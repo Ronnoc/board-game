@@ -1,8 +1,8 @@
 import { IDatabase, IGameData } from "./IDatabase";
 import { Game } from "../Game";
-import sqlite3 = require("sqlite3");
-import path = require("path");
-import fs = require("fs");
+import * as sqlite3 from "sqlite3";
+import * as path from "path";
+import * as fs from "fs";
 
 const dbFolder = path.resolve(__dirname, "../../../db");
 const dbPath = path.resolve(__dirname, "../../../db/game.db");
