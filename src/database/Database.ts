@@ -1,7 +1,7 @@
 import { SQLite } from "./SQLite";
 import { IDatabase } from "./IDatabase";
 
-export default class Database {
+export class Database {
   private static instance: IDatabase;
 
   //   private constructor() {}

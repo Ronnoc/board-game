@@ -1,14 +1,13 @@
 import { IDatabase, IGameData } from "./IDatabase";
 import { Game } from "../Game";
 import sqlite3 = require("sqlite3");
+import path = require("path");
+import fs = require("fs");
 
-
-const path = require("path");
-const fs = require("fs");
 const dbFolder = path.resolve(__dirname, "../../../db");
 const dbPath = path.resolve(__dirname, "../../../db/game.db");
 
-export default class SQLite implements IDatabase {
+export class SQLite implements IDatabase {
   private db: sqlite3.Database;
 
   constructor() {
@@ -18,21 +17,20 @@ export default class SQLite implements IDatabase {
     }
     this.db = new sqlite3.Database(dbPath);
     this.db.run(
-      "CREATE TABLE IF NOT EXISTS games(game_id varchar, players integer, save_id integer, game text, status text default 'running', created_time timestamp default (strftime('%s', 'now')), PRIMARY KEY (game_id, save_id))"
+      "CREATE TABLE IF NOT EXISTS games(gameId varchar, players integer, saveId integer, game text, status text default 'running', created_time timestamp default (strftime('%s', 'now')), PRIMARY KEY (gameId, saveId))",
     );
   }
 
-  getClonableGames(cb: (err: any, allGames: Array<IGameData>) => void) {
-    var allGames: Array<IGameData> = [];
-    var sql =
-      "SELECT distinct game_id game_id, players players FROM games WHERE status = 'running' and save_id = 0 order by game_id asc";
+  getClonableGames(cb: (err: Error, allGames: Array<IGameData>) => void): void {
+    const allGames: Array<IGameData> = [];
+    const sql = "SELECT distinct gameId gameId, players players FROM games WHERE status = 'running' and saveId = 0 order by gameId asc";
 
-    this.db.all(sql, [], (err, rows) => {
+    this.db.all(sql, [], (err: Error, rows) => {
       if (rows) {
         rows.forEach((row) => {
-          let gameId: string = row.game_id;
-          let playerCount: number = row.players;
-          let gameData: IGameData = {
+          const { gameId } = row;
+          const playerCount: number = row.players;
+          const gameData: IGameData = {
             gameId,
             playerCount,
           };
@@ -40,54 +38,55 @@ export default class SQLite implements IDatabase {
         });
         return cb(err, allGames);
       }
+      return undefined;
     });
   }
 
-  getGames(cb: (err: any, allGames: Array<string>) => void) {
-    var allGames: Array<string> = [];
-    var sql: string =
-      "SELECT distinct game_id game_id FROM games WHERE status = 'running' and save_id > 0";
-    this.db.all(sql, [], (err, rows) => {
+  getGames(cb: (err: Error, allGames: Array<string>) => void): void {
+    const allGames: Array<string> = [];
+    const sql = "SELECT distinct gameId gameId FROM games WHERE status = 'running' and saveId > 0";
+    this.db.all(sql, [], (err: Error, rows) => {
       if (rows) {
         rows.forEach((row) => {
-          allGames.push(row.game_id);
+          allGames.push(row.gameId);
         });
         return cb(err, allGames);
       }
+      return undefined;
     });
   }
 
-  restoreReferenceGame(game_id: string, game: Game, cb: (err: any) => void) {
+  restoreReferenceGame(gameId: string, game: Game, cb: (err: Error) => void): void {
     // Retrieve first save from database
     this.db.get(
-      "SELECT game_id game_id, game game FROM games WHERE game_id = ? AND save_id = 0",
-      [game_id],
-      (err: { message: any }, row: { game_id: string; game: any }) => {
-        if (row.game_id === undefined) {
+      "SELECT gameId gameId, game game FROM games WHERE gameId = ? AND saveId = 0",
+      [gameId],
+      (err: Error, row: { gameId: string; game: string }) => {
+        if (row.gameId === undefined) {
           return cb(new Error("Game not found"));
         }
         // Transform string to json
-        let gameToRestore = JSON.parse(row.game);
+        const gameToRestore = JSON.parse(row.game);
 
         // Rebuild each objects
         game.loadFromJSON(gameToRestore);
 
         return cb(err);
-      }
+      },
     );
   }
 
-  restoreGameLastSave(game_id: string, game: Game, cb: (err: any) => void) {
+  restoreGameLastSave(gameId: string, game: Game, cb: (err: Error) => void): void {
     // Retrieve last save from database
     this.db.get(
-      "SELECT game game FROM games WHERE game_id = ? ORDER BY save_id DESC LIMIT 1",
-      [game_id],
-      (err: { message: any }, row: { game: any }) => {
+      "SELECT game game FROM games WHERE gameId = ? ORDER BY saveId DESC LIMIT 1",
+      [gameId],
+      (err: Error, row: { game: string }) => {
         if (err) {
           return cb(err);
         }
         // Transform string to json
-        let gameToRestore = JSON.parse(row.game);
+        const gameToRestore = JSON.parse(row.game);
 
         // Rebuild each objects
         try {
@@ -95,73 +94,75 @@ export default class SQLite implements IDatabase {
         } catch (e) {
           console.log(gameToRestore);
           cb(e);
-          return;
+          return undefined;
         }
 
         return cb(err);
-      }
+      },
     );
   }
 
-  cleanSaves(game_id: string, save_id: number): void {
+  cleanSaves(gameId: string, saveId: number): void {
     // DELETE all saves except initial and last one
     this.db.run(
-      "DELETE FROM games WHERE game_id = ? AND save_id < ? AND save_id > 0",
-      [game_id, save_id],
-      function (err: { message: any }) {
+      "DELETE FROM games WHERE gameId = ? AND saveId < ? AND saveId > 0",
+      [gameId, saveId],
+      (err: Error) => {
         if (err) {
           return console.warn(err.message);
         }
-      }
+        return undefined;
+      },
     );
     // Flag game as finished
     this.db.run(
-      "UPDATE games SET status = 'finished' WHERE game_id = ?",
-      [game_id],
-      function (err: { message: any }) {
+      "UPDATE games SET status = 'finished' WHERE gameId = ?",
+      [gameId],
+      (err: Error) => {
         if (err) {
           return console.warn(err.message);
         }
-      }
+        return undefined;
+      },
     );
   }
 
-  restoreGame(game_id: string, save_id: number, game: Game): void {
+  restoreGame(gameId: string, saveId: number, game: Game): void {
     // Retrieve last save from database
     this.db.get(
-      "SELECT game game FROM games WHERE game_id = ? AND save_id = ? ORDER BY save_id DESC LIMIT 1",
-      [game_id, save_id],
-      (err: { message: any }, row: { game: any }) => {
+      "SELECT game game FROM games WHERE gameId = ? AND saveId = ? ORDER BY saveId DESC LIMIT 1",
+      [gameId, saveId],
+      (err: { message: Error }, row: { game: string }) => {
         if (err) {
           return console.error(err.message);
         }
         // Transform string to json
-        let gameToRestore = JSON.parse(row.game);
+        const gameToRestore = JSON.parse(row.game);
 
         // Rebuild each objects
         game.loadFromJSON(gameToRestore);
 
         return true;
-      }
+      },
     );
   }
 
   saveGameState(
-    game_id: string,
-    save_id: number,
+    gameId: string,
+    saveId: number,
     game: string,
-    players: number
+    players: number,
   ): void {
     // Insert
     this.db.run(
-      "INSERT INTO games(game_id, save_id, game, players) VALUES(?, ?, ?, ?)",
-      [game_id, save_id, game, players],
-      function (err: { message: any }) {
+      "INSERT INTO games(gameId, saveId, game, players) VALUES(?, ?, ?, ?)",
+      [gameId, saveId, game, players],
+      (err: Error) => {
         if (err) {
-          //Should be a duplicate, does not matter
-          return;
+          // Should be a duplicate, does not matter
+
         }
-      }
+      },
     );
   }
 }
