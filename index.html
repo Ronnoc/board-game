@@ -1,11 +1,15 @@
 <!doctype html>
 <html>
 
-<head></head>
+<head>
+    <title>Arkham Horror LCG</title>
+</head>
 
 <body>
-    <div id="app"></div>
+    <div id="app">
+        <start-screen v-if="screen === 'start-screen'"></start-screen>
+    </div>
 </body>
-<script src="./dist/main.js"></script>
+<script src="/main.js"></script>
 
 </html>
