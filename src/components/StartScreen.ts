@@ -1,6 +1,18 @@
 import { Vue, Component } from "vue-property-decorator";
 import * as d3 from "d3";
 
+const debugJson = {
+  nodes: [
+    { id: 0 },
+    { id: 1 },
+    { id: 2 },
+  ],
+  links: [
+    { source: 0, target: 1 },
+    { source: 1, target: 2 },
+  ],
+};
+
 @Component({
   template: `
         <div>
@@ -9,7 +21,7 @@ import * as d3 from "d3";
                 <a href="/new-game">New game</a>
                 <button v-on:click="update">You clicked me {{ count }} times.</button>
             </div>
-            <div class="svg-container" :style="{height: 200, width: 200}">
+            <div class="svg-container">
             <svg id="svg"
             @mousemove="drag($event)"
             @mouseup="drop()">
@@ -23,9 +35,9 @@ import * as d3 from "d3";
                 <circle v-for="node in nodes"
                   :cx="coords[node.index].x"
                   :cy="coords[node.index].y"
-                  :r="10" :fill="colors[Math.ceil(Math.sqrt(node.index))]"
+                  :r="10" :fill="colors[node.index]"
                   stroke="white" stroke-width="5"
-                  @mousedown="setMove($event.screenX,  $event.screenY, node)"/>
+                  @mousedown="mdown($event,node)"/>
             </svg>
         </div>
         </div>
@@ -34,51 +46,51 @@ import * as d3 from "d3";
 export class StartScreen extends Vue {
   private mCounter = 0;
 
+  get count():number {
+    return this.mCounter;
+  }
+
   padding= 10;
 
   width=300;
 
   height=150;
 
-  savedNode =[];
+  mSavedNode:Array<any> =[];
+
+  mLinks:Array<any> = [];
+
+  private mSimulation = null as any;
+
+  private currentMove = null as any;
 
   colors= ["#2196F3", "#E91E63", "#7E57C2", "#009688", "#00BCD4", "#EF6C00", "#4CAF50", "#FF9800", "#F44336", "#CDDC39", "#9C27B0"];
 
-  setMove(x:any, y:any, node:any):void {
-    this.currentMove = { x, y, node };
-  }
-
   get nodes():any {
-    this.savedNode = this.mSimulation.nodes();
-    return this.savedNode;
-  }
-
-  get count():number {
-    return this.mCounter;
+    return this.mSavedNode;
   }
 
   get links():any {
-    return this.debugJson.links;
+    return this.mLinks;
+  }
+
+  static mlog(info:string):void {
+    console.log(info);
   }
 
   get coords():any {
-    if (this.mSimulation === null) return undefined;
-    const minX = Math.min(...this.mSimulation.nodes().map((n:any) => n.x));
-    const maxX = Math.max(...this.mSimulation.nodes().map((n:any) => n.x));
-    const minY = Math.min(...this.mSimulation.nodes().map((n:any) => n.y));
-    const maxY = Math.max(...this.mSimulation.nodes().map((n:any) => n.y));
-    console.log(minX, maxX, minY, maxY);
-    return this.mSimulation.nodes().map((node:d3.SimulationNodeDatum) => ({
+    console.log("coords");
+    const minX = Math.min(...this.mSavedNode.map((n:any) => n.x));
+    const maxX = Math.max(...this.mSavedNode.map((n:any) => n.x));
+    const minY = Math.min(...this.mSavedNode.map((n:any) => n.y));
+    const maxY = Math.max(...this.mSavedNode.map((n:any) => n.y));
+    return this.mSavedNode.map((node:d3.SimulationNodeDatum) => ({
       x: this.padding + (node.x as number - minX)
       * ((this.width - 2 * this.padding) / (maxX - minX)),
       y: this.padding + (node.y as number - minY)
       * ((this.height - 2 * this.padding) / (maxY - minY)),
     }));
   }
-
-  private mSimulation = null as any;
-
-  private currentMove = null as any;
 
   // private graph = null as any;
 
@@ -94,27 +106,17 @@ export class StartScreen extends Vue {
     console.log("wh", this.width, this.height);
     console.log("mounted");
     // this.graph = this.debugJson;
-    const simulation = d3.forceSimulation(this.debugJson.nodes as d3.SimulationNodeDatum[])
-      .force("link", d3.forceLink(this.debugJson.links).distance(100).strength(0.1))
+    let simulation = d3.forceSimulation(debugJson.nodes as d3.SimulationNodeDatum[])
+      .force("link", d3.forceLink(debugJson.links).distance(20).strength(0.1))
       .force("charge", d3.forceManyBody())
       .force("center", d3.forceCenter(600 / 2, 600 / 2));
+    this.mSavedNode = simulation.nodes();
+    this.mLinks = debugJson.links;
+    simulation = d3.forceSimulation(this.mSavedNode as d3.SimulationNodeDatum[])
+      .force("link", d3.forceLink(this.mLinks).distance(20).strength(0.1))
+      .force("charge", d3.forceManyBody())
+      .force("center", d3.forceCenter(this.width / 2, this.height / 2));
     this.mSimulation = simulation;
-  }
-
-  updated():void {
-    console.log(typeof (this.mSimulation));
-  }
-
-  debugJson = {
-    nodes: [
-      { id: 0 },
-      { id: 1 },
-      { id: 2 },
-    ],
-    links: [
-      { source: 0, target: 1 },
-      { source: 1, target: 2 },
-    ],
   }
 
   drag(e:any):void {
@@ -135,6 +137,14 @@ export class StartScreen extends Vue {
     }
   }
 
+  mdown(e:any, xnode:any):void{
+    this.currentMove = {
+      x: e.screenX,
+      y: e.screenY,
+      node: xnode,
+    };
+  }
+
   drop():void {
     console.log("drop");
     delete this.currentMove.node.fx;
@@ -144,56 +154,3 @@ export class StartScreen extends Vue {
     this.mSimulation.restart();
   }
 }
-/*
-
-  coords(): any {
-    console.log("coords");
-    const { minX } = this.bounds();
-    const { maxX } = this.bounds();
-    const { minY } = this.bounds();
-    const { maxY } = this.bounds();
-    const rtn = this.nodes.map((node) => ({
-      x: this.padding + ((node.x - minX) * (this.width - 2 * this.padding)) / (maxX - minX),
-      y: this.padding + ((node.y - minY) * (this.height - 2 * this.padding)) / (maxY - minY),
-    }));
-    console.log("query coords", rtn);
-    return rtn;
-  }
-
-  mounted(): void {
-    console.log("mounted");
-    this.simulation = d3.forceSimulation(this.nodes as d3.SimulationNodeDatum[])
-      .force("charge", d3.forceManyBody().strength(() => -100))
-      .force("link", d3.forceLink(this.links))
-      .force("x", d3.forceX())
-      .force("y", d3.forceY());
-    console.log("mounted done");
-  }
-
-  drag(e:any):void {
-    console.log("drag");
-    if (this.currentMove) {
-      const { minX } = this.bounds();
-      const { maxX } = this.bounds();
-      const { minY } = this.bounds();
-      const { maxY } = this.bounds();
-      this.currentMove.node.fx = this.currentMove.node.x
-      - ((this.currentMove.x - e.screenX) * (maxX - minX))
-      / (this.width - 2 * this.padding);
-      this.currentMove.node.fy = this.currentMove.node.y
-      - ((this.currentMove.y - e.screenY) * (maxY - minY))
-      / (this.height - 2 * this.padding);
-      this.currentMove.x = e.screenX;
-      this.currentMove.y = e.screenY;
-    }
-  }
-
-  drop():void {
-    console.log("drop");
-    delete this.currentMove.node.fx;
-    delete this.currentMove.node.fy;
-    this.currentMove = null;
-    this.simulation.alpha(1);
-    this.simulation.restart();
-  }
-*/
