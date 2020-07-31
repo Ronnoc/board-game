@@ -121,6 +121,10 @@ export class StartScreen extends Vue {
       .force("link", d3.forceLink().links(this.mLinks).distance(20))
       .force("charge", d3.forceManyBody())
       .force("center", d3.forceCenter(this.width / 2, this.height / 2));
+    simulation.stop();
+    for (let index = 0; index < 100; index += 1) {
+      simulation.tick();
+    }
     this.mSavedNode = simulation.nodes();
 
     this.mSimulation = simulation;
