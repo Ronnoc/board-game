@@ -9,7 +9,6 @@ export const mainAppSettings = {
     "start-screen": StartScreen,
   },
   mounted():void {
-    console.log("mounted!");
     ((this as unknown) as Record<string, string>).screen = "start-screen";
   },
 };
