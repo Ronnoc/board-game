@@ -3,13 +3,23 @@ import * as d3 from "d3";
 
 const debugJson = {
   nodes: [
-    { id: 0 },
-    { id: 1 },
-    { id: 2 },
+    { id: 0, name: "Me", type: 0 },
+    { id: 1, name: "She", type: 0 },
+    { id: 2, name: "He", type: 0 },
+    { id: 3, name: "LocA", type: 2 },
+    { id: 4, name: "LocB", type: 2 },
+    { id: 5, name: "LocC", type: 2 },
+    { id: 6, name: "Mos1", type: 1 },
   ],
   links: [
-    { source: 0, target: 1 },
-    { source: 1, target: 2 },
+    { source: 0, target: 4 },
+    { source: 1, target: 3 },
+    { source: 2, target: 4 },
+    { source: 3, target: 4 },
+    { source: 4, target: 5 },
+    { source: 5, target: 3 },
+    { source: 6, target: 2 },
+    { source: 6, target: 4 },
   ],
 };
 
@@ -22,9 +32,7 @@ const debugJson = {
                 <button v-on:click="update">You clicked me {{ count }} times.</button>
             </div>
             <div class="svg-container">
-            <svg id="svg"
-            @mousemove="drag($event)"
-            @mouseup="drop()">
+            <svg id="svg" height="510" width="510">
                 <line v-for="link in links"
                 :x1="coords[link.source.index].x"
                 :y1="coords[link.source.index].y"
@@ -35,9 +43,12 @@ const debugJson = {
                 <circle v-for="node in nodes"
                   :cx="coords[node.index].x"
                   :cy="coords[node.index].y"
-                  :r="10" :fill="colors[node.index]"
-                  stroke="white" stroke-width="5"
-                  @mousedown="mdown($event,node)"/>
+                  :r="10" :fill="colors[node.type]"
+                  stroke="white" stroke-width="5"/>
+
+                <text v-for="node in nodes"
+                  :x="coords[node.index].x-5"
+                  :y="coords[node.index].y-5">{{ node.name }}</text>
             </svg>
         </div>
         </div>
@@ -50,11 +61,11 @@ export class StartScreen extends Vue {
     return this.mCounter;
   }
 
-  padding= 10;
+  padding= 30;
 
-  width=300;
+  width=500;
 
-  height=150;
+  height=500;
 
   mSavedNode:Array<any> =[];
 
@@ -103,19 +114,15 @@ export class StartScreen extends Vue {
   }
 
   mounted():void {
-    console.log("wh", this.width, this.height);
     console.log("mounted");
     // this.graph = this.debugJson;
-    let simulation = d3.forceSimulation(debugJson.nodes as d3.SimulationNodeDatum[])
-      .force("link", d3.forceLink(debugJson.links).distance(20).strength(0.1))
-      .force("charge", d3.forceManyBody())
-      .force("center", d3.forceCenter(600 / 2, 600 / 2));
-    this.mSavedNode = simulation.nodes();
     this.mLinks = debugJson.links;
-    simulation = d3.forceSimulation(this.mSavedNode as d3.SimulationNodeDatum[])
-      .force("link", d3.forceLink(this.mLinks).distance(20).strength(0.1))
+    const simulation = d3.forceSimulation(debugJson.nodes as d3.SimulationNodeDatum[])
+      .force("link", d3.forceLink().links(this.mLinks).distance(20))
       .force("charge", d3.forceManyBody())
       .force("center", d3.forceCenter(this.width / 2, this.height / 2));
+    this.mSavedNode = simulation.nodes();
+
     this.mSimulation = simulation;
   }
 
