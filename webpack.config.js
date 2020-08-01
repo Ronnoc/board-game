@@ -1,7 +1,7 @@
 module.exports = {
   mode: "development",
   entry: [
-    "./dist/script.js",
+    "./dist/components/App.js",
   ],
   resolve: {
     alias: {

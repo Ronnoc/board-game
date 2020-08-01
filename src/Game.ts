@@ -1,4 +1,4 @@
-import { ILoadable, SerializedGame } from "./interface/Serialized";
+import { ILoadable, SerializedGame } from "./Serialized";
 import { Database } from "./database/Database";
 import { Player } from "./Player";
 import { Phase } from "./enums/Phase";

@@ -28,6 +28,6 @@
   ],
   "files": [
     "src/server.ts",
-    "src/script.ts"
+    "src/components/App.ts"
   ]
 }

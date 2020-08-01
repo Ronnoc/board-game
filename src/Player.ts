@@ -1,8 +1,8 @@
-import { ILoadable, SerializedPlayer } from "./interface/Serialized";
+import { ILoadable, SerializedPlayer } from "./Serialized";
 import { generateRandomId } from "./utils";
 import { Color } from "./enums/Color";
 import { Game } from "./Game";
-import { PlayerInput } from "./interface/PlayerInput";
+import { PlayerInput } from "./inputs/PlayerInput";
 
 export class Player implements ILoadable<SerializedPlayer, Player> {
   public id="";

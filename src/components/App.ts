@@ -1,6 +1,7 @@
+import Vue from "vue";
 import { StartScreen } from "./StartScreen";
 
-export const mainAppSettings = {
+export const vm = new Vue({
   el: "#app",
   data: {
     screen: "empty",
@@ -9,6 +10,6 @@ export const mainAppSettings = {
     "start-screen": StartScreen,
   },
   mounted():void {
-    ((this as unknown) as Record<string, string>).screen = "start-screen";
+    this.screen = "start-screen";
   },
-};
+});
