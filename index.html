@@ -7,7 +7,8 @@
 
 <body>
     <div id="app">
-        <start-screen v-if="screen === 'start-screen'"></start-screen>
+        <vm-board v-if="screen === 'vm-board'"></vm-board>
+        <vm-start-screen v-if="screen === 'vm-start-screen'"></vm-start-screen>
     </div>
 </body>
 <script src="/main.js"></script>

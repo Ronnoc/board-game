@@ -1,5 +1,6 @@
 import Vue from "vue";
 import { StartScreen } from "./StartScreen";
+import { Board } from "./Board";
 
 export const vm = new Vue({
   el: "#app",
@@ -7,9 +8,10 @@ export const vm = new Vue({
     screen: "empty",
   },
   components: {
-    "start-screen": StartScreen,
+    "vm-start-screen": StartScreen,
+    "vm-board": Board,
   },
   mounted():void {
-    this.screen = "start-screen";
+    this.screen = "vm-board";
   },
 });
