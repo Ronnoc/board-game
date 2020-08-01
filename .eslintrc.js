@@ -23,6 +23,7 @@ module.exports = {
     "import/prefer-default-export": "off",
     "import/order": "off",
     "no-console": "off",
+    "import/no-cycle": "off",
   },
   settings: {
     "import/resolver": {

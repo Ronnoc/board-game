@@ -3,5 +3,9 @@ export interface ILoadable<T, T2> {
 }
 
 export interface SerializedGame {
-  id: number;
+  id: string;
+}
+
+export interface SerializedPlayer {
+  id: string;
 }
