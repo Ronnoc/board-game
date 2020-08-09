@@ -25,27 +25,38 @@ const debugJson = {
 
 @Component({
   template: `
-        <div>
-            <svg id="svg" height="510" width="510">
-                <line v-for="link in links"
-                :x1="coords[link.source.index].x"
-                :y1="coords[link.source.index].y"
-                :x2="coords[link.target.index].x"
-                :y2="coords[link.target.index].y"
-                stroke="black" stroke-width="1"/>
+    <div>
+      <svg id="svg" height="510" width="510">
+        <line
+          v-for="link in links"
+          :x1="coords[link.source.index].x"
+          :y1="coords[link.source.index].y"
+          :x2="coords[link.target.index].x"
+          :y2="coords[link.target.index].y"
+          stroke="black"
+          stroke-width="1"
+        />
 
-                <circle v-for="node in nodes"
-                  :cx="coords[node.index].x"
-                  :cy="coords[node.index].y"
-                  :r="10" :fill="colors[node.type]"
-                  stroke="white" stroke-width="5"/>
+        <circle
+          v-for="node in nodes"
+          :cx="coords[node.index].x"
+          :cy="coords[node.index].y"
+          :r="10"
+          :fill="colors[node.type]"
+          stroke="white"
+          stroke-width="5"
+        />
 
-                <text v-for="node in nodes"
-                  :x="coords[node.index].x-5"
-                  :y="coords[node.index].y-5">{{ node.name }}</text>
-            </svg>
-        </div>
-    `,
+        <text
+          v-for="node in nodes"
+          :x="coords[node.index].x-5"
+          :y="coords[node.index].y-5"
+        >
+          {{ node.name }}
+        </text>
+      </svg>
+    </div>
+  `,
 })
 export class Board extends Vue {
   padding = 30;
@@ -58,7 +69,19 @@ export class Board extends Vue {
 
   mLinks: Array<any> = [];
 
-  colors = ["#2196F3", "#E91E63", "#7E57C2", "#009688", "#00BCD4", "#EF6C00", "#4CAF50", "#FF9800", "#F44336", "#CDDC39", "#9C27B0"];
+  colors = [
+    "#2196F3",
+    "#E91E63",
+    "#7E57C2",
+    "#009688",
+    "#00BCD4",
+    "#EF6C00",
+    "#4CAF50",
+    "#FF9800",
+    "#F44336",
+    "#CDDC39",
+    "#9C27B0",
+  ];
 
   get nodes(): d3.SimulationNodeDatum[] {
     return this.mSavedNode;
@@ -73,23 +96,35 @@ export class Board extends Vue {
   }
 
   get coords(): any {
-    console.log("coords");
-    const minX = Math.min(...this.mSavedNode.map((n: d3.SimulationNodeDatum) => n.x as number));
-    const maxX = Math.max(...this.mSavedNode.map((n: d3.SimulationNodeDatum) => n.x as number));
-    const minY = Math.min(...this.mSavedNode.map((n: d3.SimulationNodeDatum) => n.y as number));
-    const maxY = Math.max(...this.mSavedNode.map((n: d3.SimulationNodeDatum) => n.y as number));
+    const minX = Math.min(
+      ...this.mSavedNode.map((n: d3.SimulationNodeDatum) => n.x as number),
+    );
+    const maxX = Math.max(
+      ...this.mSavedNode.map((n: d3.SimulationNodeDatum) => n.x as number),
+    );
+    const minY = Math.min(
+      ...this.mSavedNode.map((n: d3.SimulationNodeDatum) => n.y as number),
+    );
+    const maxY = Math.max(
+      ...this.mSavedNode.map((n: d3.SimulationNodeDatum) => n.y as number),
+    );
     return this.mSavedNode.map((node: d3.SimulationNodeDatum) => ({
-      x: this.padding + (node.x as number - minX)
-        * ((this.width - 2 * this.padding) / (maxX - minX)),
-      y: this.padding + (node.y as number - minY)
-        * ((this.height - 2 * this.padding) / (maxY - minY)),
+      x:
+        this.padding
+        + ((node.x as number) - minX)
+          * ((this.width - 2 * this.padding) / (maxX - minX)),
+      y:
+        this.padding
+        + ((node.y as number) - minY)
+          * ((this.height - 2 * this.padding) / (maxY - minY)),
     }));
   }
 
   mounted(): void {
     // console.log("board mounted");
     this.mLinks = debugJson.links;
-    const simulation = d3.forceSimulation(debugJson.nodes as d3.SimulationNodeDatum[])
+    const simulation = d3
+      .forceSimulation(debugJson.nodes as d3.SimulationNodeDatum[])
       .force("link", d3.forceLink().links(this.mLinks).distance(20))
       .force("charge", d3.forceManyBody())
       .force("center", d3.forceCenter(this.width / 2, this.height / 2));

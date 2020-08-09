@@ -12,12 +12,16 @@ const serverId = generateRandomId();
 const allGames: Map<string, Game> = new Map<string, Game>();
 const allPlayers: Map<string, Player> = new Map<string, Player>();
 
-function notFound(req: http.IncomingMessage, res: http.ServerResponse): void {
+function notFound(
+  req: http.IncomingMessage,
+  res: http.ServerResponse,
+  errorInfo = ""
+): void {
   if (!process.argv.includes("hide-not-found-warnings")) {
     console.warn("Not found", req.method, req.url);
   }
   res.writeHead(404);
-  res.write("Not found");
+  res.write(`Not found ${errorInfo}`);
   res.end();
 }
 
@@ -40,7 +44,7 @@ function serveAsset(req: http.IncomingMessage, res: http.ServerResponse): void {
 
 function processInput(
   req: http.IncomingMessage,
-  res: http.ServerResponse,
+  res: http.ServerResponse
 ): void {
   if (req.url === undefined) {
     notFound(req, res);
@@ -73,9 +77,11 @@ function processInput(
         "Content-Type": "application/json",
       });
       console.warn("Error processing input from player", err);
-      res.write(JSON.stringify({
-        message: err.message,
-      }));
+      res.write(
+        JSON.stringify({
+          message: err.message,
+        })
+      );
       res.end();
     }
   });
@@ -121,7 +127,7 @@ function apiGetGame(req: http.IncomingMessage, res: http.ServerResponse): void {
 
 function apiGetWaitingFor(
   req: http.IncomingMessage,
-  res: http.ServerResponse,
+  res: http.ServerResponse
 ): void {
   if (req.url === undefined) {
     console.warn("url not defined");
@@ -158,21 +164,23 @@ function apiGetWaitingFor(
 
 function apiGetPlayerState(
   req: http.IncomingMessage,
-  res: http.ServerResponse,
+  res: http.ServerResponse
 ): void {
   if (req.url === undefined) {
     console.warn("url not defined");
     notFound(req, res);
     return;
   }
-  const playerId: string = req.url.substring("/api/player?id=".length);
+  const playerId: string = req.url.substring("/api/player_state?id=".length);
   const player = allPlayers.get(playerId);
   if (player === undefined) {
+    console.log("player === undefined");
     notFound(req, res);
     return;
   }
   const game = allGames.get(player.currentGame);
   if (game === undefined) {
+    console.log("game === undefined");
     notFound(req, res);
     return;
   }
@@ -193,7 +201,7 @@ function createGame(req: http.IncomingMessage, res: http.ServerResponse): void {
       const createGameForm = gameReq as IFCreateGameForm;
       const gameId = generateRandomId();
       const players = createGameForm.players.map(
-        (obj: IFCreatePlayer) => new Player(obj.name as string, obj.color),
+        (obj: IFCreatePlayer) => new Player(obj.name as string, obj.color)
       );
       let firstPlayer = players[0];
       for (let i = 0; i < createGameForm.players.length; i += 1) {
@@ -222,7 +230,7 @@ function createGame(req: http.IncomingMessage, res: http.ServerResponse): void {
 
 function requestHandler(
   req: http.IncomingMessage,
-  res: http.ServerResponse,
+  res: http.ServerResponse
 ): void {
   console.log(`${req.url} ${req.method}`);
   if (req.url === undefined) {
@@ -230,7 +238,7 @@ function requestHandler(
     return;
   }
   if (req.method === "PUT") {
-    if (req.url === ("/create_game")) {
+    if (req.url === "/create_game") {
       createGame(req, res);
     } else {
       notFound(req, res);
@@ -244,10 +252,12 @@ function requestHandler(
   } else if (req.method === "GET") {
     if (req.url.startsWith("/api/server?id=")) {
       notFound(req, res);
-    } else if (req.url === "/"
-        || req.url.startsWith("/new_game")
-        || req.url.startsWith("/game?id=")
-        || req.url.startsWith("/player?id=")) {
+    } else if (
+      req.url === "/" ||
+      req.url.startsWith("/new_game") ||
+      req.url.startsWith("/game?id=") ||
+      req.url.startsWith("/player?id=")
+    ) {
       serveApp(res);
     } else if (req.url.startsWith("/api/player_state?id=")) {
       apiGetPlayerState(req, res);
@@ -255,10 +265,7 @@ function requestHandler(
       apiGetWaitingFor(req, res);
     } else if (req.url.startsWith("/api/game?id=")) {
       apiGetGame(req, res);
-    } else if (
-      req.url.startsWith("/assets/")
-      || req.url === "/main.js"
-    ) {
+    } else if (req.url.startsWith("/assets/") || req.url === "/main.js") {
       serveAsset(req, res);
     } else {
       notFound(req, res);

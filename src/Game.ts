@@ -6,17 +6,15 @@ import { IFCreateGameForm } from "./inferface/IFCreateGameForm";
 import { IFGameInfo } from "./inferface/IFGameInfo";
 
 export class Game implements ILoadable<SerializedGame, Game> {
-  public activePlayer="";
-
-  public phase: Phase = Phase.START;
+  public activePlayer = "";
+  public phase = Phase.START;
 
   constructor(
     public id: string,
     private players: Array<Player>,
     private first: Player,
-    createGameForm: IFCreateGameForm,
+    createGameForm: IFCreateGameForm
   ) {
-    console.log("Game.constructor");
     Database.getInstance();
   }
 
@@ -25,20 +23,18 @@ export class Game implements ILoadable<SerializedGame, Game> {
     return Object.assign(this, d);
   }
 
-  public getPlayers():Array<Player> {
+  public getPlayers(): Array<Player> {
     return this.players;
   }
 
-  public getPlayerById(id:string):Player {
+  public getPlayerById(id: string): Player {
     return this.players.filter((p) => p.id === id)[0];
   }
 
-  public infoStringify():string {
-    return JSON.stringify(
-      {
-        id: this.id,
-        players: this.players.map((p:Player) => p.getInfo()),
-      } as IFGameInfo,
-    );
+  public infoStringify(): string {
+    return JSON.stringify({
+      id: this.id,
+      players: this.players.map((p: Player) => p.getInfo()),
+    } as IFGameInfo);
   }
 }

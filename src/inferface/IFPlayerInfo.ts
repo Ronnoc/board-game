@@ -1,4 +1,4 @@
-export interface IFPlayerInfo{
-  id:string,
-  name:string,
+export interface IFPlayerInfo {
+  id: string;
+  name: string;
 }

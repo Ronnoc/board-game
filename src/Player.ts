@@ -5,18 +5,20 @@ import { Game } from "./Game";
 import { PlayerInput } from "./inputs/PlayerInput";
 import { IFPlayerGameState } from "./inferface/IFPlayerGameState";
 import { IFPlayerInfo } from "./inferface/IFPlayerInfo";
+import { RolandBanks } from "./cards/core/investigators/RolandBanks";
+import { debugDecks } from "./DeckDealer";
+import { IPlayerCard } from "./cards/IPlayerCard";
 
 export class Player implements ILoadable<SerializedPlayer, Player> {
-  public id="";
-
-  public currentGame="";
-
+  public id = "";
+  public investigator = new RolandBanks();
+  public deck = debugDecks;
+  public cardsInHand: Array<IPlayerCard> = [];
+  public cardsDiscarded: Array<IPlayerCard> = [];
+  public currentGame = "";
   private waitingFor?: PlayerInput;
 
-  constructor(
-    public name: string,
-    public color: Color,
-  ) {
+  constructor(public name: string, public color: Color) {
     this.id = generateRandomId();
   }
 
@@ -24,7 +26,7 @@ export class Player implements ILoadable<SerializedPlayer, Player> {
     return Object.assign(this, d);
   }
 
-  public setCurrentGame(gameId:string):void{
+  public setCurrentGame(gameId: string): void {
     this.currentGame = gameId;
   }
 
@@ -36,19 +38,17 @@ export class Player implements ILoadable<SerializedPlayer, Player> {
     return this.waitingFor;
   }
 
-  public getInfo():IFPlayerInfo {
+  public getInfo(): IFPlayerInfo {
     return {
       id: this.id,
       name: this.name,
     } as IFPlayerInfo;
   }
 
-  public stateStringify(game:Game):string {
-    return JSON.stringify(
-      {
-        id: this.id,
-        gameid: game.id,
-      } as IFPlayerGameState,
-    );
+  public stateStringify(game: Game): string {
+    return JSON.stringify({
+      id: this.id,
+      gameid: game.id,
+    } as IFPlayerGameState);
   }
 }

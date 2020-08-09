@@ -13,7 +13,7 @@
             v-if="screen === 'vm-start-screen'"></vm-start-screen>
         <vm-game-home :game="game"
             v-if="screen === 'vm-game-home'"></vm-game-home>
-        <vm-player-home 
+        <vm-player-home :player_state="player_state"
             v-if="screen === 'vm-player-home'"></vm-player-home>
     </div>
 </body>

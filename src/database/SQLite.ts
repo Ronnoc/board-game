@@ -56,7 +56,11 @@ export class SQLite implements IDatabase {
     });
   }
 
-  restoreReferenceGame(gameId: string, game: Game, cb: (err: Error) => void): void {
+  restoreReferenceGame(
+    gameId: string,
+    game: Game,
+    cb: (err: Error) => void,
+  ): void {
     // Retrieve first save from database
     this.db.get(
       "SELECT gameId gameId, game game FROM games WHERE gameId = ? AND saveId = 0",
@@ -76,7 +80,11 @@ export class SQLite implements IDatabase {
     );
   }
 
-  restoreGameLastSave(gameId: string, game: Game, cb: (err: Error) => void): void {
+  restoreGameLastSave(
+    gameId: string,
+    game: Game,
+    cb: (err: Error) => void,
+  ): void {
     // Retrieve last save from database
     this.db.get(
       "SELECT game game FROM games WHERE gameId = ? ORDER BY saveId DESC LIMIT 1",
@@ -160,7 +168,6 @@ export class SQLite implements IDatabase {
       (err: Error) => {
         if (err) {
           // Should be a duplicate, does not matter
-
         }
       },
     );
