@@ -2,7 +2,8 @@ import { ILoadable, SerializedGame } from "./Serialized";
 import { Database } from "./database/Database";
 import { Player } from "./Player";
 import { Phase } from "./enums/Phase";
-import { GameOptions } from "./GameOptions";
+import { IFCreateGameForm } from "./inferface/IFCreateGameForm";
+import { IFGameInfo } from "./inferface/IFGameInfo";
 
 export class Game implements ILoadable<SerializedGame, Game> {
   public activePlayer="";
@@ -13,7 +14,7 @@ export class Game implements ILoadable<SerializedGame, Game> {
     public id: string,
     private players: Array<Player>,
     private first: Player,
-    gameOptions: GameOptions,
+    createGameForm: IFCreateGameForm,
   ) {
     console.log("Game.constructor");
     Database.getInstance();
@@ -28,14 +29,16 @@ export class Game implements ILoadable<SerializedGame, Game> {
     return this.players;
   }
 
-  public toStringfy():string {
-    const rtn = {
-      id: this.id,
-    };
-    return JSON.stringify(rtn);
-  }
-
   public getPlayerById(id:string):Player {
     return this.players.filter((p) => p.id === id)[0];
+  }
+
+  public infoStringify():string {
+    return JSON.stringify(
+      {
+        id: this.id,
+        players: this.players.map((p:Player) => p.getInfo()),
+      } as IFGameInfo,
+    );
   }
 }

@@ -7,8 +7,14 @@
 
 <body>
     <div id="app">
-        <vm-board v-if="screen === 'vm-board'"></vm-board>
-        <vm-start-screen v-if="screen === 'vm-start-screen'"></vm-start-screen>
+        <vm-create-game-form 
+            v-if="screen === 'vm-create-game-form'"></vm-create-game-form>
+        <vm-start-screen 
+            v-if="screen === 'vm-start-screen'"></vm-start-screen>
+        <vm-game-home :game="game"
+            v-if="screen === 'vm-game-home'"></vm-game-home>
+        <vm-player-home 
+            v-if="screen === 'vm-player-home'"></vm-player-home>
     </div>
 </body>
 <script src="/main.js"></script>

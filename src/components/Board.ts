@@ -48,29 +48,19 @@ const debugJson = {
     `,
 })
 export class Board extends Vue {
-  private mCounter = 0;
-
-  get count(): number {
-    return this.mCounter;
-  }
-
   padding = 30;
 
   width = 500;
 
   height = 500;
 
-  mSavedNode: Array<any> = [];
+  mSavedNode: d3.SimulationNodeDatum[] = [];
 
   mLinks: Array<any> = [];
 
-  private mSimulation = null as any;
-
-  private currentMove = null as any;
-
   colors = ["#2196F3", "#E91E63", "#7E57C2", "#009688", "#00BCD4", "#EF6C00", "#4CAF50", "#FF9800", "#F44336", "#CDDC39", "#9C27B0"];
 
-  get nodes(): any {
+  get nodes(): d3.SimulationNodeDatum[] {
     return this.mSavedNode;
   }
 
@@ -84,10 +74,10 @@ export class Board extends Vue {
 
   get coords(): any {
     console.log("coords");
-    const minX = Math.min(...this.mSavedNode.map((n: any) => n.x));
-    const maxX = Math.max(...this.mSavedNode.map((n: any) => n.x));
-    const minY = Math.min(...this.mSavedNode.map((n: any) => n.y));
-    const maxY = Math.max(...this.mSavedNode.map((n: any) => n.y));
+    const minX = Math.min(...this.mSavedNode.map((n: d3.SimulationNodeDatum) => n.x as number));
+    const maxX = Math.max(...this.mSavedNode.map((n: d3.SimulationNodeDatum) => n.x as number));
+    const minY = Math.min(...this.mSavedNode.map((n: d3.SimulationNodeDatum) => n.y as number));
+    const maxY = Math.max(...this.mSavedNode.map((n: d3.SimulationNodeDatum) => n.y as number));
     return this.mSavedNode.map((node: d3.SimulationNodeDatum) => ({
       x: this.padding + (node.x as number - minX)
         * ((this.width - 2 * this.padding) / (maxX - minX)),
@@ -96,33 +86,20 @@ export class Board extends Vue {
     }));
   }
 
-  // private graph = null as any;
-
-  update(): void {
-    this.mCounter += 1;
-  }
-
-  static created(): void {
-    console.log("created");
-  }
-
   mounted(): void {
-    console.log("mounted");
-    // this.graph = this.debugJson;
+    // console.log("board mounted");
     this.mLinks = debugJson.links;
     const simulation = d3.forceSimulation(debugJson.nodes as d3.SimulationNodeDatum[])
       .force("link", d3.forceLink().links(this.mLinks).distance(20))
       .force("charge", d3.forceManyBody())
       .force("center", d3.forceCenter(this.width / 2, this.height / 2));
     simulation.stop();
-    for (let index = 0; index < 100; index += 1) {
+    for (let index = 0; index < 40; index += 1) {
       simulation.tick();
     }
     this.mSavedNode = simulation.nodes();
-
-    this.mSimulation = simulation;
   }
-
+  /*
   drag(e: any): void {
     console.log("drag");
     if (this.currentMove) {
@@ -157,4 +134,5 @@ export class Board extends Vue {
     this.mSimulation.alpha(1);
     this.mSimulation.restart();
   }
+  */
 }

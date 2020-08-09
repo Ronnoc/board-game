@@ -4,11 +4,12 @@ import { Board } from "./Board";
 export const PlayerHome = Vue.component("player-home", {
   props: ["player"],
   components: {
-    board: Board,
+    "vm-board": Board,
   },
   template: `
-        <div class="start-screen">
-            <h1 class="start-screen-game-title" >Arkham Horror LCG</h1>
+        <div>
+            <h1>Arkham Horror LCG Player Home</h1>
+            <vm-board></vm-board>
         </div>
     `,
 });

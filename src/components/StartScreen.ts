@@ -3,10 +3,9 @@ import { Vue, Component } from "vue-property-decorator";
 @Component({
   template: `
         <div>
-            <h1>Arkham Horror LCG</h1>
+            <h1>Arkham Horror LCG Start Screen</h1>
             <div>
-                <a href="/new-game">New game</a>
-                <button v-on:click="update">You clicked me {{ count }} times.</button>
+                <a href="/new_game">New game</a>
             </div>
         </div>
     `,

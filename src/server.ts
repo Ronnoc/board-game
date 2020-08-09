@@ -5,8 +5,8 @@ import { Game } from "./Game";
 import { Player } from "./Player";
 import { Phase } from "./enums/Phase";
 import { generateRandomId } from "./utils";
-import { GameOptions } from "./GameOptions";
-import { Color } from "./enums/Color";
+import { IFCreateGameForm } from "./inferface/IFCreateGameForm";
+import { IFCreatePlayer } from "./inferface/IFCreatePlayer";
 
 const serverId = generateRandomId();
 const allGames: Map<string, Game> = new Map<string, Game>();
@@ -66,7 +66,7 @@ function processInput(
       const entity = JSON.parse(body);
       player.process(game, entity);
       res.setHeader("Content-Type", "application/json");
-      res.write(player.stateToStringfy(game));
+      res.write(player.stateStringify(game));
       res.end();
     } catch (err) {
       res.writeHead(400, {
@@ -115,7 +115,7 @@ function apiGetGame(req: http.IncomingMessage, res: http.ServerResponse): void {
   }
 
   res.setHeader("Content-Type", "application/json");
-  res.write(game.toStringfy());
+  res.write(game.infoStringify());
   res.end();
 }
 
@@ -178,7 +178,7 @@ function apiGetPlayerState(
   }
 
   res.setHeader("Content-Type", "application/json");
-  res.write(player.stateToStringfy(game));
+  res.write(player.stateStringify(game));
   res.end();
 }
 
@@ -190,27 +190,27 @@ function createGame(req: http.IncomingMessage, res: http.ServerResponse): void {
   req.once("end", () => {
     try {
       const gameReq = JSON.parse(body);
+      const createGameForm = gameReq as IFCreateGameForm;
       const gameId = generateRandomId();
-      const players = gameReq.players.map(
-        (obj: Record<string, string|Color>) => new Player(obj.name as string, obj.color as Color),
+      const players = createGameForm.players.map(
+        (obj: IFCreatePlayer) => new Player(obj.name as string, obj.color),
       );
       let firstPlayer = players[0];
-      for (let i = 0; i < gameReq.players.length; i += 1) {
-        if (gameReq.players[i].first === true) {
+      for (let i = 0; i < createGameForm.players.length; i += 1) {
+        if (createGameForm.players[i].first === true) {
           firstPlayer = players[i];
           break;
         }
       }
-      const gameOptions = new GameOptions(gameReq);
 
-      const game = new Game(gameId, players, firstPlayer, gameOptions);
+      const game = new Game(gameId, players, firstPlayer, createGameForm);
       allGames.set(gameId, game);
       game.getPlayers().forEach((player) => {
         allPlayers.set(player.id, player);
         player.setCurrentGame(game.id);
       });
       res.setHeader("Content-Type", "application/json");
-      res.write(game.toStringfy());
+      res.write(game.infoStringify());
     } catch (err) {
       console.warn("error creating game", err);
       res.writeHead(500);
@@ -245,12 +245,13 @@ function requestHandler(
     if (req.url.startsWith("/api/server?id=")) {
       notFound(req, res);
     } else if (req.url === "/"
+        || req.url.startsWith("/new_game")
         || req.url.startsWith("/game?id=")
         || req.url.startsWith("/player?id=")) {
       serveApp(res);
     } else if (req.url.startsWith("/api/player_state?id=")) {
       apiGetPlayerState(req, res);
-    } else if (req.url.startsWith("/api/waitingfor?id=")) {
+    } else if (req.url.startsWith("/api/waiting_for?id=")) {
       apiGetWaitingFor(req, res);
     } else if (req.url.startsWith("/api/game?id=")) {
       apiGetGame(req, res);

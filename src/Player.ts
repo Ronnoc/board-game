@@ -3,6 +3,8 @@ import { generateRandomId } from "./utils";
 import { Color } from "./enums/Color";
 import { Game } from "./Game";
 import { PlayerInput } from "./inputs/PlayerInput";
+import { IFPlayerGameState } from "./inferface/IFPlayerGameState";
+import { IFPlayerInfo } from "./inferface/IFPlayerInfo";
 
 export class Player implements ILoadable<SerializedPlayer, Player> {
   public id="";
@@ -34,12 +36,19 @@ export class Player implements ILoadable<SerializedPlayer, Player> {
     return this.waitingFor;
   }
 
-  public stateToStringfy(game:Game):string {
-    const rtn = {
+  public getInfo():IFPlayerInfo {
+    return {
       id: this.id,
       name: this.name,
-      color: this.color,
-    };
-    return JSON.stringify(rtn);
+    } as IFPlayerInfo;
+  }
+
+  public stateStringify(game:Game):string {
+    return JSON.stringify(
+      {
+        id: this.id,
+        gameid: game.id,
+      } as IFPlayerGameState,
+    );
   }
 }
