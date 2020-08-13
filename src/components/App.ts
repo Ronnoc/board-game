@@ -3,8 +3,8 @@ import { StartScreen } from "./StartScreen";
 import { PlayerHome } from "./PlayerHome";
 import { CreateGameForm } from "./CreateGameForm";
 import { GameHome } from "./GameHome";
-import { IFGameInfo } from "../inferface/IFGameInfo";
-import { IFPlayerGameState } from "../inferface/IFPlayerGameState";
+import { IFGameInfo } from "../interface/IFGameInfo";
+import { IFPlayerGameState } from "../interface/IFPlayerGameState";
 
 export const vm = new Vue({
   el: "#app",
@@ -18,6 +18,37 @@ export const vm = new Vue({
     "vm-player-home": PlayerHome,
     "vm-game-home": GameHome,
     "vm-create-game-form": CreateGameForm,
+  },
+  methods: {
+    updatePlayer() {
+      const currentPathname: string = window.location.pathname;
+      const xhr = new XMLHttpRequest();
+      const app = (this as any);
+      xhr.open("GET", `/api/player${window.location.search.replace("&noredirect", "")}`);
+      xhr.onerror = function () {
+        alert("Error getting game data");
+      };
+      xhr.onload = () => {
+        if (xhr.status === 200) {
+          app.player = xhr.response;
+          if (app.player.phase === "end" && window.location.search.indexOf("&noredirect") === -1) {
+            app.screen = "the-end";
+            if (currentPathname !== "/the-end") {
+              window.history.replaceState(xhr.response, "Teraforming Mars - Player", `/the-end?id=${xhr.response.id}`);
+            }
+          } else {
+            app.screen = "player-home";
+            if (currentPathname !== "/player") {
+              window.history.replaceState(xhr.response, "Teraforming Mars - Game", `/player?id=${xhr.response.id}`);
+            }
+          }
+        } else {
+          alert("Unexpected server response");
+        }
+      };
+      xhr.responseType = "json";
+      xhr.send();
+    },
   },
   mounted(): void {
     const currentPathname: string = window.location.pathname;
@@ -36,7 +67,7 @@ export const vm = new Vue({
           window.history.replaceState(
             xhr.response,
             "Arkham Horror LCG - Game",
-            `/game?id=${xhr.response.id}`
+            `/game?id=${xhr.response.id}`,
           );
           this.game = xhr.response as IFGameInfo;
         } else {
@@ -49,7 +80,7 @@ export const vm = new Vue({
       const xhr = new XMLHttpRequest();
       xhr.open(
         "GET",
-        `/api/player_state${window.location.search.replace("&noredirect", "")}`
+        `/api/player_state${window.location.search.replace("&noredirect", "")}`,
       );
       xhr.onerror = () => {
         alert("Error getting game data");
@@ -62,7 +93,7 @@ export const vm = new Vue({
             window.history.replaceState(
               xhr.response,
               "Arkham Horror LCG - Game",
-              `/player?id=${xhr.response.id}`
+              `/player?id=${xhr.response.id}`,
             );
           }
         } else {

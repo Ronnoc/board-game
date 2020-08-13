@@ -1,9 +1,15 @@
 import { IActCard } from "./IActCard";
 import { IAgendaCard } from "./IAgendaCard";
+import { IFCard } from "./IFCard";
 
-export interface IScenario {
-  name: string;
-  acts: Array<IActCard>;
-  agendas: Array<IAgendaCard>;
-  arkhamdbid?: number;
+export class IScenario implements IFCard {
+  mName = "IScenario"
+
+  html(): string {
+    return this.mName;
+  }
+
+  mActs?: Array<IActCard> | undefined
+
+  mAgendas: Array<IAgendaCard> | undefined
 }

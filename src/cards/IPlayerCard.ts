@@ -4,16 +4,30 @@ import { CardTrait } from "../enums/CardTrait";
 import { SkillIcon } from "../enums/SkillIcon";
 import { Game } from "../Game";
 import { Player } from "../Player";
+import { IFCard } from "./IFCard";
 
-export interface IPlayerCard {
-  name: string;
-  cost: number;
-  XP: number;
-  faction: CardFaction;
-  type: CardType;
-  traits: Array<CardTrait>;
-  testIcons: Array<SkillIcon>;
-  text: string;
-  canPlay?: (player: Player, game: Game, bonusMc?: number) => boolean;
-  arkhamdbid?: number;
+export class IPlayerCard implements IFCard {
+  mName = "IPlayerCard"
+
+  html(): string {
+    return this.mName;
+  }
+
+  mCost?: number;
+
+  mXP?: number;
+
+  mFaction = CardFaction.UNKNOWN;
+
+  mType = CardType.UNKNOWN;
+
+  mTraits?: Array<CardTrait>;
+
+  mTestIcons?: Array<SkillIcon>;
+
+  mText = "IPlayerCard.text";
+
+  canPlay(player: Player, game: Game): boolean {
+    throw new Error(`${this.mName} canPlay NotImplemented`);
+  }
 }

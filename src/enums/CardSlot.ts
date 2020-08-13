@@ -1,1 +1,3 @@
-export enum CardSlot {}
+export enum CardSlot {
+  UNKNOWN,
+}

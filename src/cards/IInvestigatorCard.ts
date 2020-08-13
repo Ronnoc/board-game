@@ -1,16 +1,30 @@
 import { CardFaction } from "../enums/CardFaction";
 import { Game } from "../Game";
 import { Player } from "../Player";
+import { IFCard } from "./IFCard";
 
-export interface IInvestigatorCard {
-  name: string;
-  faction: CardFaction;
-  willpower: number;
-  intellect: number;
-  combat: number;
-  agility: number;
-  health: number;
-  sanity: number;
-  elderSign: (game: Game, player: Player) => number;
-  arkhamdbid?: number;
+export class IInvestigatorCard implements IFCard {
+  mName = "ILocationCard"
+
+  html(): string {
+    return this.mName;
+  }
+
+  mFaction = CardFaction.UNKNOWN;
+
+  mWillpower: number | undefined;
+
+  mIntellect: number | undefined;
+
+  mCombat: number | undefined;
+
+  mAgility: number | undefined;
+
+  mHealth: number | undefined;
+
+  mSanity: number | undefined;
+
+  elderSign(game: Game, player: Player): number {
+    throw new Error(`${this.mName} turnOver NotImplemented`);
+  }
 }

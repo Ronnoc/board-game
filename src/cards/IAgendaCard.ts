@@ -1,12 +1,27 @@
 import { Game } from "../Game";
+import { IFCard } from "./IFCard";
 
-export interface IAgendaCard {
-  name: string;
-  stage: number;
-  dooms: number;
-  checkTurnOver?: (game: Game) => boolean;
-  turnOver: (game: Game) => void;
-  frontText: string;
-  backText: string;
-  arkhamdbid?: number;
+export class IAgendaCard implements IFCard {
+  mName = "IAgendaCard"
+
+  html(): string {
+    return this.mName;
+  }
+
+  mStage: number | undefined;
+
+  mDooms: number | undefined;
+
+  checkTurnOver(game: Game): boolean {
+    throw new Error(`${this.mName} checkTurnOver NotImplemented`);
+    return false;
+  }
+
+  turnOver(game: Game): void {
+    throw new Error(`${this.mName} turnOver NotImplemented`);
+  }
+
+  frontText = "";
+
+  backText = "";
 }

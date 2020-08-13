@@ -3,24 +3,24 @@ import { CardFaction } from "../../../enums/CardFaction";
 import { Game } from "../../../Game";
 import { Player } from "../../../Player";
 
-export class RolandBanks implements IInvestigatorCard {
-  name = "Roland Banks";
+export class RolandBanks extends IInvestigatorCard {
+  mName = "Roland Banks";
 
-  faction = CardFaction.GUARDIAN;
+  mFaction = CardFaction.GUARDIAN;
 
-  willpower = 3;
+  mwillpower = 3;
 
-  intellect = 3;
+  mIntellect = 3;
 
-  combat = 4;
+  mCombat = 4;
 
-  agility = 2;
+  mAgility = 2;
 
-  sanity = 5;
+  mSanity = 5;
 
-  health = 9;
+  mHealth = 9;
 
   elderSign(game: Game, player: Player): number {
-    return this.agility;
+    return this.mAgility;
   }
 }

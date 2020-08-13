@@ -2,20 +2,25 @@ import { ILoadable, SerializedGame } from "./Serialized";
 import { Database } from "./database/Database";
 import { Player } from "./Player";
 import { Phase } from "./enums/Phase";
-import { IFCreateGameForm } from "./inferface/IFCreateGameForm";
-import { IFGameInfo } from "./inferface/IFGameInfo";
+import { IFCreateGameForm } from "./interface/IFCreateGameForm";
+import { IFGameInfo } from "./interface/IFGameInfo";
+import { PlayerInterrupt } from "./interrupts/PlayerInterrupt";
 
 export class Game implements ILoadable<SerializedGame, Game> {
   public activePlayer = "";
+
   public phase = Phase.START;
+
+  public interrupts: Array<PlayerInterrupt> = [];
 
   constructor(
     public id: string,
     private players: Array<Player>,
     private first: Player,
-    createGameForm: IFCreateGameForm
+    createGameForm: IFCreateGameForm,
   ) {
     Database.getInstance();
+    this.id = id;
   }
 
   public loadFromJSON(d: SerializedGame): Game {

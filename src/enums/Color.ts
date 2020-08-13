@@ -1,4 +1,5 @@
 export enum Color {
+  UNKNOWN = "unknown",
   BLUE = "blue",
   RED = "red",
   YELLOW = "yellow",

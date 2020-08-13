@@ -4,21 +4,21 @@ import { CardType } from "../../../enums/CardType";
 import { CardTrait } from "../../../enums/CardTrait";
 import { SkillIcon } from "../../../enums/SkillIcon";
 
-export class Rolands38Special implements IPlayerCard {
-  name = "Rolands38Special";
+export class Rolands38Special extends IPlayerCard {
+  mName = "Rolands38Special";
 
-  cost = 3;
+  mCost = 3;
 
-  XP = 0;
+  mXP = 0;
 
-  faction = CardFaction.GUARDIAN;
+  mFaction = CardFaction.GUARDIAN;
 
-  type = CardType.ASSET;
+  mType = CardType.ASSET;
 
-  traits = [CardTrait.ITEM, CardTrait.WEAPON, CardTrait.FIREARM];
+  mTraits = [CardTrait.ITEM, CardTrait.WEAPON, CardTrait.FIREARM];
 
-  testIcons = [SkillIcon.COMBAT, SkillIcon.AGILITY, SkillIcon.WILD];
+  mTestIcons = [SkillIcon.COMBAT, SkillIcon.AGILITY, SkillIcon.WILD];
 
-  text =
+  mText =
     "Roland Banks deck only.\nUses(4 ammo).\nSpend 1 ammo: Fight.You get +1 COMBAT for this attack(if there are 1 or more clues on your location, you get + 3 COMBAT, instead).This attack deals + 1 damage.";
 }

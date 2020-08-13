@@ -1,4 +1,5 @@
 export enum PlayerInputTypes {
+  UNKNOWN,
   AND_OPTIONS,
   OR_OPTIONS,
   SELECT_CARD,

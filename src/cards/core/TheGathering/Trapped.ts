@@ -1,7 +1,7 @@
 import { IAgendaCard } from "../../IAgendaCard";
 import { Game } from "../../../Game";
 
-export class Trapped implements IAgendaCard {
+export class Trapped extends IAgendaCard {
   name = "Trapped";
 
   stage = 1;

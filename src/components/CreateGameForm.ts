@@ -1,8 +1,8 @@
 import { Vue, Component } from "vue-property-decorator";
-import { IFCreateGameForm } from "../inferface/IFCreateGameForm";
+import { IFCreateGameForm } from "../interface/IFCreateGameForm";
 import { DifficultyLevel } from "../enums/DifficultyLevel";
-import { IFCreatePlayer } from "../inferface/IFCreatePlayer";
-import { IFGameInfo } from "../inferface/IFGameInfo";
+import { IFCreatePlayer } from "../interface/IFCreatePlayer";
+import { IFGameInfo } from "../interface/IFGameInfo";
 import { Color } from "../enums/Color";
 
 @Component({

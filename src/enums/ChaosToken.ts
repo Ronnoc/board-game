@@ -1,4 +1,5 @@
 export enum ChaosToken {
+  UNKNOWN,
   PLUS_ONE,
   ZERO,
   MINUS_ONE,

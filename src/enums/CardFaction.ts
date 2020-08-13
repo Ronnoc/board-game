@@ -1,4 +1,5 @@
 export enum CardFaction {
+  UNKNOWN,
   GUARDIAN,
   MYSTIC,
   MYTHOS,

@@ -2,10 +2,10 @@ import { IScenario } from "../../IScenario";
 import { WhatsGoingOn } from "./WhatsGoingOn";
 import { Trapped } from "./Trapped";
 
-export class TheGathering implements IScenario {
+export class TheGathering extends IScenario {
   name = "The Gathering";
 
-  acts = [new WhatsGoingOn()];
+  mActs = [new WhatsGoingOn()];
 
-  agendas = [new Trapped()];
+  mAgendas = [new Trapped()];
 }
