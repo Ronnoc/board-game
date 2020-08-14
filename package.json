@@ -4,8 +4,9 @@
   "description": "Arkham Horror LCG",
   "author": "ybkang",
   "scripts": {
-    "build": "eslint --fix src/**/*.ts && lessc src/styles/common.less styles.css && tsc --build tsconfig.json && webpack --config webpack.config.js",
-    "start": "npm run build && node dist/server.js"
+    "prepare": "eslint --fix src/**/*.ts && lessc src/styles/common.less styles.css && tsc --build tsconfig.json",
+    "debug": "npm run prepare && webpack --config webpack.config.js && node dist/server.js",
+    "start": "npm run prepare && webpack -p --config webpack.config.js && node dist/server.js"
   },
   "main": "index.js",
   "dependencies": {
