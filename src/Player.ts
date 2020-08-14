@@ -111,7 +111,7 @@ export class Player implements ILoadable<SerializedPlayer, Player> {
       id: this.id,
       gameid: game.id,
       waitingfor: this.waitingFor,
-      gameLog: game.gameLog.reverse(),
+      gameLog: game.gameLog,
       players: game.getPlayers(),
     } as IFPlayerGameState);
   }

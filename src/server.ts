@@ -34,6 +34,9 @@ function serveAsset(req: http.IncomingMessage, res: http.ServerResponse): void {
   if (req.url === "/main.js") {
     res.setHeader("Content-Type", "text/javascript");
     res.write(fs.readFileSync("dist/main.js"));
+  } else if (req.url === "/styles.css") {
+    res.setHeader("Content-Type", "text/css");
+    res.write(fs.readFileSync("styles.css"));
   } else {
     console.log(`unknown req${req.url}`);
   }
@@ -256,7 +259,7 @@ function requestHandler(
       apiGetWaitingFor(req, res);
     } else if (req.url.startsWith("/api/game?id=")) {
       apiGetGame(req, res);
-    } else if (req.url.startsWith("/assets/") || req.url === "/main.js") {
+    } else if (req.url.startsWith("/assets/") || req.url === "/main.js" || req.url === "/styles.css") {
       serveAsset(req, res);
     } else {
       notFound(req, res);

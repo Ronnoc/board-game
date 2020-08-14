@@ -15,14 +15,14 @@ export const PlayerHome = Vue.component("player-home", {
         <div>
             <h1>Arkham Horror LCG Player Home</h1>
             <vm-board></vm-board>
-            <vm-waiting-for
-              :player="player"
-              :waitingfor="player.waitingfor"
-            ></vm-waiting-for>
             <vm-log-panel 
               :messages="player.gameLog" 
               :players="player.players">
             </vm-log-panel>
+            <vm-waiting-for
+              :player="player"
+              :waitingfor="player.waitingfor"
+            ></vm-waiting-for>
         </div>
     `,
 });

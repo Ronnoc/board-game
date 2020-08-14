@@ -18,10 +18,11 @@ export class Game implements ILoadable<SerializedGame, Game> {
 
   gameLog: Array<LogMessage> = [];
 
-  private count = 3;
+  private count = 1;
 
   private getDebugOption(): OrOptions {
     this.count += 1;
+    this.count = Math.min(this.count, 5);
     const debugOptions = new OrOptions();
     for (let i = 0; i < this.count; i += 1) {
       debugOptions.options.push(
@@ -30,6 +31,7 @@ export class Game implements ILoadable<SerializedGame, Game> {
             `\${0} select ${String(i)}`,
             new LogMessageData(LogMessageDataType.PLAYER, this.first.id),
           );
+          console.log(`choice ${i}`);
           return undefined;
         }),
       );
@@ -39,7 +41,6 @@ export class Game implements ILoadable<SerializedGame, Game> {
 
   private getDebugWaitingFor(): () => void {
     return () => {
-      console.log(`setWaitingFor debugOptions callback done ${this.count}`);
       this.first.setWaitingFor(this.getDebugOption(), this.getDebugWaitingFor());
     };
   }

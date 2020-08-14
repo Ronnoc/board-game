@@ -9,9 +9,9 @@ export const LogPanel = Vue.component("log-panel", {
   },
   methods: {
     scrollToEnd() {
-      const scrollablePanel = document.getElementById("logpanel-scrollable");
-      if (scrollablePanel !== null) {
-        scrollablePanel.scrollTop = scrollablePanel.scrollHeight;
+      const container = this.$el.querySelector("#logpanel-scrollable");
+      if (container !== null) {
+        container.scrollTop = container.scrollHeight;
       }
     },
     parseData(data: LogMessageData) {
@@ -28,18 +28,18 @@ export const LogPanel = Vue.component("log-panel", {
       return "";
     },
   },
-  mounted() {
-    this.$nextTick(this.scrollToEnd);
+  watch: {
+    messages(): void {
+      this.scrollToEnd();
+    },
   },
   template: `
     <div>
-        <div class="panel log-panel">
-            <div id="logpanel-scrollable" class="panel-body">
-                <ul v-if="messages">
-                    <li v-for="message in messages" v-html="parseMessage(message)"></li>
-                </ul>
-            </div>
-        </div>
+      <div id="logpanel-scrollable" class="log-panel">
+          <ul v-if="messages">
+              <li v-for="message in messages" v-html="parseMessage(message)"></li>
+          </ul>
+      </div>
     </div>
     `,
 });
