@@ -10,6 +10,8 @@ import { SelectOption } from "./inputs/SelectOption";
 import { LogMessageData } from "./LogMessageData";
 import { LogMessage } from "./LogMessage";
 import { LogMessageDataType } from "./enums/LogMessageDataType";
+import { ILocationCard } from "./cards/ILocationCard";
+import { Study } from "./cards/core/TheGathering/Study";
 
 export class Game implements ILoadable<SerializedGame, Game> {
   phase = Phase.START;
@@ -17,6 +19,8 @@ export class Game implements ILoadable<SerializedGame, Game> {
   interrupts: Array<PlayerInterrupt> = [];
 
   gameLog: Array<LogMessage> = [];
+
+  locations: Array<ILocationCard> = [new Study()];
 
   private count = 1;
 
@@ -31,6 +35,9 @@ export class Game implements ILoadable<SerializedGame, Game> {
             `\${0} select ${String(i)}`,
             new LogMessageData(LogMessageDataType.PLAYER, this.first.id),
           );
+          if (!this.locations[0].isFront) {
+            this.locations[0].turnOver(this);
+          }
           console.log(`choice ${i}`);
           return undefined;
         }),
@@ -47,8 +54,8 @@ export class Game implements ILoadable<SerializedGame, Game> {
 
   constructor(
     public id: string,
-    private players: Array<Player>,
-    private first: Player,
+    public players: Array<Player>,
+    public first: Player,
     createGameForm: IFCreateGameForm,
   ) {
     Database.getInstance();
@@ -73,10 +80,6 @@ export class Game implements ILoadable<SerializedGame, Game> {
   public loadFromJSON(d: SerializedGame): Game {
     console.log(this.first.id); // debug
     return Object.assign(this, d);
-  }
-
-  public getPlayers(): Array<Player> {
-    return this.players;
   }
 
   public getPlayerById(id: string): Player {

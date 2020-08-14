@@ -4,10 +4,10 @@ import { Player } from "../Player";
 import { IFCard } from "./IFCard";
 
 export class IInvestigatorCard implements IFCard {
-  mName = "ILocationCard"
+  mName = "IInvestigatorCard"
 
-  html(): string {
-    return this.mName;
+  html(card: IInvestigatorCard): string {
+    return card.mName;
   }
 
   mFaction = CardFaction.UNKNOWN;

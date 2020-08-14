@@ -29,6 +29,8 @@ export class Player implements ILoadable<SerializedPlayer, Player> {
   private waitingForCb?: () => void;
 
   constructor(public name: string, public color: Color) {
+    this.name = name;
+    this.color = color;
     this.id = generateRandomId();
   }
 
@@ -112,7 +114,8 @@ export class Player implements ILoadable<SerializedPlayer, Player> {
       gameid: game.id,
       waitingfor: this.waitingFor,
       gameLog: game.gameLog,
-      players: game.getPlayers(),
+      players: game.players,
+      locations: game.locations,
     } as IFPlayerGameState);
   }
 }

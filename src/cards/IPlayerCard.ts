@@ -9,10 +9,6 @@ import { IFCard } from "./IFCard";
 export class IPlayerCard implements IFCard {
   mName = "IPlayerCard"
 
-  html(): string {
-    return this.mName;
-  }
-
   mCost?: number;
 
   mXP?: number;

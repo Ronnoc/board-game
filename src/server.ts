@@ -234,7 +234,7 @@ function createGame(req: http.IncomingMessage, res: http.ServerResponse): void {
 
       const game = new Game(gameId, players, firstPlayer, createGameForm);
       allGames.set(gameId, game);
-      game.getPlayers().forEach((player) => {
+      game.players.forEach((player) => {
         allPlayers.set(player.id, player);
         player.setCurrentGame(game.id);
       });

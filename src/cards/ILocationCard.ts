@@ -4,10 +4,6 @@ import { IFCard } from "./IFCard";
 export class ILocationCard implements IFCard {
   mName = "ILocationCard"
 
-  html(): string {
-    return this.mName;
-  }
-
   mShroud: number | undefined;
 
   mClues: number | undefined;
@@ -18,12 +14,26 @@ export class ILocationCard implements IFCard {
 
   mBackText = "";
 
+  resource: number | undefined;
+
+  resourceName: string | undefined;
+
+  isFront = false;
+
   checkTurnOver(game: Game): boolean {
     throw new Error(`${this.mName} checkTurnOver NotImplemented`);
     return false;
   }
 
+  protected doTurnOver(game: Game): void {
+    throw new Error(`${this.mName} _TurnOver NotImplemented`);
+  }
+
   turnOver(game: Game): void {
-    throw new Error(`${this.mName} turnOver NotImplemented`);
+    if (this.isFront) {
+      console.error("is turned over!");
+    }
+    this.isFront = true;
+    this.doTurnOver(game);
   }
 }

@@ -5,9 +5,7 @@ import { IFCard } from "./IFCard";
 export class ITreacheryCard implements IFCard {
   mName = "ITreacheryCard"
 
-  html(): string {
-    return this.mName;
-  }
+  mText = "ITreacheryCard.text";
 
   effect(game: Game, player: Player): void {
     throw new Error(`${this.mName} effect NotImplemented`);
