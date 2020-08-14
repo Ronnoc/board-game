@@ -31,12 +31,39 @@ function serveApp(res: http.ServerResponse): void {
 
 function serveAsset(req: http.IncomingMessage, res: http.ServerResponse): void {
   if (req.url === undefined) throw new Error("Empty url");
+  let isGzip = false;
+  const ae = req.headers["accept-encoding"];
+  if (ae !== undefined) {
+    let aev: string[];
+    if (typeof ae === "string") {
+      aev = ae.replace(" ", "").split(",");
+    } else {
+      aev = ae;
+    }
+    aev.forEach((e) => {
+      if (e === "gzip") {
+        isGzip = true;
+      }
+    });
+  }
+
+  let filepath = "";
   if (req.url === "/main.js") {
+    filepath = "dist/main.js";
+  } else if (req.url === "/styles.css") {
+    filepath = "dist/styles.css";
+  }
+
+  if (isGzip && filepath !== "" && fs.existsSync(`${filepath}.gz`)) {
+    console.log(`serveAsset gzip ${filepath}`);
+    res.setHeader("Content-Encoding", "gzip");
+    res.write(fs.readFileSync(`${filepath}.gz`));
+  } else if (req.url === "/main.js") {
     res.setHeader("Content-Type", "text/javascript");
-    res.write(fs.readFileSync("dist/main.js"));
+    res.write(fs.readFileSync(filepath));
   } else if (req.url === "/styles.css") {
     res.setHeader("Content-Type", "text/css");
-    res.write(fs.readFileSync("styles.css"));
+    res.write(fs.readFileSync(filepath));
   } else {
     console.log(`unknown req${req.url}`);
   }
@@ -259,7 +286,11 @@ function requestHandler(
       apiGetWaitingFor(req, res);
     } else if (req.url.startsWith("/api/game?id=")) {
       apiGetGame(req, res);
-    } else if (req.url.startsWith("/assets/") || req.url === "/main.js" || req.url === "/styles.css") {
+    } else if (
+      req.url.startsWith("/assets/")
+      || req.url === "/main.js"
+      || req.url === "/styles.css"
+    ) {
       serveAsset(req, res);
     } else {
       notFound(req, res);
