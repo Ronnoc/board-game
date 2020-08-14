@@ -16,7 +16,8 @@ export const WaitingFor = Vue.component("waiting-for", {
       clearTimeout(uiUpdateTimeout);
       const askForUpdate = () => {
         const xhr = new XMLHttpRequest();
-        xhr.open("GET", `/api/waitingfor${window.location.search}&prev-game-age=${this.player.gameAge.toString()}`);
+        const root = (this).$root as any;
+        xhr.open("GET", `/api/waiting_for${window.location.search}`);
         xhr.onerror = function () {
           alert("Error getting waitingfor data");
         };
@@ -24,37 +25,37 @@ export const WaitingFor = Vue.component("waiting-for", {
           if (xhr.status === 200) {
             const result = xhr.response;
             if (result.result === "GO") {
-              (this).$root.updatePlayer();
+              root.updatePlayer();
 
-              if (Notification.permission !== "granted") {
-                Notification.requestPermission();
-              }
-              if (Notification.permission === "granted") {
-                const notify = new Notification(
-                  "Terraforming Mars Online",
-                  {
-                    icon: "/favicon.ico",
-                    body: "It's your turn!",
-                  },
-                );
-                notify.close();
-              }
+              // if (Notification.permission !== "granted") {
+              //   Notification.requestPermission();
+              // }
+              // if (Notification.permission === "granted") {
+              //   const notify = new Notification(
+              //     "Terraforming Mars Online",
+              //     {
+              //       icon: "/favicon.ico",
+              //       body: "It's your turn!",
+              //     },
+              //   );
+              //   notify.close();
+              // }
               // We don't need to wait anymore - it's our turn
               return;
             } if (result.result === "REFRESH") {
               // Something changed, let's refresh UI
-              (this).$root.updatePlayer();
+              root.updatePlayer();
               return;
             }
             (this).waitForUpdate();
           } else {
-            alert("Unexpected server response");
+            alert(`@WaitingFor.waitForUpdate Unexpected server response status=${xhr.status}`);
           }
         };
         xhr.responseType = "json";
         xhr.send();
       };
-      uiUpdateTimeout = setTimeout(askForUpdate, 5000) as any;
+      uiUpdateTimeout = setTimeout(askForUpdate, 2000) as any;
     },
   },
   render(createElement) {
@@ -65,14 +66,13 @@ export const WaitingFor = Vue.component("waiting-for", {
     const input = new PlayerInputFactory().getPlayerInput(
       createElement, this.players, this.player, this.waitingfor, (out: Array<Array<string>>) => {
         const xhr = new XMLHttpRequest();
-        xhr.open("POST", `/player/input?id=${(this.$parent as any).player.id}`);
+        xhr.open("POST", `/api/player_input?id=${(this.$parent as any).player.id}`);
         xhr.responseType = "json";
         xhr.onload = () => {
           if (xhr.status === 200) {
             const root = (this.$root as any);
-            root.screen = "empty";
             root.player = xhr.response;
-            root.screen = "player-home";
+            root.screen = "vm-player-home";
             if (root.player.phase === "end" && window.location.pathname !== "/the-end") {
               (window as any).location = (window as any).location;
             }
@@ -90,6 +90,9 @@ export const WaitingFor = Vue.component("waiting-for", {
           } else {
             alert("Error sending input");
           }
+        };
+        xhr.onerror = function () {
+          console.log("Error sending waitingfor input data");
         };
         xhr.send(JSON.stringify(out));
       }, true, true,

@@ -17,9 +17,7 @@ function notFound(
   res: http.ServerResponse,
   errorInfo = "",
 ): void {
-  if (!process.argv.includes("hide-not-found-warnings")) {
-    console.warn("Not found", req.method, req.url);
-  }
+  console.warn("Not found", req.method, req.url, errorInfo);
   res.writeHead(404);
   res.write(`Not found ${errorInfo}`);
   res.end();
@@ -47,18 +45,18 @@ function processInput(
   res: http.ServerResponse,
 ): void {
   if (req.url === undefined) {
-    notFound(req, res);
+    notFound(req, res, "req.url === undefined");
     return;
   }
   const playerId: string = req.url.substring("/api/player_input?id=".length);
   const player = allPlayers.get(playerId);
   if (player === undefined) {
-    notFound(req, res);
+    notFound(req, res, "processInput::player === undefined");
     return;
   }
   const game = allGames.get(player.currentGame);
   if (game === undefined) {
-    notFound(req, res);
+    notFound(req, res, "processInput::game === undefined");
     return;
   }
   let body = "";
@@ -91,22 +89,19 @@ function apiGetGame(req: http.IncomingMessage, res: http.ServerResponse): void {
   const routeRegExp = /^\/api\/game\?id=([0-9abcdef]+)$/i;
 
   if (req.url === undefined) {
-    console.warn("url not defined");
-    notFound(req, res);
+    notFound(req, res, "apiGetGame::url not defined");
     return;
   }
 
   if (!routeRegExp.test(req.url)) {
-    console.warn("no match with regexp");
-    notFound(req, res);
+    notFound(req, res, "apiGetGame::no match with regexp");
     return;
   }
 
   const matches = req.url.match(routeRegExp);
 
   if (matches === null || matches[1] === undefined) {
-    console.warn("didn't find game id");
-    notFound(req, res);
+    notFound(req, res, "apiGetGame::didn't find game id");
     return;
   }
 
@@ -115,8 +110,7 @@ function apiGetGame(req: http.IncomingMessage, res: http.ServerResponse): void {
   const game = allGames.get(gameId);
 
   if (game === undefined) {
-    console.warn("game is undefined");
-    notFound(req, res);
+    notFound(req, res, "apiGetGame::game is undefined");
     return;
   }
 
@@ -130,28 +124,27 @@ function apiGetWaitingFor(
   res: http.ServerResponse,
 ): void {
   if (req.url === undefined) {
-    console.warn("url not defined");
-    notFound(req, res);
+    notFound(req, res, "apiGetWaitingFor::url not defined");
     return;
   }
-  const qs: string = req.url.substring("/api/waitingfor?".length);
+  const qs: string = req.url.substring("/api/waiting_for?".length);
   const queryParams = querystring.parse(qs);
   const playerId = (queryParams as Record<string, string>).id;
   const player = allPlayers.get(playerId);
   if (player === undefined) {
-    notFound(req, res);
+    notFound(req, res, `apiGetWaitingFor::player is undefined with id = ${playerId}`);
     return;
   }
   const game = allGames.get(player.currentGame);
   if (game === undefined) {
-    notFound(req, res);
+    notFound(req, res, "apiGetWaitingFor::game is undefined");
     return;
   }
 
   res.setHeader("Content-Type", "application/json");
   const answer = {
     result: "WAIT",
-    player: game.getPlayerById(game.activePlayer).name,
+    player: player.name,
   };
   if (player.getWaitingFor() !== undefined || game.phase === Phase.END) {
     answer.result = "GO";
@@ -174,14 +167,12 @@ function apiGetPlayerState(
   const playerId: string = req.url.substring("/api/player_state?id=".length);
   const player = allPlayers.get(playerId);
   if (player === undefined) {
-    console.log("player === undefined");
-    notFound(req, res);
+    notFound(req, res, "apiGetPlayerState::player === undefined");
     return;
   }
   const game = allGames.get(player.currentGame);
   if (game === undefined) {
-    console.log("game === undefined");
-    notFound(req, res);
+    notFound(req, res, "apiGetPlayerState::game === undefined");
     return;
   }
 

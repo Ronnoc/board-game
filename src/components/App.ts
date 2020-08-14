@@ -11,7 +11,7 @@ export const vm = new Vue({
   data: {
     screen: "empty",
     game: {} as IFGameInfo,
-    player_state: {} as IFPlayerGameState,
+    player: {} as IFPlayerGameState,
   },
   components: {
     "vm-start-screen": StartScreen,
@@ -24,7 +24,7 @@ export const vm = new Vue({
       const currentPathname: string = window.location.pathname;
       const xhr = new XMLHttpRequest();
       const app = (this as any);
-      xhr.open("GET", `/api/player${window.location.search.replace("&noredirect", "")}`);
+      xhr.open("GET", `/api/player_state${window.location.search.replace("&noredirect", "")}`);
       xhr.onerror = function () {
         alert("Error getting game data");
       };
@@ -32,12 +32,12 @@ export const vm = new Vue({
         if (xhr.status === 200) {
           app.player = xhr.response;
           if (app.player.phase === "end" && window.location.search.indexOf("&noredirect") === -1) {
-            app.screen = "the-end";
+            app.screen = "vm-the-end";
             if (currentPathname !== "/the-end") {
               window.history.replaceState(xhr.response, "Teraforming Mars - Player", `/the-end?id=${xhr.response.id}`);
             }
           } else {
-            app.screen = "player-home";
+            app.screen = "vm-player-home";
             if (currentPathname !== "/player") {
               window.history.replaceState(xhr.response, "Teraforming Mars - Game", `/player?id=${xhr.response.id}`);
             }
@@ -87,7 +87,7 @@ export const vm = new Vue({
       };
       xhr.onload = () => {
         if (xhr.status === 200) {
-          this.player_state = xhr.response as IFPlayerGameState;
+          this.player = xhr.response as IFPlayerGameState;
           this.screen = "vm-player-home";
           if (currentPathname !== "/player") {
             window.history.replaceState(

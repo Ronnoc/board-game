@@ -1,21 +1,16 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
-
-<head>
+  <head>
     <title>Arkham Horror LCG</title>
-</head>
+  </head>
 
-<body>
+  <body>
     <div id="app">
-        <vm-create-game-form 
-            v-if="screen === 'vm-create-game-form'"></vm-create-game-form>
-        <vm-start-screen 
-            v-if="screen === 'vm-start-screen'"></vm-start-screen>
-        <vm-game-home :game="game"
-            v-if="screen === 'vm-game-home'"></vm-game-home>
-        <vm-player-home :player_state="player_state"
-            v-if="screen === 'vm-player-home'"></vm-player-home>
+      <vm-create-game-form v-if="screen === 'vm-create-game-form'"></vm-create-game-form>
+      <vm-start-screen v-if="screen === 'vm-start-screen'"></vm-start-screen>
+      <vm-game-home :game="game" v-if="screen === 'vm-game-home'"></vm-game-home>
+      <vm-player-home :player="player" v-if="screen === 'vm-player-home'"></vm-player-home>
     </div>
-</body>
-<script src="/main.js"></script>
+  </body>
+  <script src="/main.js"></script>
 </html>

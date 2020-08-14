@@ -8,6 +8,8 @@ import { IFPlayerInfo } from "./interface/IFPlayerInfo";
 import { RolandBanks } from "./cards/core/investigators/RolandBanks";
 import { debugDecks } from "./DeckDealer";
 import { IPlayerCard } from "./cards/IPlayerCard";
+import { SelectOption } from "./inputs/SelectOption";
+import { OrOptions } from "./inputs/OrOptions";
 
 export class Player implements ILoadable<SerializedPlayer, Player> {
   public id = "";
@@ -65,18 +67,37 @@ export class Player implements ILoadable<SerializedPlayer, Player> {
     this.waitingForCb = cb;
   }
 
+  private runInputCb(game: Game, result: PlayerInput | undefined): void {
+    if (result !== undefined) {
+      game.interrupts.push({
+        player: this,
+        playerInput: result,
+      });
+    }
+  }
+
   private runInput(
     game: Game,
     input: Array<Array<string>>,
     pi: PlayerInput,
   ): void {
-    console.log(typeof this);
-    throw new Error("Unsupported waitingFor");
+    if (pi instanceof SelectOption) {
+      this.runInputCb(game, pi.cb());
+    } else if (pi instanceof OrOptions) {
+      const waiting: OrOptions = pi;
+      const optionIndex = parseInt(input[0][0], 10);
+      const remainingInput = input[0].slice();
+      // Remove option index to process option
+      remainingInput.shift();
+      this.runInput(game, [remainingInput], waiting.options[optionIndex]);
+    } else {
+      throw new Error("Unsupported waitingFor");
+    }
   }
 
-  private hasInterrupt(game: Game): boolean {
-    return game.interrupts.find((interrupt) => interrupt.player === this) !== undefined;
-  }
+  // private hasInterrupt(game: Game): boolean {
+  //   return game.interrupts.find((interrupt) => interrupt.player === this) !== undefined;
+  // }
 
   public getInfo(): IFPlayerInfo {
     return {
@@ -89,6 +110,9 @@ export class Player implements ILoadable<SerializedPlayer, Player> {
     return JSON.stringify({
       id: this.id,
       gameid: game.id,
+      waitingfor: this.waitingFor,
+      gameLog: game.gameLog.reverse(),
+      players: game.getPlayers(),
     } as IFPlayerGameState);
   }
 }
