@@ -6,22 +6,23 @@ const Localhtml = (card: ILocationCard): string => {
   rtn += "<div>";
   rtn += `<h5>${card.mName}</h5>`;
   if (card.isFront) {
-    rtn += `<a>Shroud:${card.mShroud}</a>`;
-    rtn += `<a>mClues:${card.mClues}</a>`;
-    rtn += `<a>mCluePerInvestigator:${card.mCluePerInvestigator}</a>`;
-    rtn += `<a>${card.mFrontText}</a>`;
+    rtn += `<a>Shroud: ${card.mShroud}</a><br>`;
+    rtn += `<a>Clues: ${card.mClues}</a>`;
+    if (card.mCluePerInvestigator) {
+      rtn += "<a>xP</a>";
+    }
+    rtn += "<br>";
+    rtn += `<p>${card.mFrontText}</p>`;
   } else {
-    rtn += `<a>${card.mBackText}</a>`;
+    rtn += `<p>${card.mBackText}</p>`;
   }
   rtn += "</div>";
   return rtn;
 };
 
 export const Card = Vue.component("card", {
-  props: [
-    "card",
-  ],
-  methods: {
+  props: ["card"],
+  computed: {
     getCardContent() {
       return Localhtml(this.card);
     },
@@ -34,9 +35,8 @@ export const Card = Vue.component("card", {
       {{ card.mResource }}
       </span>
     </div>
-    <div class="card-content-wrapper">
-      <div LocationCard>
-    </div>
+    <p class="card-content-wrapper" v-html=getCardContent>
+    </p>
   </div>
   `,
 });

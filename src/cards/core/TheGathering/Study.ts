@@ -4,7 +4,7 @@ import { Game } from "../../../Game";
 export class Study extends ILocationCard {
   mArkhamDBID = "01111";
 
-  mName = "Study"
+  mName = "Study";
 
   mShroud = 2;
 
@@ -12,11 +12,12 @@ export class Study extends ILocationCard {
 
   mCluePerInvestigator = true;
 
-  mBackText = "You've been investigating the strange events occurring in Arkham for several days now. Your deck in covered in newspaper articles, police reports, and witness accounts.";
+  mBackText =
+    "You've been investigating the strange events occurring in Arkham for several days now. Your deck in covered in newspaper articles, police reports, and witness accounts.";
 
   mFrontText = "The door to your study has vanished.";
 
   protected doTurnOver(game: Game): void {
-    console.log("Study doTurnOver");
+    game.log("Study doTurnOver");
   }
 }

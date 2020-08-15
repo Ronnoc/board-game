@@ -1,4 +1,7 @@
+import { CardType } from "../enums/CardType";
+
 export interface IFCard {
-  mName: string,
-  mArkhamDBID?: string,
+  mName: string;
+  mCardType: CardType;
+  mArkhamDBID?: string;
 }

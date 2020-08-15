@@ -1,8 +1,11 @@
 import { Game } from "../Game";
 import { IFCard } from "./IFCard";
+import { CardType } from "../enums/CardType";
 
 export class IAgendaCard implements IFCard {
-  mName = "IAgendaCard"
+  mCardType = CardType.AGENDA;
+
+  mName = "IAgendaCard";
 
   html(): string {
     return this.mName;

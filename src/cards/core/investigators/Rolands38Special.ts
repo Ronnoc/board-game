@@ -1,8 +1,8 @@
 import { IPlayerCard } from "../../IPlayerCard";
 import { CardFaction } from "../../../enums/CardFaction";
-import { CardType } from "../../../enums/CardType";
 import { CardTrait } from "../../../enums/CardTrait";
 import { SkillIcon } from "../../../enums/SkillIcon";
+import { PlayerCardType } from "../../../enums/PlayerCardType";
 
 export class Rolands38Special extends IPlayerCard {
   mName = "Rolands38Special";
@@ -13,7 +13,7 @@ export class Rolands38Special extends IPlayerCard {
 
   mFaction = CardFaction.GUARDIAN;
 
-  mType = CardType.ASSET;
+  mType = PlayerCardType.ASSET;
 
   mTraits = [CardTrait.ITEM, CardTrait.WEAPON, CardTrait.FIREARM];
 

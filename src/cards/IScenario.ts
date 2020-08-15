@@ -1,11 +1,14 @@
 import { IActCard } from "./IActCard";
 import { IAgendaCard } from "./IAgendaCard";
 import { IFCard } from "./IFCard";
+import { CardType } from "../enums/CardType";
 
 export class IScenario implements IFCard {
-  mName = "IScenario"
+  mCardType = CardType.SCENARIO;
 
-  mActs?: Array<IActCard> | undefined
+  mName = "IScenario";
 
-  mAgendas: Array<IAgendaCard> | undefined
+  mActs?: Array<IActCard> | undefined;
+
+  mAgendas: Array<IAgendaCard> | undefined;
 }

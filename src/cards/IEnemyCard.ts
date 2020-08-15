@@ -1,9 +1,12 @@
 import { CardTrait } from "../enums/CardTrait";
 import { CardKeyword } from "../enums/CardKeyword";
 import { IFCard } from "./IFCard";
+import { CardType } from "../enums/CardType";
 
 export class IEnemyCard implements IFCard {
-  mName = "IEnemyCard"
+  mCardType = CardType.ENEMY;
+
+  mName = "IEnemyCard";
 
   html(): string {
     return this.mName;

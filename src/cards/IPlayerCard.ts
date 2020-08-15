@@ -5,9 +5,12 @@ import { SkillIcon } from "../enums/SkillIcon";
 import { Game } from "../Game";
 import { Player } from "../Player";
 import { IFCard } from "./IFCard";
+import { PlayerCardType } from "../enums/PlayerCardType";
 
 export class IPlayerCard implements IFCard {
-  mName = "IPlayerCard"
+  mCardType = CardType.PLAYER;
+
+  mName = "IPlayerCard";
 
   mCost?: number;
 
@@ -15,7 +18,7 @@ export class IPlayerCard implements IFCard {
 
   mFaction = CardFaction.UNKNOWN;
 
-  mType = CardType.UNKNOWN;
+  mType = PlayerCardType.UNKNOWN;
 
   mTraits?: Array<CardTrait>;
 

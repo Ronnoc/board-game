@@ -1,8 +1,11 @@
 import { Game } from "../Game";
 import { IFCard } from "./IFCard";
+import { CardType } from "../enums/CardType";
 
 export class ILocationCard implements IFCard {
-  mName = "ILocationCard"
+  mCardType = CardType.LOCATION;
+
+  mName = "ILocationCard";
 
   mShroud: number | undefined;
 

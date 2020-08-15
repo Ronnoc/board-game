@@ -1,8 +1,11 @@
 export enum CardType {
   UNKNOWN,
-  ASSET,
-  SKILL,
-  EVENT,
-  WEAKNESS,
   ENEMY,
+  TREACHERY,
+  SCENARIO,
+  PLAYER,
+  LOCATION,
+  INVESTIGATOR,
+  ACT,
+  AGENDA,
 }

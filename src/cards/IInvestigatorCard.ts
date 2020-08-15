@@ -2,9 +2,12 @@ import { CardFaction } from "../enums/CardFaction";
 import { Game } from "../Game";
 import { Player } from "../Player";
 import { IFCard } from "./IFCard";
+import { CardType } from "../enums/CardType";
 
 export class IInvestigatorCard implements IFCard {
-  mName = "IInvestigatorCard"
+  mCardType = CardType.INVESTIGATOR;
+
+  mName = "IInvestigatorCard";
 
   html(card: IInvestigatorCard): string {
     return card.mName;
