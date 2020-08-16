@@ -116,6 +116,9 @@ export class Player implements ILoadable<SerializedPlayer, Player> {
       gameLog: game.gameLog,
       players: game.players,
       locations: game.locations,
+      act: game.act,
+      agenda: game.agenda,
+      scenario: game.scenario,
     } as IFPlayerGameState);
   }
 }

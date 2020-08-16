@@ -11,7 +11,10 @@ import { LogMessageData } from "./LogMessageData";
 import { LogMessage } from "./LogMessage";
 import { LogMessageDataType } from "./enums/LogMessageDataType";
 import { ILocationCard } from "./cards/ILocationCard";
-import { Study } from "./cards/core/TheGathering/Study";
+import { IScenario } from "./cards/IScenario";
+import { TheGathering } from "./cards/core/TheGathering/TheGathering";
+import { IAgendaCard } from "./cards/IAgendaCard";
+import { IActCard } from "./cards/IActCard";
 
 export class Game implements ILoadable<SerializedGame, Game> {
   phase = Phase.START;
@@ -20,7 +23,13 @@ export class Game implements ILoadable<SerializedGame, Game> {
 
   gameLog: Array<LogMessage> = [];
 
-  locations: Array<ILocationCard> = [new Study()];
+  locations: Array<ILocationCard> = [];
+
+  scenario: IScenario | undefined;
+
+  agenda: IAgendaCard | undefined;
+
+  act: IActCard | undefined;
 
   private count = 1;
 
@@ -48,7 +57,10 @@ export class Game implements ILoadable<SerializedGame, Game> {
 
   private getDebugWaitingFor(): () => void {
     return () => {
-      this.first.setWaitingFor(this.getDebugOption(), this.getDebugWaitingFor());
+      this.first.setWaitingFor(
+        this.getDebugOption(),
+        this.getDebugWaitingFor(),
+      );
     };
   }
 
@@ -62,18 +74,17 @@ export class Game implements ILoadable<SerializedGame, Game> {
     this.id = id;
     this.first = first;
     this.players = players;
+    this.scenario = new TheGathering();
+    this.scenario.init(this);
     this.players.forEach((player) => {
-      player.setWaitingFor(
-        this.getDebugOption(),
-        this.getDebugWaitingFor(),
-      );
+      player.setWaitingFor(this.getDebugOption(), this.getDebugWaitingFor());
     });
   }
 
   public log(message: string, ...data: LogMessageData[]): void {
     this.gameLog.push(new LogMessage(message, data));
     if (this.gameLog.length > 100) {
-      (this.gameLog.shift());
+      this.gameLog.shift();
     }
   }
 
@@ -84,6 +95,14 @@ export class Game implements ILoadable<SerializedGame, Game> {
 
   public getPlayerById(id: string): Player {
     return this.players.filter((p) => p.id === id)[0];
+  }
+
+  public setAct(act:IActCard):void{ this.act = act; }
+
+  public setAgenda(agenda:IAgendaCard):void{ this.agenda = agenda; }
+
+  public setLocations(locations:Array<ILocationCard>):void{
+    this.locations = locations;
   }
 
   public infoStringify(): string {
