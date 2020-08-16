@@ -24,7 +24,7 @@ export class IAgendaCard implements IFCard {
     throw new Error(`${this.mName} turnOver NotImplemented`);
   }
 
-  frontText = "";
+  mFrontText = "";
 
-  backText = "";
+  mBackText = "";
 }

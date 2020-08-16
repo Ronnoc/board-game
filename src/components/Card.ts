@@ -1,5 +1,7 @@
 import Vue from "vue";
 import { ILocationCard } from "../cards/ILocationCard";
+import { CardType } from "../enums/CardType";
+import { IFCard } from "../cards/IFCard";
 
 const Localhtml = (card: ILocationCard): string => {
   let rtn = "";
@@ -24,7 +26,11 @@ export const Card = Vue.component("card", {
   props: ["card"],
   computed: {
     getCardContent() {
-      return Localhtml(this.card);
+      if (this.card === undefined) return "card is undefined";
+      if ((this.card as IFCard).mCardType === CardType.LOCATION) {
+        return Localhtml(this.card);
+      }
+      return JSON.stringify(this.card, null, 2);
     },
   },
   template: `

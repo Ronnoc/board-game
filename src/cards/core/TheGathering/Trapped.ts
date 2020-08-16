@@ -2,17 +2,17 @@ import { IAgendaCard } from "../../IAgendaCard";
 import { Game } from "../../../Game";
 
 export class Trapped extends IAgendaCard {
-  name = "Trapped";
+  mName = "Trapped";
 
-  stage = 1;
+  mStage = 1;
 
-  dooms = 3;
+  mDooms = 3;
 
   turnOver(game: Game): void {
-    console.log(this.name);
+    console.log(this.mName);
   }
 
-  frontText = "front";
+  mFrontText = "front";
 
-  backText = "back";
+  mBackText = "back";
 }

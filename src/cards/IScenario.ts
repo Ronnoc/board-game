@@ -4,6 +4,8 @@ import { IFCard } from "./IFCard";
 import { CardType } from "../enums/CardType";
 import { Game } from "../Game";
 import { ILocationCard } from "./ILocationCard";
+import { ChaosBag } from "../ChaosBag";
+import { ChaosToken } from "../enums/ChaosToken";
 
 export class IScenario implements IFCard {
   mCardType = CardType.SCENARIO;
@@ -18,17 +20,41 @@ export class IScenario implements IFCard {
 
   mAgendaId = 0;
 
-  init(game:Game):void {
+  init(game: Game): void {
     game.setAct(this.nextAct());
     game.setAgenda(this.nextAgenda());
     game.setLocations(this.initLocation());
+    this.initChaosBag(game);
   }
 
-  protected initLocation():Array<ILocationCard> {
+  protected initChaosBag(game: Game): void {
+    game.setChaosBag(
+      new ChaosBag([
+        ChaosToken.PLUS_ONE,
+        ChaosToken.ZERO,
+        ChaosToken.ZERO,
+        ChaosToken.MINUS_ONE,
+        ChaosToken.MINUS_ONE,
+        ChaosToken.MINUS_ONE,
+        ChaosToken.MINUS_TWO,
+        ChaosToken.MINUS_TWO,
+        ChaosToken.MINUS_THREE,
+        ChaosToken.MINUS_FOUR,
+        ChaosToken.SKULL,
+        ChaosToken.SKULL,
+        ChaosToken.CULTIST,
+        ChaosToken.TOMBSTONE,
+        ChaosToken.AUTO_FAIL,
+        ChaosToken.ELDER_SIGN,
+      ]),
+    );
+  }
+
+  protected initLocation(): Array<ILocationCard> {
     throw new Error(`${this.mName} initLocation not implement`);
   }
 
-  protected nextAct():IActCard {
+  protected nextAct(): IActCard {
     if (this.mActs === undefined) {
       throw new Error(`${this.mName} this.mActs === undefined`);
     }
@@ -40,7 +66,7 @@ export class IScenario implements IFCard {
     return act;
   }
 
-  protected nextAgenda():IAgendaCard {
+  protected nextAgenda(): IAgendaCard {
     if (this.mAgendas === undefined) {
       throw new Error(`${this.mName} this.mAgendas === undefined`);
     }

@@ -22,6 +22,10 @@ export class Player implements ILoadable<SerializedPlayer, Player> {
 
   public cardsDiscarded: Array<IPlayerCard> = [];
 
+  public assets:Array<IPlayerCard> = [];
+
+  public threats:Array<IPlayerCard> = [];
+
   public currentGame = "";
 
   private waitingFor?: PlayerInput;
@@ -29,8 +33,6 @@ export class Player implements ILoadable<SerializedPlayer, Player> {
   private waitingForCb?: () => void;
 
   constructor(public name: string, public color: Color) {
-    this.name = name;
-    this.color = color;
     this.id = generateRandomId();
   }
 
@@ -81,7 +83,7 @@ export class Player implements ILoadable<SerializedPlayer, Player> {
   private runInput(
     game: Game,
     input: Array<Array<string>>,
-    pi: PlayerInput,
+    pi: PlayerInput
   ): void {
     if (pi instanceof SelectOption) {
       this.runInputCb(game, pi.cb());
@@ -112,10 +114,15 @@ export class Player implements ILoadable<SerializedPlayer, Player> {
     return JSON.stringify({
       id: this.id,
       gameid: game.id,
+      investigator: this.investigator,
+      cardsInHand: this.cardsInHand,
+      assets: this.assets,
+      threats: this.threats,
       waitingfor: this.waitingFor,
       gameLog: game.gameLog,
       players: game.players,
       locations: game.locations,
+      npcs: game.npcs,
       act: game.act,
       agenda: game.agenda,
       scenario: game.scenario,

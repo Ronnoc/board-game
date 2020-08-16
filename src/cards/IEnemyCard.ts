@@ -1,12 +1,14 @@
 import { CardTrait } from "../enums/CardTrait";
 import { CardKeyword } from "../enums/CardKeyword";
-import { IFCard } from "./IFCard";
 import { CardType } from "../enums/CardType";
+import { ITreacheryCard } from "./ITreacheryCard";
 
-export class IEnemyCard implements IFCard {
+export class IEnemyCard extends ITreacheryCard {
   mCardType = CardType.ENEMY;
 
   mName = "IEnemyCard";
+
+  mText = "IEnemyCard.text";
 
   html(): string {
     return this.mName;

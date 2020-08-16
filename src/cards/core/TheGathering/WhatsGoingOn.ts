@@ -2,19 +2,19 @@ import { IActCard } from "../../IActCard";
 import { Game } from "../../../Game";
 
 export class WhatsGoingOn extends IActCard {
-  name = "What's Going On";
+  mName = "What's Going On";
 
-  stage = 1;
+  mStage = 1;
 
-  clues = 2;
+  mClues = 2;
 
-  cluePerInvestigator = true;
+  mCluePerInvestigator = true;
 
   turnOver(game: Game): void {
-    console.log(this.name);
+    console.log(this.mName);
   }
 
-  frontText = "What's Going On front";
+  mFrontText = "What's Going On front";
 
-  backText = "What's Going On back";
+  mBackText = "What's Going On back";
 }

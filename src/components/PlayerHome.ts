@@ -13,21 +13,65 @@ export const PlayerHome = Vue.component("player-home", {
     "vm-card": Card,
   },
   template: `
-        <div>
-            <h1>Arkham Horror LCG Player Home</h1>
-            <vm-log-panel 
-              :messages="player.gameLog" 
-              :players="player.players">
-            </vm-log-panel>
-            <div>
-              <vm-card v-for="loc in player.locations"
-                v-bind:card="loc">
-              </vm-card>
-            </div>
-            <vm-waiting-for
-              :player="player"
-              :waitingfor="player.waitingfor"
-            ></vm-waiting-for>
-        </div>
+    <div>
+      <h1>Arkham Horror LCG Player Home</h1>
+      <div>
+        <h5>Scenario+Act+Agenda</h5>
+        <table><tbody><tr>
+          <td><vm-card :card="player.scenario"></vm-card></td>
+          <td><vm-card :card="player.act"></vm-card></td>
+          <td><vm-card :card="player.agenda"></vm-card></td>
+        </tr></tbody></table>
+      </div>
+      <div>
+        <h5>locations</h5>
+        <table><tbody><tr>
+          <td v-for="loc in player.locations" :card="loc">
+            <vm-card :card="loc"></vm-card>
+          </td>
+        </tr></tbody></table>
+      </div>
+      <div>
+        <h5>npcs</h5>
+        <table><tbody><tr>
+          <td v-for="npc in player.npcs" :card="npc">
+            <vm-card :card="npc"></vm-card>
+          </td>
+        </tr></tbody></table>
+      </div>
+      <div>
+        <h5>threats</h5>
+        <table><tbody><tr>
+          <td v-for="thr in player.threats" :card="thr">
+            <vm-card :card="thr"></vm-card>
+          </td>
+        </tr></tbody></table>
+      </div>
+      <div>
+        <h5>investigator+assets</h5>
+        <table><tbody><tr>
+          <td><vm-card :card="player.investigator"></vm-card></td>
+          <td v-for="ass in player.assets" :card="ass">
+            <vm-card :card="ass"></vm-card>
+          </td>
+        </tr></tbody></table>
+      </div>
+      <div>
+        <h5>cardsInHand</h5>
+        <table><tbody><tr>
+          <td v-for="crd in player.cardsInHand" :card="crd">
+            <vm-card :card="crd"></vm-card>
+          </td>
+        </tr></tbody></table>
+      </div>
+      <vm-log-panel 
+        :messages="player.gameLog" 
+        :players="player.players">
+      </vm-log-panel>
+      <vm-waiting-for
+        :player="player"
+        :waitingfor="player.waitingfor">
+      </vm-waiting-for>
+    </div>
     `,
 });

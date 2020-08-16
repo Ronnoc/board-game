@@ -15,6 +15,9 @@ import { IScenario } from "./cards/IScenario";
 import { TheGathering } from "./cards/core/TheGathering/TheGathering";
 import { IAgendaCard } from "./cards/IAgendaCard";
 import { IActCard } from "./cards/IActCard";
+import { ChaosBag } from "./ChaosBag";
+import { IEnemyCard } from "./cards/IEnemyCard";
+import { IPlayerCard } from "./cards/IPlayerCard";
 
 export class Game implements ILoadable<SerializedGame, Game> {
   phase = Phase.START;
@@ -25,11 +28,15 @@ export class Game implements ILoadable<SerializedGame, Game> {
 
   locations: Array<ILocationCard> = [];
 
+  npcs: Array<IEnemyCard|IPlayerCard> = [];
+
   scenario: IScenario | undefined;
 
   agenda: IAgendaCard | undefined;
 
   act: IActCard | undefined;
+
+  chaosBag: ChaosBag | undefined;
 
   private count = 1;
 
@@ -42,14 +49,14 @@ export class Game implements ILoadable<SerializedGame, Game> {
         new SelectOption(String(i), () => {
           this.log(
             `\${0} select ${String(i)}`,
-            new LogMessageData(LogMessageDataType.PLAYER, this.first.id),
+            new LogMessageData(LogMessageDataType.PLAYER, this.first.id)
           );
           if (!this.locations[0].isFront) {
             this.locations[0].turnOver(this);
           }
           console.log(`choice ${i}`);
           return undefined;
-        }),
+        })
       );
     }
     return debugOptions;
@@ -59,7 +66,7 @@ export class Game implements ILoadable<SerializedGame, Game> {
     return () => {
       this.first.setWaitingFor(
         this.getDebugOption(),
-        this.getDebugWaitingFor(),
+        this.getDebugWaitingFor()
       );
     };
   }
@@ -68,7 +75,7 @@ export class Game implements ILoadable<SerializedGame, Game> {
     public id: string,
     public players: Array<Player>,
     public first: Player,
-    createGameForm: IFCreateGameForm,
+    public createGameForm: IFCreateGameForm
   ) {
     Database.getInstance();
     this.id = id;
@@ -97,11 +104,19 @@ export class Game implements ILoadable<SerializedGame, Game> {
     return this.players.filter((p) => p.id === id)[0];
   }
 
-  public setAct(act:IActCard):void{ this.act = act; }
+  public setAct(act: IActCard): void {
+    this.act = act;
+  }
 
-  public setAgenda(agenda:IAgendaCard):void{ this.agenda = agenda; }
+  public setAgenda(agenda: IAgendaCard): void {
+    this.agenda = agenda;
+  }
 
-  public setLocations(locations:Array<ILocationCard>):void{
+  public setChaosBag(chaosBag: ChaosBag): void {
+    this.chaosBag = chaosBag;
+  }
+
+  public setLocations(locations: Array<ILocationCard>): void {
     this.locations = locations;
   }
 

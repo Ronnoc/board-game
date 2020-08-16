@@ -8,7 +8,7 @@ export class RolandBanks extends IInvestigatorCard {
 
   mFaction = CardFaction.GUARDIAN;
 
-  mwillpower = 3;
+  mWillpower = 3;
 
   mIntellect = 3;
 

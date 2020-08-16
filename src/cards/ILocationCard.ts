@@ -17,9 +17,11 @@ export class ILocationCard implements IFCard {
 
   mBackText = "";
 
-  resource: number | undefined;
+  mVictoryPoint = 0;
 
-  resourceName: string | undefined;
+  resource: Array<number>=[];
+
+  resourceName: Array<string> =[];
 
   isFront = false;
 
