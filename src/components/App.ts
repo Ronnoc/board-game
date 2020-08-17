@@ -25,7 +25,7 @@ export const vm = new Vue({
       const xhr = new XMLHttpRequest();
       const app = (this as any);
       xhr.open("GET", `/api/player_state${window.location.search.replace("&noredirect", "")}`);
-      xhr.onerror = function () {
+      xhr.onerror = function onError() {
         alert("Error getting game data");
       };
       xhr.onload = () => {

@@ -18,7 +18,7 @@ export const WaitingFor = Vue.component("waiting-for", {
         const xhr = new XMLHttpRequest();
         const root = (this).$root as any;
         xhr.open("GET", `/api/waiting_for${window.location.search}`);
-        xhr.onerror = function () {
+        xhr.onerror = function onError() {
           alert("Error getting waitingFor data");
         };
         xhr.onload = () => {
@@ -91,7 +91,7 @@ export const WaitingFor = Vue.component("waiting-for", {
             alert("Error sending input");
           }
         };
-        xhr.onerror = function () {
+        xhr.onerror = function onError() {
           console.log("Error sending waitingFor input data");
         };
         xhr.send(JSON.stringify(out));

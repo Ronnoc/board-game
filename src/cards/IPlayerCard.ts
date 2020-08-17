@@ -27,6 +27,6 @@ export class IPlayerCard extends ICard {
   mText = "IPlayerCard.text";
 
   canPlay(player: Player, game: Game): boolean {
-    throw new Error(`${this.mName} canPlay NotImplemented`);
+    throw new Error(`${game.id} ${player.id} ${this.mName} canPlay NotImplemented`);
   }
 }

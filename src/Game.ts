@@ -18,6 +18,8 @@ import { IActCard } from "./cards/IActCard";
 import { ChaosBag } from "./ChaosBag";
 import { IEnemyCard } from "./cards/IEnemyCard";
 import { IPlayerCard } from "./cards/IPlayerCard";
+import { EncounterDealer } from "./EncounterDealer";
+import { ITreacheryCard } from "./cards/ITreacheryCard";
 
 export class Game implements ILoadable<SerializedGame, Game> {
   phase = Phase.UNKNOWN;
@@ -37,6 +39,8 @@ export class Game implements ILoadable<SerializedGame, Game> {
   act: IActCard | undefined;
 
   chaosBag: ChaosBag | undefined;
+
+  encounterDealer: EncounterDealer | undefined;
 
   private count = 1;
 
@@ -119,6 +123,10 @@ export class Game implements ILoadable<SerializedGame, Game> {
 
   public setLocations(locations: Array<ILocationCard>): void {
     this.locations = locations;
+  }
+
+  public setTreacheryCards(treacheryCards: Array<ITreacheryCard>): void {
+    this.encounterDealer = new EncounterDealer(treacheryCards);
   }
 
   public infoStringify(): string {

@@ -22,12 +22,12 @@ export class ILocationCard extends ICard {
   isFront = false;
 
   checkTurnOver(game: Game): boolean {
-    throw new Error(`${this.mName} checkTurnOver NotImplemented`);
+    throw new Error(`${game.id} ${this.mName} checkTurnOver NotImplemented`);
     return false;
   }
 
   protected doTurnOver(game: Game): void {
-    throw new Error(`${this.mName} _TurnOver NotImplemented`);
+    throw new Error(`${game.id} ${this.mName} _TurnOver NotImplemented`);
   }
 
   turnOver(game: Game): void {

@@ -24,6 +24,6 @@ export class IInvestigatorCard extends ICard {
   mSanity: number | undefined;
 
   elderSign(game: Game, player: Player): number {
-    throw new Error(`${this.mName} turnOver NotImplemented`);
+    throw new Error(`${game.id} ${player.id} ${this.mName} turnOver NotImplemented`);
   }
 }

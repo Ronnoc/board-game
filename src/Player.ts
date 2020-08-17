@@ -115,13 +115,18 @@ export class Player implements ILoadable<SerializedPlayer, Player> {
 
   public stateStringify(game: Game): string {
     return JSON.stringify({
+      // player
       id: this.id,
-      gameId: game.id,
       investigator: this.investigator,
+      atLocation: this.atLocation,
       cardsInHand: this.cardsInHand,
+      cardsDiscarded: this.cardsDiscarded,
       assets: this.assets,
       threats: this.threats,
       waitingFor: this.waitingFor,
+      // game
+      gameId: game.id,
+      phase: game.phase,
       gameLog: game.gameLog,
       players: game.players,
       locations: game.locations,
@@ -129,6 +134,7 @@ export class Player implements ILoadable<SerializedPlayer, Player> {
       act: game.act,
       agenda: game.agenda,
       scenario: game.scenario,
+      chaosBag: game.chaosBag,
     } as IFPlayerGameState);
   }
 }

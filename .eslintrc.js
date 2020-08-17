@@ -22,6 +22,7 @@ module.exports = {
     "no-console": "off",
     "import/no-cycle": "off",
     "class-methods-use-this": "off",
+    "no-alert": "off",
   },
   settings: {
     "import/resolver": {

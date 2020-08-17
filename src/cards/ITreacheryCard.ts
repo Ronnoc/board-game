@@ -11,6 +11,6 @@ export class ITreacheryCard extends ICard {
   mText = "ITreacheryCard.text";
 
   effect(game: Game, player: Player): void {
-    throw new Error(`${this.mName} effect NotImplemented`);
+    throw new Error(`${game.id} ${player.id} ${this.mName} effect NotImplemented`);
   }
 }

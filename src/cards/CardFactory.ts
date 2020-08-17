@@ -11,5 +11,5 @@ function insertCard(XIcard: typeof ICard): void {
   }
 }
 
-console.log("Insert CoreCards to CardFactory");
 CoreCards.forEach(insertCard);
+console.log(`CardFactory size ${CardFactory.size}`);

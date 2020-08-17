@@ -16,11 +16,11 @@ export class IAgendaCard extends ICard {
   mBackText = "";
 
   checkTurnOver(game: Game): boolean {
-    throw new Error(`${this.mName} checkTurnOver NotImplemented`);
+    throw new Error(`${game.id} ${this.mName} checkTurnOver NotImplemented`);
     return false;
   }
 
   turnOver(game: Game): void {
-    throw new Error(`${this.mName} turnOver NotImplemented`);
+    throw new Error(`${game.id} ${this.mName} turnOver NotImplemented`);
   }
 }

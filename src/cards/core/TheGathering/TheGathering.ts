@@ -4,8 +4,6 @@ import { Trapped } from "./Trapped";
 import { Study } from "./Study";
 import { ILocationCard } from "../../ILocationCard";
 import { EncounterSet } from "../../../enums/EncounterSet";
-import { ITreacheryCard } from "../../ITreacheryCard";
-import { EncounterSetFactory } from "../../EncounterSetFactory";
 
 export class TheGathering extends IScenario {
   mName = "The Gathering";
@@ -25,16 +23,5 @@ export class TheGathering extends IScenario {
 
   protected initLocation(): Array<ILocationCard> {
     return [new Study()];
-  }
-
-  protected initEncounterSet(): Array<ITreacheryCard> {
-    const rtn: Array<ITreacheryCard> = [];
-    this.mEncounterSets.forEach((element: EncounterSet): void => {
-      const XEncounterSet = EncounterSetFactory.get(element);
-      if (XEncounterSet !== undefined) {
-        rtn.push(...(new XEncounterSet()).create());
-      }
-    });
-    return rtn;
   }
 }

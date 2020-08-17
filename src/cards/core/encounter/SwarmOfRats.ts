@@ -23,4 +23,6 @@ export class SwarmOfRats extends IEnemyCard {
   mHorror = 0
 
   mKeywords = [CardKeyword.HUNTER]
+
+  mText = "A horde of cruel rats skitters forth in an undulating wave of claws, teeth, and mottled fur.";
 }

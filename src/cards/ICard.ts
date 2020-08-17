@@ -5,5 +5,5 @@ export class ICard {
 
   mCardType = CardType.UNKNOWN;
 
-  static cArkhamDBID = "ICard";
+  static cArkhamDBID: string | undefined = undefined;
 }

@@ -6,6 +6,9 @@ import { Game } from "../Game";
 import { ILocationCard } from "./ILocationCard";
 import { ChaosBag } from "../ChaosBag";
 import { ChaosToken } from "../enums/ChaosToken";
+import { ITreacheryCard } from "./ITreacheryCard";
+import { EncounterSetFactory } from "./EncounterSetFactory";
+import { EncounterSet } from "../enums/EncounterSet";
 
 export class IScenario extends ICard {
   mCardType = CardType.SCENARIO;
@@ -16,6 +19,8 @@ export class IScenario extends ICard {
 
   mAgendas: Array<typeof IAgendaCard> = [];
 
+  mEncounterSets: Array<EncounterSet> = [];
+
   mActId = 0;
 
   mAgendaId = 0;
@@ -25,6 +30,7 @@ export class IScenario extends ICard {
     game.setAgenda(this.nextAgenda());
     game.setLocations(this.initLocation());
     this.initChaosBag(game);
+    game.setTreacheryCards(this.initEncounterSet());
   }
 
   protected initChaosBag(game: Game): void {
@@ -48,6 +54,19 @@ export class IScenario extends ICard {
         ChaosToken.ELDER_SIGN,
       ]),
     );
+  }
+
+  protected initEncounterSet(): Array<ITreacheryCard> {
+    const rtn: Array<ITreacheryCard> = [];
+    this.mEncounterSets.forEach((element: EncounterSet): void => {
+      const XEncounterSet = EncounterSetFactory.get(element);
+      if (XEncounterSet !== undefined) {
+        rtn.push(...(new XEncounterSet()).create());
+      } else {
+        console.warn(`${element} EncounterSet not created`);
+      }
+    });
+    return rtn;
   }
 
   protected initLocation(): Array<ILocationCard> {
