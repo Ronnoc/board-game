@@ -16,7 +16,7 @@ export const PlayerHome = Vue.component("player-home", {
     <div>
       <h1>Arkham Horror LCG Player Home</h1>
       <div>
-        <h5>Scenario+Act+Agenda</h5>
+        *Scenario+Act+Agenda
         <table><tbody><tr>
           <td><vm-card :card="player.scenario"></vm-card></td>
           <td><vm-card :card="player.act"></vm-card></td>
@@ -24,31 +24,31 @@ export const PlayerHome = Vue.component("player-home", {
         </tr></tbody></table>
       </div>
       <div>
-        <h5>locations</h5>
-        <table><tbody><tr>
+        *locations
+        <table v-if="player.locations.length > 0"><tbody><tr>
           <td v-for="loc in player.locations" :card="loc">
             <vm-card :card="loc"></vm-card>
           </td>
         </tr></tbody></table>
       </div>
       <div>
-        <h5>npcs</h5>
-        <table><tbody><tr>
+        *npcs
+        <table v-if="player.npcs.length > 0"><tbody><tr>
           <td v-for="npc in player.npcs" :card="npc">
             <vm-card :card="npc"></vm-card>
           </td>
         </tr></tbody></table>
       </div>
       <div>
-        <h5>threats</h5>
-        <table><tbody><tr>
+        *threats
+        <table v-if="player.npcs.threats > 0"><tbody><tr>
           <td v-for="thr in player.threats" :card="thr">
             <vm-card :card="thr"></vm-card>
           </td>
         </tr></tbody></table>
       </div>
       <div>
-        <h5>investigator+assets</h5>
+        *investigator+assets
         <table><tbody><tr>
           <td><vm-card :card="player.investigator"></vm-card></td>
           <td v-for="ass in player.assets" :card="ass">
@@ -57,8 +57,8 @@ export const PlayerHome = Vue.component("player-home", {
         </tr></tbody></table>
       </div>
       <div>
-        <h5>cardsInHand</h5>
-        <table><tbody><tr>
+        *cardsInHand
+        <table v-if="player.cardsInHand.threats > 0"><tbody><tr>
           <td v-for="crd in player.cardsInHand" :card="crd">
             <vm-card :card="crd"></vm-card>
           </td>

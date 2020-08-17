@@ -1,4 +1,5 @@
 import Vue from "vue";
+import { LogMessageDataType } from "../enums/LogMessageDataType";
 
 import { LogMessage } from "../LogMessage";
 import { LogMessageData } from "../LogMessageData";
@@ -15,10 +16,17 @@ export const LogPanel = Vue.component("log-panel", {
       }
     },
     parseData(data: LogMessageData) {
-      if (data.type !== undefined && data.value !== undefined) {
-        return data.value;
+      if (data.type === undefined || data.value === undefined) {
+        return "";
       }
-      return "";
+      if (data.type === LogMessageDataType.PLAYER) {
+        const candidates = this.players.filter((p : {id:string}) => p.id === data.value);
+        if (candidates.length === 1) {
+          return `<span style="color:${candidates[0].color}">${candidates[0].name}</span>`;
+        }
+        return `<span>${data.value}</span>`;
+      }
+      return data.value;
     },
     parseMessage(message: LogMessage) {
       const logEntryBullet = `<span title="${new Date(message.timestamp).toLocaleString()}">&#x1f551;</span>`;
