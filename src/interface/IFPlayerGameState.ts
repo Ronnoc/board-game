@@ -11,12 +11,12 @@ import { IScenario } from "../cards/IScenario";
 
 export interface IFPlayerGameState {
   id: string,
-  gameid: string,
+  gameId: string,
   investigator: IInvestigatorCard,
   cardsInHand: Array<IPlayerCard|ITreacheryCard>;
   assets: Array<IPlayerCard>,
   threats: Array<IPlayerCard|ITreacheryCard>,
-  waitingfor: PlayerInput,
+  waitingFor: PlayerInput,
   gameLog: LogMessage[],
   players: Player[],
   locations: ILocationCard[],

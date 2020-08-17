@@ -10,6 +10,7 @@ import { debugDecks } from "./DeckDealer";
 import { IPlayerCard } from "./cards/IPlayerCard";
 import { SelectOption } from "./inputs/SelectOption";
 import { OrOptions } from "./inputs/OrOptions";
+import { ILocationCard } from "./cards/ILocationCard";
 
 export class Player implements ILoadable<SerializedPlayer, Player> {
   public id = "";
@@ -22,9 +23,11 @@ export class Player implements ILoadable<SerializedPlayer, Player> {
 
   public cardsDiscarded: Array<IPlayerCard> = [];
 
-  public assets:Array<IPlayerCard> = [];
+  public assets: Array<IPlayerCard> = [];
 
-  public threats:Array<IPlayerCard> = [];
+  public threats: Array<IPlayerCard> = [];
+
+  public atLocation: ILocationCard | undefined;
 
   public currentGame = "";
 
@@ -83,7 +86,7 @@ export class Player implements ILoadable<SerializedPlayer, Player> {
   private runInput(
     game: Game,
     input: Array<Array<string>>,
-    pi: PlayerInput
+    pi: PlayerInput,
   ): void {
     if (pi instanceof SelectOption) {
       this.runInputCb(game, pi.cb());
@@ -113,12 +116,12 @@ export class Player implements ILoadable<SerializedPlayer, Player> {
   public stateStringify(game: Game): string {
     return JSON.stringify({
       id: this.id,
-      gameid: game.id,
+      gameId: game.id,
       investigator: this.investigator,
       cardsInHand: this.cardsInHand,
       assets: this.assets,
       threats: this.threats,
-      waitingfor: this.waitingFor,
+      waitingFor: this.waitingFor,
       gameLog: game.gameLog,
       players: game.players,
       locations: game.locations,

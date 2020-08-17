@@ -28,7 +28,7 @@ export class Game implements ILoadable<SerializedGame, Game> {
 
   locations: Array<ILocationCard> = [];
 
-  npcs: Array<IEnemyCard|IPlayerCard> = [];
+  npcs: Array<IEnemyCard | IPlayerCard> = [];
 
   scenario: IScenario | undefined;
 
@@ -49,14 +49,14 @@ export class Game implements ILoadable<SerializedGame, Game> {
         new SelectOption(String(i), () => {
           this.log(
             `\${0} select ${String(i)}`,
-            new LogMessageData(LogMessageDataType.PLAYER, this.first.id)
+            new LogMessageData(LogMessageDataType.PLAYER, this.first.id),
           );
           if (!this.locations[0].isFront) {
             this.locations[0].turnOver(this);
           }
           console.log(`choice ${i}`);
           return undefined;
-        })
+        }),
       );
     }
     return debugOptions;
@@ -66,7 +66,7 @@ export class Game implements ILoadable<SerializedGame, Game> {
     return () => {
       this.first.setWaitingFor(
         this.getDebugOption(),
-        this.getDebugWaitingFor()
+        this.getDebugWaitingFor(),
       );
     };
   }
@@ -75,7 +75,7 @@ export class Game implements ILoadable<SerializedGame, Game> {
     public id: string,
     public players: Array<Player>,
     public first: Player,
-    public createGameForm: IFCreateGameForm
+    public createGameForm: IFCreateGameForm,
   ) {
     Database.getInstance();
     this.id = id;

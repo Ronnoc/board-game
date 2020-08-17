@@ -4,8 +4,8 @@ import { CardTrait } from "../../../enums/CardTrait";
 import { SkillIcon } from "../../../enums/SkillIcon";
 import { PlayerCardType } from "../../../enums/PlayerCardType";
 
-export class Rolands38Special extends IPlayerCard {
-  mName = "Rolands38Special";
+export class Roland38Special extends IPlayerCard {
+  mName = "Roland38Special";
 
   mCost = 3;
 

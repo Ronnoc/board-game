@@ -6,7 +6,7 @@ import { PlayerInputFactory } from "./inputs/PlayerInputFactory";
 let uiUpdateTimeout: number | undefined;
 
 export const WaitingFor = Vue.component("waiting-for", {
-  props: ["player", "players", "waitingfor"],
+  props: ["player", "players", "waitingFor"],
   components: {
     "or-options": OrOptions,
     "select-option": SelectOption,
@@ -19,7 +19,7 @@ export const WaitingFor = Vue.component("waiting-for", {
         const root = (this).$root as any;
         xhr.open("GET", `/api/waiting_for${window.location.search}`);
         xhr.onerror = function () {
-          alert("Error getting waitingfor data");
+          alert("Error getting waitingFor data");
         };
         xhr.onload = () => {
           if (xhr.status === 200) {
@@ -59,12 +59,12 @@ export const WaitingFor = Vue.component("waiting-for", {
     },
   },
   render(createElement) {
-    if (this.waitingfor === undefined) {
+    if (this.waitingFor === undefined) {
       this.waitForUpdate();
       return createElement("div", "Not your turn to take any actions");
     }
     const input = new PlayerInputFactory().getPlayerInput(
-      createElement, this.players, this.player, this.waitingfor, (out: Array<Array<string>>) => {
+      createElement, this.players, this.player, this.waitingFor, (out: Array<Array<string>>) => {
         const xhr = new XMLHttpRequest();
         xhr.open("POST", `/api/player_input?id=${(this.$parent as any).player.id}`);
         xhr.responseType = "json";
@@ -92,7 +92,7 @@ export const WaitingFor = Vue.component("waiting-for", {
           }
         };
         xhr.onerror = function () {
-          console.log("Error sending waitingfor input data");
+          console.log("Error sending waitingFor input data");
         };
         xhr.send(JSON.stringify(out));
       }, true, true,

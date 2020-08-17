@@ -70,7 +70,7 @@ export const PlayerHome = Vue.component("player-home", {
       </vm-log-panel>
       <vm-waiting-for
         :player="player"
-        :waitingfor="player.waitingfor">
+        :waitingFor="player.waitingFor">
       </vm-waiting-for>
     </div>
     `,
