@@ -1,20 +1,20 @@
 import { IActCard } from "./IActCard";
 import { IAgendaCard } from "./IAgendaCard";
-import { IFCard } from "./IFCard";
+import { ICard } from "./ICard";
 import { CardType } from "../enums/CardType";
 import { Game } from "../Game";
 import { ILocationCard } from "./ILocationCard";
 import { ChaosBag } from "../ChaosBag";
 import { ChaosToken } from "../enums/ChaosToken";
 
-export class IScenario implements IFCard {
+export class IScenario extends ICard {
   mCardType = CardType.SCENARIO;
 
   mName = "IScenario";
 
-  mActs: Array<typeof IActCard> | undefined;
+  mActs: Array<typeof IActCard> = [];
 
-  mAgendas: Array<typeof IAgendaCard> | undefined;
+  mAgendas: Array<typeof IAgendaCard> = [];
 
   mActId = 0;
 

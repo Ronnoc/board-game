@@ -10,10 +10,6 @@ export class IEnemyCard extends ITreacheryCard {
 
   mText = "IEnemyCard.text";
 
-  html(): string {
-    return this.mName;
-  }
-
   mTraits: Array<CardTrait> = [];
 
   mFight: number | undefined;

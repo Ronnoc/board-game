@@ -1,19 +1,19 @@
 import { Game } from "../Game";
-import { IFCard } from "./IFCard";
+import { ICard } from "./ICard";
 import { CardType } from "../enums/CardType";
 
-export class IAgendaCard implements IFCard {
+export class IAgendaCard extends ICard {
   mCardType = CardType.AGENDA;
 
   mName = "IAgendaCard";
 
-  html(): string {
-    return this.mName;
-  }
-
   mStage: number | undefined;
 
   mDooms: number | undefined;
+
+  mFrontText = "";
+
+  mBackText = "";
 
   checkTurnOver(game: Game): boolean {
     throw new Error(`${this.mName} checkTurnOver NotImplemented`);
@@ -23,8 +23,4 @@ export class IAgendaCard implements IFCard {
   turnOver(game: Game): void {
     throw new Error(`${this.mName} turnOver NotImplemented`);
   }
-
-  mFrontText = "";
-
-  mBackText = "";
 }

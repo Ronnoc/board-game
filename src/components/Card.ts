@@ -1,7 +1,7 @@
 import Vue from "vue";
 import { ILocationCard } from "../cards/ILocationCard";
 import { CardType } from "../enums/CardType";
-import { IFCard } from "../cards/IFCard";
+import { ICard } from "../cards/ICard";
 
 const Localhtml = (card: ILocationCard): string => {
   let rtn = "";
@@ -27,7 +27,7 @@ export const Card = Vue.component("card", {
   computed: {
     getCardContent() {
       if (this.card === undefined) return "card is undefined";
-      if ((this.card as IFCard).mCardType === CardType.LOCATION) {
+      if ((this.card as ICard).mCardType === CardType.LOCATION) {
         return Localhtml(this.card);
       }
       return JSON.stringify(this.card, null, 2);
@@ -35,14 +35,7 @@ export const Card = Vue.component("card", {
   },
   template: `
   <div class=general_card>
-    <div class="card_resources_counter" v-if="card.resources !== undefined">
-      {{ card.mResourceName }}:
-      <span class="card_resources_counter--number"> 
-      {{ card.mResource }}
-      </span>
-    </div>
-    <p class="card-content-wrapper" v-html=getCardContent>
-    </p>
+    <p class="card-content-wrapper" v-html=getCardContent></p>
   </div>
   `,
 });

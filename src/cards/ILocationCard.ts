@@ -1,8 +1,8 @@
 import { Game } from "../Game";
-import { IFCard } from "./IFCard";
+import { ICard } from "./ICard";
 import { CardType } from "../enums/CardType";
 
-export class ILocationCard implements IFCard {
+export class ILocationCard extends ICard {
   mCardType = CardType.LOCATION;
 
   mName = "ILocationCard";
@@ -18,10 +18,6 @@ export class ILocationCard implements IFCard {
   mBackText = "";
 
   mVictoryPoint = 0;
-
-  resource: Array<number>=[];
-
-  resourceName: Array<string> =[];
 
   isFront = false;
 

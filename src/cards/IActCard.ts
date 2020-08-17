@@ -1,15 +1,11 @@
 import { Game } from "../Game";
-import { IFCard } from "./IFCard";
+import { ICard } from "./ICard";
 import { CardType } from "../enums/CardType";
 
-export class IActCard implements IFCard {
+export class IActCard extends ICard {
   mCardType = CardType.ACT;
 
   mName = "IActCard";
-
-  html(): string {
-    return this.mName;
-  }
 
   mStage: number | undefined;
 

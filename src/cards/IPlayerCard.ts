@@ -4,10 +4,10 @@ import { CardTrait } from "../enums/CardTrait";
 import { SkillIcon } from "../enums/SkillIcon";
 import { Game } from "../Game";
 import { Player } from "../Player";
-import { IFCard } from "./IFCard";
+import { ICard } from "./ICard";
 import { PlayerCardType } from "../enums/PlayerCardType";
 
-export class IPlayerCard implements IFCard {
+export class IPlayerCard extends ICard {
   mCardType = CardType.PLAYER;
 
   mName = "IPlayerCard";

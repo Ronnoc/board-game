@@ -1,9 +1,9 @@
 import { Game } from "../Game";
 import { Player } from "../Player";
-import { IFCard } from "./IFCard";
+import { ICard } from "./ICard";
 import { CardType } from "../enums/CardType";
 
-export class ITreacheryCard implements IFCard {
+export class ITreacheryCard extends ICard {
   mCardType = CardType.TREACHERY;
 
   mName = "ITreacheryCard";
