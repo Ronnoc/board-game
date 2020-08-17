@@ -4,4 +4,5 @@ export enum CardTrait {
   ITEM,
   WEAPON,
   FIREARM,
+  CREATURE,
 }

@@ -5,5 +5,5 @@ export class ICard {
 
   mCardType = CardType.UNKNOWN;
 
-  static mArkhamDBID = "ICard";
+  static cArkhamDBID = "ICard";
 }

@@ -1,5 +1,6 @@
 export enum EncounterSet {
   UNKNOWN,
+  CORE_THE_GATHERING,
   CORE_RATS,
   CORE_GHOULS,
   CORE_STRIKING_FEAR,

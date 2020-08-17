@@ -2,7 +2,7 @@ import { ILocationCard } from "../../ILocationCard";
 import { Game } from "../../../Game";
 
 export class Study extends ILocationCard {
-  static mArkhamDBID = "01111";
+  static cArkhamDBID = "01111";
 
   mName = "Study";
 

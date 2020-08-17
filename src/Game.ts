@@ -20,7 +20,7 @@ import { IEnemyCard } from "./cards/IEnemyCard";
 import { IPlayerCard } from "./cards/IPlayerCard";
 
 export class Game implements ILoadable<SerializedGame, Game> {
-  phase = Phase.START;
+  phase = Phase.UNKNOWN;
 
   interrupts: Array<PlayerInterrupt> = [];
 
@@ -81,6 +81,7 @@ export class Game implements ILoadable<SerializedGame, Game> {
     this.id = id;
     this.first = first;
     this.players = players;
+    this.phase = Phase.INVESTIGATION;
     this.scenario = new TheGathering();
     this.scenario.init(this);
     this.players.forEach((player) => {

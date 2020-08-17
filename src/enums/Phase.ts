@@ -1,6 +1,8 @@
 export enum Phase {
-  UNKNOWN = "unknown",
-  ACTION = "action",
-  END = "end",
-  START = "start",
+  UNKNOWN = "Unknown",
+  MYTHOS = "Mythos",
+  INVESTIGATION = "Investigation",
+  ENEMY = "Enemy",
+  UPKEEP = "Upkeep",
+  END = "Emd",
 }
