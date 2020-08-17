@@ -16,6 +16,7 @@ export const WaitingFor = Vue.component("waiting-for", {
       clearTimeout(uiUpdateTimeout);
       const askForUpdate = () => {
         const xhr = new XMLHttpRequest();
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const root = (this).$root as any;
         xhr.open("GET", `/api/waiting_for${window.location.search}`);
         xhr.onerror = function onError() {
@@ -55,6 +56,7 @@ export const WaitingFor = Vue.component("waiting-for", {
         xhr.responseType = "json";
         xhr.send();
       };
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       uiUpdateTimeout = setTimeout(askForUpdate, 2000) as any;
     },
   },
@@ -66,16 +68,15 @@ export const WaitingFor = Vue.component("waiting-for", {
     const input = new PlayerInputFactory().getPlayerInput(
       createElement, this.players, this.player, this.waitingFor, (out: Array<Array<string>>) => {
         const xhr = new XMLHttpRequest();
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         xhr.open("POST", `/api/player_input?id=${(this.$parent as any).player.id}`);
         xhr.responseType = "json";
         xhr.onload = () => {
           if (xhr.status === 200) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const root = (this.$root as any);
             root.player = xhr.response;
             root.screen = "vm-player-home";
-            if (root.player.phase === "end" && window.location.pathname !== "/the-end") {
-              (window as any).location = (window as any).location;
-            }
           } else if (xhr.status === 400 && xhr.responseType === "json") {
             const element: HTMLElement | null = document.getElementById("dialog-default");
             const message: HTMLElement | null = document.getElementById("dialog-default-message");

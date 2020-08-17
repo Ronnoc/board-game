@@ -5,6 +5,7 @@ import { CreateGameForm } from "./CreateGameForm";
 import { GameHome } from "./GameHome";
 import { IFGameInfo } from "../interface/IFGameInfo";
 import { IFPlayerGameState } from "../interface/IFPlayerGameState";
+import { Phase } from "../enums/Phase";
 
 export const vm = new Vue({
   el: "#app",
@@ -23,21 +24,20 @@ export const vm = new Vue({
     updatePlayer() {
       const currentPathname: string = window.location.pathname;
       const xhr = new XMLHttpRequest();
-      const app = (this as any);
       xhr.open("GET", `/api/player_state${window.location.search.replace("&noredirect", "")}`);
       xhr.onerror = function onError() {
         alert("Error getting game data");
       };
       xhr.onload = () => {
         if (xhr.status === 200) {
-          app.player = xhr.response;
-          if (app.player.phase === "end" && window.location.search.indexOf("&noredirect") === -1) {
-            app.screen = "vm-the-end";
+          this.player = xhr.response;
+          if (this.player.phase === Phase.END && window.location.search.indexOf("&noredirect") === -1) {
+            this.screen = "vm-the-end";
             if (currentPathname !== "/the-end") {
               window.history.replaceState(xhr.response, "Teraforming Mars - Player", `/the-end?id=${xhr.response.id}`);
             }
           } else {
-            app.screen = "vm-player-home";
+            this.screen = "vm-player-home";
             if (currentPathname !== "/player") {
               window.history.replaceState(xhr.response, "Teraforming Mars - Game", `/player?id=${xhr.response.id}`);
             }

@@ -12,10 +12,11 @@ export const OrOptions = Vue.component("or-options", {
   },
   methods: {
     saveData() {
-      const { componentInstance } = this.$data.childComponents[this.$data.selectedOption];
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const { componentInstance } = this.$data.childComponents[this.$data.selectedOption] as any;
       if (componentInstance !== undefined) {
-        if ((componentInstance as any).saveData instanceof Function) {
-          (componentInstance as any).saveData();
+        if (componentInstance.saveData instanceof Function) {
+          componentInstance.saveData();
           return;
         }
       }
@@ -29,7 +30,9 @@ export const OrOptions = Vue.component("or-options", {
       children.push(createElement("label", [createElement("div", this.playerinput.title)]));
     }
     const optionElements: Array<VNode> = [];
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     this.playerinput.options.forEach((option: any, idx: number) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const domProps: { [key: string]: any } = {
         name: `selectOption${unique}`,
         type: "radio",
@@ -44,6 +47,7 @@ export const OrOptions = Vue.component("or-options", {
         createElement("input", {
           domProps,
           on: {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             change: (event: any) => {
               this.selectedOption = Number(event.target.value);
             },

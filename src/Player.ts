@@ -102,10 +102,6 @@ export class Player implements ILoadable<SerializedPlayer, Player> {
     }
   }
 
-  // private hasInterrupt(game: Game): boolean {
-  //   return game.interrupts.find((interrupt) => interrupt.player === this) !== undefined;
-  // }
-
   public getInfo(): IFPlayerInfo {
     return {
       id: this.id,

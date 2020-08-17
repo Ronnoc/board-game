@@ -23,6 +23,15 @@ const debugJson = {
   ],
 };
 
+interface oneLink {
+  source: number,
+  target: number,
+}
+interface oneCoord {
+  x: number,
+  y: number,
+}
+
 @Component({
   template: `
     <div>
@@ -67,7 +76,7 @@ export class Board extends Vue {
 
   mSavedNode: d3.SimulationNodeDatum[] = [];
 
-  mLinks: Array<any> = [];
+  mLinks: Array<oneLink> = [];
 
   colors = [
     "#2196F3",
@@ -87,7 +96,7 @@ export class Board extends Vue {
     return this.mSavedNode;
   }
 
-  get links(): any {
+  get links(): Array<oneLink> {
     return this.mLinks;
   }
 
@@ -95,7 +104,7 @@ export class Board extends Vue {
     console.log(info);
   }
 
-  get coords(): any {
+  get coords(): Array<oneCoord> {
     const minX = Math.min(
       ...this.mSavedNode.map((n: d3.SimulationNodeDatum) => n.x as number),
     );
@@ -112,11 +121,11 @@ export class Board extends Vue {
       x:
         this.padding
         + ((node.x as number) - minX)
-          * ((this.width - 2 * this.padding) / (maxX - minX)),
+        * ((this.width - 2 * this.padding) / (maxX - minX)),
       y:
         this.padding
         + ((node.y as number) - minY)
-          * ((this.height - 2 * this.padding) / (maxY - minY)),
+        * ((this.height - 2 * this.padding) / (maxY - minY)),
     }));
   }
 

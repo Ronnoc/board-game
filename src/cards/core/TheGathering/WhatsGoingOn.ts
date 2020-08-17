@@ -11,7 +11,7 @@ export class WhatsGoingOn extends IActCard {
   mCluePerInvestigator = true;
 
   turnOver(game: Game): void {
-    console.log(this.mName);
+    game.log(`${this.mName} turnOver`);
   }
 
   mFrontText = "What's Going On front";

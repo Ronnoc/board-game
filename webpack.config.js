@@ -10,10 +10,6 @@ module.exports = {
       vue$: "vue/dist/vue.esm.js", // 'vue/dist/vue.common.js' for webpack 1
     },
   },
-  optimization: {
-    splitChunks: {
-    },
-  },
   plugins: [
     new CompressionPlugin({
       filename: "[path].gz[query]",

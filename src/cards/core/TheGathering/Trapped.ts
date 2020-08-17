@@ -9,7 +9,7 @@ export class Trapped extends IAgendaCard {
   mDooms = 3;
 
   turnOver(game: Game): void {
-    console.log(this.mName);
+    game.log(`${this.mName} turnOver`);
   }
 
   mFrontText = "front";
