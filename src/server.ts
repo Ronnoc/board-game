@@ -158,8 +158,9 @@ function apiGetWaitingFor(
     return;
   }
   const qs: string = req.url.substring("/api/waiting_for?".length);
-  const queryParams = querystring.parse(qs);
-  const playerId = (queryParams as Record<string, string>).id;
+  const queryParams = querystring.parse(qs) as Record<string, string>;
+  const playerId = queryParams.id;
+  const prevGameAge = parseInt(queryParams["prev-game-age"], 10);
   const player = allPlayers.get(playerId);
   if (player === undefined) {
     notFound(req, res, `apiGetWaitingFor::player is undefined with id = ${playerId}`);
@@ -178,7 +179,7 @@ function apiGetWaitingFor(
   };
   if (player.getWaitingFor() !== undefined || game.phase === Phase.END) {
     answer.result = "GO";
-  } else {
+  } else if (game.needRefresh(prevGameAge)) {
     answer.result = "REFRESH";
   }
   res.write(JSON.stringify(answer));

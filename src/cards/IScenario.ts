@@ -63,7 +63,7 @@ export class IScenario extends ICard {
       if (XEncounterSet !== undefined) {
         rtn.push(...(new XEncounterSet()).create());
       } else {
-        console.warn(`${element} EncounterSet not created`);
+        console.warn(`IScenario.ts:: ${element} EncounterSet not created`);
       }
     });
     return rtn;

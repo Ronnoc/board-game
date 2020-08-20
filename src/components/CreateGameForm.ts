@@ -32,7 +32,7 @@ export class CreateGameForm extends Vue implements IFCreateGameForm {
 
   players: Array<IFCreatePlayer> = [
     {
-      name: "kyb",
+      name: "blue",
       color: Color.BLUE,
       first: true,
     } as IFCreatePlayer,

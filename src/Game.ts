@@ -5,11 +5,8 @@ import { Phase } from "./enums/Phase";
 import { IFCreateGameForm } from "./interface/IFCreateGameForm";
 import { IFGameInfo } from "./interface/IFGameInfo";
 import { PlayerInterrupt } from "./interrupts/PlayerInterrupt";
-import { OrOptions } from "./inputs/OrOptions";
-import { SelectOption } from "./inputs/SelectOption";
 import { LogMessageData } from "./LogMessageData";
 import { LogMessage } from "./LogMessage";
-import { LogMessageDataType } from "./enums/LogMessageDataType";
 import { ILocationCard } from "./cards/ILocationCard";
 import { IScenario } from "./cards/IScenario";
 import { TheGathering } from "./cards/core/TheGathering/TheGathering";
@@ -21,6 +18,7 @@ import { IPlayerCard } from "./cards/IPlayerCard";
 import { EncounterDealer } from "./EncounterDealer";
 import { ITreacheryCard } from "./cards/ITreacheryCard";
 
+export type PlayerId = string;
 export class Game implements ILoadable<SerializedGame, Game> {
   phase = Phase.UNKNOWN;
 
@@ -42,38 +40,7 @@ export class Game implements ILoadable<SerializedGame, Game> {
 
   encounterDealer: EncounterDealer | undefined;
 
-  private count = 1;
-
-  private getDebugOption(): OrOptions {
-    this.count += 1;
-    this.count = Math.min(this.count, 5);
-    const debugOptions = new OrOptions();
-    for (let i = 0; i < this.count; i += 1) {
-      debugOptions.options.push(
-        new SelectOption(String(i), () => {
-          this.log(
-            `\${0} select ${String(i)}`,
-            new LogMessageData(LogMessageDataType.PLAYER, this.first.id),
-          );
-          if (!this.locations[0].isFront) {
-            this.locations[0].turnOver(this);
-          }
-          console.log(`choice ${i}`);
-          return undefined;
-        }),
-      );
-    }
-    return debugOptions;
-  }
-
-  private getDebugWaitingFor(): () => void {
-    return () => {
-      this.first.setWaitingFor(
-        this.getDebugOption(),
-        this.getDebugWaitingFor(),
-      );
-    };
-  }
+  private doneInvestigationPlayers: Set<PlayerId> = new Set<PlayerId>();
 
   constructor(
     public id: string,
@@ -81,6 +48,7 @@ export class Game implements ILoadable<SerializedGame, Game> {
     public first: Player,
     public createGameForm: IFCreateGameForm,
   ) {
+    this.log("Init Game");
     Database.getInstance();
     this.id = id;
     this.first = first;
@@ -88,9 +56,7 @@ export class Game implements ILoadable<SerializedGame, Game> {
     this.phase = Phase.INVESTIGATION;
     this.scenario = new TheGathering();
     this.scenario.init(this);
-    this.players.forEach((player) => {
-      player.setWaitingFor(this.getDebugOption(), this.getDebugWaitingFor());
-    });
+    this.gotoInvestigationPhase();
   }
 
   public log(message: string, ...data: LogMessageData[]): void {
@@ -105,10 +71,64 @@ export class Game implements ILoadable<SerializedGame, Game> {
     return Object.assign(this, d);
   }
 
+  public needRefresh(num: number): boolean {
+    return this.getGameAge() > num;
+  }
+
+  // phase
+  private gotoInvestigationPhase(): void {
+    this.log("game goto investigation phase");
+    this.phase = Phase.INVESTIGATION;
+    this.doneInvestigationPlayers.clear();
+    this.players.forEach((player) => {
+      player.runInvestigationPhase(this);
+    });
+  }
+
+  private allPlayersDoneInvestigation(): boolean {
+    let rtn = true;
+    this.players.forEach(
+      (player) => {
+        if (!this.doneInvestigationPlayers.has(player.id)) {
+          rtn = false;
+        }
+      },
+    );
+    return rtn;
+  }
+
+  public playerFinishedInvestigationPhase(player: Player): void {
+    this.doneInvestigationPlayers.add(player.id);
+    if (this.allPlayersDoneInvestigation()) {
+      this.gotoEnemyPhase();
+    }
+  }
+
+  private gotoEnemyPhase(): void {
+    this.log("game goto Enemy phase");
+    this.gotoUpkeepPhase();
+  }
+
+  private gotoUpkeepPhase(): void {
+    this.log("game goto Upkeep phase");
+    this.gotoMythosPhase();
+  }
+
+  private gotoMythosPhase(): void {
+    this.log("game goto Mythos phase");
+    this.gotoInvestigationPhase();
+  }
+
+  // get
   public getPlayerById(id: string): Player {
     return this.players.filter((p) => p.id === id)[0];
   }
 
+  public getGameAge(): number {
+    return this.gameLog[this.gameLog.length - 1].timestamp;
+  }
+
+  // set
   public setAct(act: IActCard): void {
     this.act = act;
   }

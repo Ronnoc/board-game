@@ -13,4 +13,4 @@ function insertEncounterSet(XIEncounterSet: typeof IEncounterSet): void {
 }
 
 CoreEncounterSets.forEach(insertEncounterSet);
-console.log(`insertEncounterSet size ${EncounterSetFactory.size}`);
+console.log(`cards/EncounterSetFactory.ts:: insertEncounterSet size ${EncounterSetFactory.size}`);

@@ -11,6 +11,8 @@ import { IPlayerCard } from "./cards/IPlayerCard";
 import { SelectOption } from "./inputs/SelectOption";
 import { OrOptions } from "./inputs/OrOptions";
 import { ILocationCard } from "./cards/ILocationCard";
+import { LogMessageData } from "./LogMessageData";
+import { LogMessageDataType } from "./enums/LogMessageDataType";
 
 export class Player implements ILoadable<SerializedPlayer, Player> {
   public id = "";
@@ -39,14 +41,48 @@ export class Player implements ILoadable<SerializedPlayer, Player> {
     this.id = generateRandomId();
   }
 
+  private count = 1;
+
+  public getDebugOption(game: Game): OrOptions {
+    this.count += 1;
+    this.count = Math.min(this.count, 5);
+    const debugOptions = new OrOptions();
+    for (let i = 0; i < this.count; i += 1) {
+      debugOptions.options.push(
+        new SelectOption(String(i), () => {
+          game.log(
+            `\${0} select ${String(i)}`,
+            new LogMessageData(LogMessageDataType.PLAYER, this.id),
+          );
+          if (!game.locations[0].isFront) {
+            game.locations[0].turnOver(game);
+          }
+          return undefined;
+        }),
+      );
+    }
+    return debugOptions;
+  }
+
+  // load
   public loadFromJSON(d: SerializedPlayer): Player {
     return Object.assign(this, d);
   }
 
+  // set
   public setCurrentGame(gameId: string): void {
     this.currentGame = gameId;
   }
+  // get
 
+  // phase
+  public runInvestigationPhase(game: Game): void {
+    this.setWaitingFor(this.getDebugOption(game), () => {
+      game.playerFinishedInvestigationPhase(this);
+    });
+  }
+
+  // waiting for
   public process(game: Game, input: Array<Array<string>>): void {
     if (this.waitingFor === undefined || this.waitingForCb === undefined) {
       throw new Error("Not waiting for anything");
@@ -102,6 +138,7 @@ export class Player implements ILoadable<SerializedPlayer, Player> {
     }
   }
 
+  // output
   public getInfo(): IFPlayerInfo {
     return {
       id: this.id,
@@ -131,6 +168,7 @@ export class Player implements ILoadable<SerializedPlayer, Player> {
       agenda: game.agenda,
       scenario: game.scenario,
       chaosBag: game.chaosBag,
+      gameAge: game.getGameAge(),
     } as IFPlayerGameState);
   }
 }

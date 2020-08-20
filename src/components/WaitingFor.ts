@@ -18,7 +18,7 @@ export const WaitingFor = Vue.component("waiting-for", {
         const xhr = new XMLHttpRequest();
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const root = (this).$root as any;
-        xhr.open("GET", `/api/waiting_for${window.location.search}`);
+        xhr.open("GET", `/api/waiting_for${window.location.search}&prev-game-age=${this.player.gameAge.toString()}`);
         xhr.onerror = function onError() {
           alert("Error getting waitingFor data");
         };
@@ -61,8 +61,8 @@ export const WaitingFor = Vue.component("waiting-for", {
     },
   },
   render(createElement) {
+    this.waitForUpdate();
     if (this.waitingFor === undefined) {
-      this.waitForUpdate();
       return createElement("div", "Not your turn to take any actions");
     }
     const input = new PlayerInputFactory().getPlayerInput(

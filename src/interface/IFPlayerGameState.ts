@@ -10,7 +10,6 @@ import { IAgendaCard } from "../cards/IAgendaCard";
 import { IScenario } from "../cards/IScenario";
 import { Phase } from "../enums/Phase";
 import { ChaosBag } from "../ChaosBag";
-import { EncounterDealer } from "../EncounterDealer";
 
 export interface IFPlayerGameState {
   // player
@@ -33,5 +32,5 @@ export interface IFPlayerGameState {
   agenda: IAgendaCard,
   scenario: IScenario,
   chaosBag: ChaosBag,
-  encounterDealer: EncounterDealer,
+  gameAge: number,
 }
