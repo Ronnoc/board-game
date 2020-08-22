@@ -56,7 +56,7 @@ export class Game implements ILoadable<SerializedGame, Game> {
     this.phase = Phase.INVESTIGATION;
     this.scenario = new TheGathering();
     this.scenario.init(this);
-    this.gotoInvestigationPhase();
+    this.gotoPreparePhase();
   }
 
   public log(message: string, ...data: LogMessageData[]): void {
@@ -76,6 +76,12 @@ export class Game implements ILoadable<SerializedGame, Game> {
   }
 
   // phase
+  private gotoPreparePhase(): void {
+    this.log("game goto prepare phase");
+    this.phase = Phase.PREPARE;
+    this.gotoInvestigationPhase();
+  }
+
   private gotoInvestigationPhase(): void {
     this.log("game goto investigation phase");
     this.phase = Phase.INVESTIGATION;
@@ -106,16 +112,19 @@ export class Game implements ILoadable<SerializedGame, Game> {
 
   private gotoEnemyPhase(): void {
     this.log("game goto Enemy phase");
+    this.phase = Phase.ENEMY;
     this.gotoUpkeepPhase();
   }
 
   private gotoUpkeepPhase(): void {
     this.log("game goto Upkeep phase");
+    this.phase = Phase.UPKEEP;
     this.gotoMythosPhase();
   }
 
   private gotoMythosPhase(): void {
     this.log("game goto Mythos phase");
+    this.phase = Phase.MYTHOS;
     this.gotoInvestigationPhase();
   }
 

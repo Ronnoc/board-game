@@ -1,5 +1,6 @@
 export enum Phase {
   UNKNOWN = "Unknown",
+  PREPARE = "Prepare",
   MYTHOS = "Mythos",
   INVESTIGATION = "Investigation",
   ENEMY = "Enemy",
