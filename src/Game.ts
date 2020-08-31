@@ -77,13 +77,13 @@ export class Game implements ILoadable<SerializedGame, Game> {
 
   // phase
   private gotoPreparePhase(): void {
-    this.log("game goto prepare phase");
+    this.log("game goto Prepare phase");
     this.phase = Phase.PREPARE;
     this.gotoInvestigationPhase();
   }
 
   private gotoInvestigationPhase(): void {
-    this.log("game goto investigation phase");
+    this.log("game goto Investigation phase");
     this.phase = Phase.INVESTIGATION;
     this.doneInvestigationPlayers.clear();
     this.players.forEach((player) => {

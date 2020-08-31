@@ -61,8 +61,8 @@ export const WaitingFor = Vue.component("waiting-for", {
     },
   },
   render(createElement) {
-    this.waitForUpdate();
     if (this.waitingFor === undefined) {
+      this.waitForUpdate();
       return createElement("div", "Not your turn to take any actions");
     }
     const input = new PlayerInputFactory().getPlayerInput(
