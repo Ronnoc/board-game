@@ -41,8 +41,8 @@ export const PlayerHome = Vue.component("player-home", {
       </div>
       <div>
         *threats
-        <table v-if="player.npcs.threats > 0"><tbody><tr>
-          <td v-for="thr in player.threats" :card="thr">
+        <table v-if="player.threats.length > 0"><tbody><tr>
+          <td v-for="thr in player.npcs" :card="thr">
             <vm-card :card="thr"></vm-card>
           </td>
         </tr></tbody></table>
@@ -58,7 +58,7 @@ export const PlayerHome = Vue.component("player-home", {
       </div>
       <div>
         *cardsInHand
-        <table v-if="player.cardsInHand.threats > 0"><tbody><tr>
+        <table v-if="player.cardsInHand.length > 0"><tbody><tr>
           <td v-for="crd in player.cardsInHand" :card="crd">
             <vm-card :card="crd"></vm-card>
           </td>

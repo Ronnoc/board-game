@@ -1,8 +1,8 @@
 import { PlayerInput } from "./PlayerInput";
 import { PlayerInputTypes } from "../enums/PlayerInputTypes";
-import { SelectOption } from "./SelectOption";
+import { SelectInput } from "./SelectInput";
 
-export class OrOptions implements PlayerInput {
+export class OrInput implements PlayerInput {
   public cb(): undefined {
     return undefined;
   }
@@ -14,7 +14,7 @@ export class OrOptions implements PlayerInput {
   public inputType: PlayerInputTypes = PlayerInputTypes.OR_OPTIONS;
 
   constructor(
-    ...options: Array<SelectOption>
+    ...options: Array<SelectInput>
   ) {
     this.options = options;
   }

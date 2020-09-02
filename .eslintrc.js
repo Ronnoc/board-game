@@ -24,6 +24,7 @@ module.exports = {
     "class-methods-use-this": "off",
     "no-alert": "off",
     "no-empty-function": "off",
+    "no-template-curly-in-string": "off",
   },
   settings: {
     "import/resolver": {

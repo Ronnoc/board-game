@@ -17,6 +17,7 @@ import { IEnemyCard } from "./cards/IEnemyCard";
 import { IPlayerCard } from "./cards/IPlayerCard";
 import { EncounterDealer } from "./EncounterDealer";
 import { IEncounterCard } from "./cards/IEncounterCard";
+import { LogMessageDataType } from "./enums/LogMessageDataType";
 
 export type PlayerId = string;
 export class Game implements ILoadable<SerializedGame, Game> {
@@ -99,7 +100,11 @@ export class Game implements ILoadable<SerializedGame, Game> {
   }
 
   public playerFinishedPreparePhase(player: Player): void {
-    this.doneInvestigationPlayers.add(player.id);
+    this.donePreparePlayers.add(player.id);
+    this.log(
+      "${0} finish prepare",
+      new LogMessageData(LogMessageDataType.PLAYER, this.id),
+    );
     if (this.allPlayersDonePrepare()) {
       this.gotoInvestigationPhase();
     }

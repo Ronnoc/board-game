@@ -1,7 +1,7 @@
 import { PlayerInput } from "./PlayerInput";
 import { PlayerInputTypes } from "../enums/PlayerInputTypes";
 
-export class SelectCard<T> implements PlayerInput {
+export class SelectCardInput<T> implements PlayerInput {
     public inputType: PlayerInputTypes = PlayerInputTypes.SELECT_CARD;
 
     constructor(

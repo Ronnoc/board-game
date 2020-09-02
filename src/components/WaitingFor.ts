@@ -2,6 +2,7 @@ import Vue from "vue";
 import { OrOptions } from "./inputs/OrOptions";
 import { SelectOption } from "./inputs/SelectOption";
 import { PlayerInputFactory } from "./inputs/PlayerInputFactory";
+import { SelectCardOption } from "./inputs/SelectCardOption";
 
 let uiUpdateTimeout: number | undefined;
 
@@ -10,6 +11,7 @@ export const WaitingFor = Vue.component("waiting-for", {
   components: {
     "or-options": OrOptions,
     "select-option": SelectOption,
+    "select-card": SelectCardOption,
   },
   methods: {
     waitForUpdate() {

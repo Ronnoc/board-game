@@ -7,14 +7,14 @@ import { IFPlayerGameState } from "./interface/IFPlayerGameState";
 import { IFPlayerInfo } from "./interface/IFPlayerInfo";
 import { RolandBanks } from "./cards/core/investigators/RolandBanks";
 import { debugDecks, DeckDealer } from "./DeckDealer";
-import { SelectOption } from "./inputs/SelectOption";
-import { OrOptions } from "./inputs/OrOptions";
+import { SelectInput } from "./inputs/SelectInput";
+import { OrInput } from "./inputs/OrInput";
 import { ILocationCard } from "./cards/ILocationCard";
 import { LogMessageData } from "./LogMessageData";
 import { LogMessageDataType } from "./enums/LogMessageDataType";
 import { CardType } from "./enums/CardType";
 import { ICard } from "./cards/ICard";
-import { SelectCard } from "./inputs/SelectCardOption";
+import { SelectCardInput } from "./inputs/SelectCardInput";
 import { IEncounterCard } from "./cards/IEncounterCard";
 import { WeaknessType } from "./enums/WeaknessType";
 
@@ -50,13 +50,13 @@ export class Player implements ILoadable<SerializedPlayer, Player> {
 
   private count = 1;
 
-  public getDebugOption(game: Game): OrOptions {
+  public getDebugOption(game: Game): OrInput {
     this.count += 1;
     this.count = Math.min(this.count, 5);
-    const debugOptions = new OrOptions();
+    const debugOptions = new OrInput();
     for (let i = 0; i < this.count; i += 1) {
       debugOptions.options.push(
-        new SelectOption(String(i), () => {
+        new SelectInput(String(i), () => {
           game.log(
             `\${0} select ${String(i)}`,
             new LogMessageData(LogMessageDataType.PLAYER, this.id),
@@ -97,7 +97,7 @@ export class Player implements ILoadable<SerializedPlayer, Player> {
       );
     }
     this.setWaitingFor(
-      new SelectCard(
+      new SelectCardInput(
         "Select cards to redraw",
         this.cardsInHand,
         (selectCards: Array<ICard>) => {
@@ -174,15 +174,34 @@ export class Player implements ILoadable<SerializedPlayer, Player> {
     input: Array<Array<string>>,
     pi: PlayerInput,
   ): void {
-    if (pi instanceof SelectOption) {
+    if (pi instanceof SelectInput) {
       this.runInputCb(game, pi.cb());
-    } else if (pi instanceof OrOptions) {
-      const waiting: OrOptions = pi;
+    } else if (pi instanceof OrInput) {
+      const waiting: OrInput = pi;
       const optionIndex = parseInt(input[0][0], 10);
       const remainingInput = input[0].slice();
       // Remove option index to process option
       remainingInput.shift();
       this.runInput(game, [remainingInput], waiting.options[optionIndex]);
+    } else if (pi instanceof SelectCardInput) {
+      if (input.length !== 1) {
+        throw new Error("Incorrect options provided");
+      }
+      const mappedCards = pi.cards.filter(
+        (card) => input[0].find(
+          (cardId) => cardId === card.runtimeId,
+        ) !== undefined,
+      );
+      if (input[0].length < pi.minCardsToSelect) {
+        throw new Error("Not enough cards selected");
+      }
+      if (input[0].length > pi.maxCardsToSelect) {
+        throw new Error("Too many cards selected");
+      }
+      if (mappedCards.length !== input[0].length) {
+        throw new Error("Not all cards found");
+      }
+      this.runInputCb(game, pi.cb(mappedCards));
     } else {
       throw new Error("Unsupported waitingFor");
     }
