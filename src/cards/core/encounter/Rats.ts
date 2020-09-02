@@ -1,6 +1,6 @@
 import { IEncounterSet } from "../../IEncounterSet";
 import { EncounterSet } from "../../../enums/EncounterSet";
-import { ITreacheryCard } from "../../ITreacheryCard";
+import { IEncounterCard } from "../../IEncounterCard";
 import { SwarmOfRats } from "./SwarmOfRats";
 
 export class Rats extends IEncounterSet {
@@ -8,7 +8,7 @@ export class Rats extends IEncounterSet {
 
   mName = "Rats"
 
-  create(): Array<ITreacheryCard> {
+  create(): Array<IEncounterCard> {
     return [
       new SwarmOfRats(),
       new SwarmOfRats(),

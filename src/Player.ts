@@ -6,13 +6,17 @@ import { PlayerInput } from "./inputs/PlayerInput";
 import { IFPlayerGameState } from "./interface/IFPlayerGameState";
 import { IFPlayerInfo } from "./interface/IFPlayerInfo";
 import { RolandBanks } from "./cards/core/investigators/RolandBanks";
-import { debugDecks } from "./DeckDealer";
-import { IPlayerCard } from "./cards/IPlayerCard";
+import { debugDecks, DeckDealer } from "./DeckDealer";
 import { SelectOption } from "./inputs/SelectOption";
 import { OrOptions } from "./inputs/OrOptions";
 import { ILocationCard } from "./cards/ILocationCard";
 import { LogMessageData } from "./LogMessageData";
 import { LogMessageDataType } from "./enums/LogMessageDataType";
+import { CardType } from "./enums/CardType";
+import { ICard } from "./cards/ICard";
+import { SelectCard } from "./inputs/SelectCardOption";
+import { IEncounterCard } from "./cards/IEncounterCard";
+import { WeaknessType } from "./enums/WeaknessType";
 
 export class Player implements ILoadable<SerializedPlayer, Player> {
   public id = "";
@@ -21,13 +25,13 @@ export class Player implements ILoadable<SerializedPlayer, Player> {
 
   public deck = debugDecks;
 
-  public cardsInHand: Array<IPlayerCard> = [];
+  public cardsInHand: Array<ICard> = [];
 
-  public cardsDiscarded: Array<IPlayerCard> = [];
+  public cardsDiscarded: Array<ICard> = [];
 
-  public assets: Array<IPlayerCard> = [];
+  public assets: Array<ICard> = [];
 
-  public threats: Array<IPlayerCard> = [];
+  public threats: Array<ICard> = [];
 
   public atLocation: ILocationCard | undefined;
 
@@ -37,8 +41,11 @@ export class Player implements ILoadable<SerializedPlayer, Player> {
 
   private waitingForCb?: () => void;
 
+  private deckDealer: DeckDealer;
+
   constructor(public name: string, public color: Color) {
     this.id = generateRandomId();
+    this.deckDealer = new DeckDealer(debugDecks);
   }
 
   private count = 1;
@@ -76,6 +83,49 @@ export class Player implements ILoadable<SerializedPlayer, Player> {
   // get
 
   // phase
+
+  public runPreparePhase(game: Game): void {
+    this.cardsInHand = [];
+    const skipFunc = (card:ICard):boolean => {
+      if (card.mCardType !== CardType.ENCOUNTER) return false;
+      const tmpCard = card as IEncounterCard;
+      return tmpCard.mWeaknessType !== WeaknessType.NORMAL;
+    };
+    for (let i = 0; i < 5; i += 1) {
+      this.cardsInHand.push(
+        this.deckDealer.drawCard(skipFunc),
+      );
+    }
+    this.setWaitingFor(
+      new SelectCard(
+        "Select cards to redraw",
+        this.cardsInHand,
+        (selectCards: Array<ICard>) => {
+          const newCards:Array<ICard> = [];
+          this.cardsInHand.filter(
+            (card) => selectCards.find(
+              (selCard) => selCard.runtimeId === card.runtimeId,
+            ) === undefined,
+          ).forEach(
+            (card) => {
+              newCards.push(card);
+            },
+          );
+          for (let i = 0; i < selectCards.length; i += 1) {
+            newCards.push(this.deckDealer.drawCard(skipFunc));
+          }
+          this.cardsInHand = newCards;
+          selectCards.forEach((card) => this.deckDealer.putInDeck(card));
+          this.deckDealer.shuffleDeck();
+          return undefined;
+        },
+        0, this.cardsInHand.length,
+      ), () => {
+        game.playerFinishedPreparePhase(this);
+      },
+    );
+  }
+
   public runInvestigationPhase(game: Game): void {
     this.setWaitingFor(this.getDebugOption(game), () => {
       game.playerFinishedInvestigationPhase(this);

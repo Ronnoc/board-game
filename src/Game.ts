@@ -16,7 +16,7 @@ import { ChaosBag } from "./ChaosBag";
 import { IEnemyCard } from "./cards/IEnemyCard";
 import { IPlayerCard } from "./cards/IPlayerCard";
 import { EncounterDealer } from "./EncounterDealer";
-import { ITreacheryCard } from "./cards/ITreacheryCard";
+import { IEncounterCard } from "./cards/IEncounterCard";
 
 export type PlayerId = string;
 export class Game implements ILoadable<SerializedGame, Game> {
@@ -42,6 +42,8 @@ export class Game implements ILoadable<SerializedGame, Game> {
 
   private doneInvestigationPlayers: Set<PlayerId> = new Set<PlayerId>();
 
+  private donePreparePlayers: Set<PlayerId> = new Set<PlayerId>();
+
   constructor(
     public id: string,
     public players: Array<Player>,
@@ -53,7 +55,6 @@ export class Game implements ILoadable<SerializedGame, Game> {
     this.id = id;
     this.first = first;
     this.players = players;
-    this.phase = Phase.INVESTIGATION;
     this.scenario = new TheGathering();
     this.scenario.init(this);
     this.gotoPreparePhase();
@@ -79,7 +80,29 @@ export class Game implements ILoadable<SerializedGame, Game> {
   private gotoPreparePhase(): void {
     this.log("game goto Prepare phase");
     this.phase = Phase.PREPARE;
-    this.gotoInvestigationPhase();
+    this.donePreparePlayers.clear();
+    this.players.forEach((player) => {
+      player.runPreparePhase(this);
+    });
+  }
+
+  private allPlayersDonePrepare(): boolean {
+    let rtn = true;
+    this.players.forEach(
+      (player) => {
+        if (!this.donePreparePlayers.has(player.id)) {
+          rtn = false;
+        }
+      },
+    );
+    return rtn;
+  }
+
+  public playerFinishedPreparePhase(player: Player): void {
+    this.doneInvestigationPlayers.add(player.id);
+    if (this.allPlayersDonePrepare()) {
+      this.gotoInvestigationPhase();
+    }
   }
 
   private gotoInvestigationPhase(): void {
@@ -154,8 +177,8 @@ export class Game implements ILoadable<SerializedGame, Game> {
     this.locations = locations;
   }
 
-  public setTreacheryCards(treacheryCards: Array<ITreacheryCard>): void {
-    this.encounterDealer = new EncounterDealer(treacheryCards);
+  public setTreacheryCards(encounterCards: Array<IEncounterCard>): void {
+    this.encounterDealer = new EncounterDealer(encounterCards);
   }
 
   public infoStringify(): string {

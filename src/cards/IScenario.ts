@@ -6,9 +6,9 @@ import { Game } from "../Game";
 import { ILocationCard } from "./ILocationCard";
 import { ChaosBag } from "../ChaosBag";
 import { ChaosToken } from "../enums/ChaosToken";
-import { ITreacheryCard } from "./ITreacheryCard";
 import { EncounterSetFactory } from "./EncounterSetFactory";
 import { EncounterSet } from "../enums/EncounterSet";
+import { IEncounterCard } from "./IEncounterCard";
 
 export class IScenario extends ICard {
   mCardType = CardType.SCENARIO;
@@ -56,8 +56,8 @@ export class IScenario extends ICard {
     );
   }
 
-  protected initEncounterSet(): Array<ITreacheryCard> {
-    const rtn: Array<ITreacheryCard> = [];
+  protected initEncounterSet(): Array<IEncounterCard> {
+    const rtn: Array<IEncounterCard> = [];
     this.mEncounterSets.forEach((element: EncounterSet): void => {
       const XEncounterSet = EncounterSetFactory.get(element);
       if (XEncounterSet !== undefined) {

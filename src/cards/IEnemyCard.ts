@@ -1,10 +1,10 @@
 import { CardTrait } from "../enums/CardTrait";
 import { CardKeyword } from "../enums/CardKeyword";
-import { CardType } from "../enums/CardType";
-import { ITreacheryCard } from "./ITreacheryCard";
+import { IEncounterCard } from "./IEncounterCard";
+import { EncounterType } from "../enums/EncounterType";
 
-export class IEnemyCard extends ITreacheryCard {
-  mCardType = CardType.ENEMY;
+export class IEnemyCard extends IEncounterCard {
+  mEncounterType = EncounterType.TREACHERY;
 
   mName = "IEnemyCard";
 

@@ -6,16 +6,16 @@ import { IFPlayerInput } from "../../interface/IFPlayerInput";
 export class PlayerInputFactory {
   private getComponentName(inputType: PlayerInputTypes): string {
     switch (inputType) {
-      case PlayerInputTypes.AND_OPTIONS:
-        return "and-options";
+      // case PlayerInputTypes.AND_OPTIONS:
+      //   return "and-options";
       case PlayerInputTypes.SELECT_CARD:
         return "select-card";
       case PlayerInputTypes.OR_OPTIONS:
         return "or-options";
       case PlayerInputTypes.SELECT_OPTION:
         return "select-option";
-      case PlayerInputTypes.SELECT_PLAYER:
-        return "select-player";
+      // case PlayerInputTypes.SELECT_PLAYER:
+      //   return "select-player";
       default:
         throw new Error("Unsupported input type");
     }

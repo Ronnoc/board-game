@@ -1,10 +1,10 @@
 export enum CardFaction {
-  UNKNOWN,
-  GUARDIAN,
-  MYSTIC,
-  MYTHOS,
-  NEUTRAL,
-  ROGUE,
-  SEEKER,
-  SURVIVOR,
+  UNKNOWN="Unknown",
+  GUARDIAN="Guardian",
+  MYSTIC="Mystic",
+  MYTHOS="Mythos",
+  NEUTRAL="Neutral",
+  ROGUE="Rogue",
+  SEEKER="Seeker",
+  SURVIVOR="Survivor",
 }

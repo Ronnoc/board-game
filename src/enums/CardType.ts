@@ -1,7 +1,7 @@
 export enum CardType {
   UNKNOWN,
   ENEMY,
-  TREACHERY,
+  ENCOUNTER,
   SCENARIO,
   PLAYER,
   LOCATION,

@@ -1,8 +1,8 @@
-import { ITreacheryCard } from "./cards/ITreacheryCard";
+import { IEncounterCard } from "./cards/IEncounterCard";
 
 export class EncounterDealer {
   constructor(
-    public deck: Array<ITreacheryCard>,
+    public deck: Array<IEncounterCard>,
   ) {
     this.deck = deck;
   }

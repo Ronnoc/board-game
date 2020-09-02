@@ -2,7 +2,7 @@ import { PlayerInput } from "../inputs/PlayerInput";
 import { LogMessage } from "../LogMessage";
 import { IInvestigatorCard } from "../cards/IInvestigatorCard";
 import { IPlayerCard } from "../cards/IPlayerCard";
-import { ITreacheryCard } from "../cards/ITreacheryCard";
+import { IEncounterCard } from "../cards/IEncounterCard";
 import { Player } from "../Player";
 import { ILocationCard } from "../cards/ILocationCard";
 import { IActCard } from "../cards/IActCard";
@@ -16,10 +16,10 @@ export interface IFPlayerGameState {
   id: string,
   investigator: IInvestigatorCard,
   atLocation: ILocationCard,
-  cardsInHand: Array<IPlayerCard | ITreacheryCard>;
-  cardsDiscarded: Array<IPlayerCard | ITreacheryCard>;
+  cardsInHand: Array<IPlayerCard | IEncounterCard>;
+  cardsDiscarded: Array<IPlayerCard | IEncounterCard>;
   assets: Array<IPlayerCard>,
-  threats: Array<IPlayerCard | ITreacheryCard>,
+  threats: Array<IPlayerCard | IEncounterCard>,
   waitingFor: PlayerInput,
   // game
   gameId: string,
@@ -27,7 +27,7 @@ export interface IFPlayerGameState {
   gameLog: LogMessage[],
   players: Player[],
   locations: ILocationCard[],
-  npcs: Array<IPlayerCard | ITreacheryCard>,
+  npcs: Array<IPlayerCard | IEncounterCard>,
   act: IActCard,
   agenda: IAgendaCard,
   scenario: IScenario,

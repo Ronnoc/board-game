@@ -65,18 +65,18 @@ export const PlayerHome = Vue.component("player-home", {
         </tr></tbody></table>
       </div>
       <div>
-        *log-panel
-        <vm-log-panel
-          :messages="player.gameLog"
-          :players="player.players">
-        </vm-log-panel>
-      </div>
-      <div>
         *waiting-for
         <vm-waiting-for
           :player="player"
           :waitingFor="player.waitingFor">
         </vm-waiting-for>
+      </div>
+      <div>
+        *log-panel
+        <vm-log-panel
+          :messages="player.gameLog"
+          :players="player.players">
+        </vm-log-panel>
       </div>
     </div>
     `,
