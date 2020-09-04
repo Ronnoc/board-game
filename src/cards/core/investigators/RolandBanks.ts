@@ -21,6 +21,6 @@ export class RolandBanks extends IInvestigatorCard {
   mHealth = 9;
 
   elderSign(game: Game, player: Player): number {
-    return this.mAgility;
+    return 2;
   }
 }

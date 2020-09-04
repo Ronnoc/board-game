@@ -3,7 +3,6 @@ import { IAgendaCard } from "./IAgendaCard";
 import { ICard } from "./ICard";
 import { CardType } from "../enums/CardType";
 import { Game } from "../Game";
-import { ILocationCard } from "./ILocationCard";
 import { ChaosBag } from "../ChaosBag";
 import { ChaosToken } from "../enums/ChaosToken";
 import { EncounterSetFactory } from "./EncounterSetFactory";
@@ -21,14 +20,14 @@ export class IScenario extends ICard {
 
   mEncounterSets: Array<EncounterSet> = [];
 
-  mActId = 0;
+  actId = 0;
 
-  mAgendaId = 0;
+  agendaId = 0;
 
   init(game: Game): void {
     game.setAct(this.nextAct());
     game.setAgenda(this.nextAgenda());
-    game.setLocations(this.initLocation());
+    this.initLocation(game);
     this.initChaosBag(game);
     game.setTreacheryCards(this.initEncounterSet());
   }
@@ -69,7 +68,7 @@ export class IScenario extends ICard {
     return rtn;
   }
 
-  protected initLocation(): Array<ILocationCard> {
+  protected initLocation(game:Game): void {
     throw new Error(`${this.mName} initLocation not implement`);
   }
 
@@ -77,11 +76,11 @@ export class IScenario extends ICard {
     if (this.mActs === undefined) {
       throw new Error(`${this.mName} this.mActs === undefined`);
     }
-    if (this.mActId >= this.mActs.length) {
-      throw new Error(`${this.mName} this.mActId >= this.mActs.length`);
+    if (this.actId >= this.mActs.length) {
+      throw new Error(`${this.mName} this.actId >= this.mActs.length`);
     }
-    const act = new this.mActs[this.mActId]();
-    this.mActId += 1;
+    const act = new this.mActs[this.actId]();
+    this.actId += 1;
     return act;
   }
 
@@ -89,11 +88,11 @@ export class IScenario extends ICard {
     if (this.mAgendas === undefined) {
       throw new Error(`${this.mName} this.mAgendas === undefined`);
     }
-    if (this.mAgendaId >= this.mAgendas.length) {
-      throw new Error(`${this.mName} this.mAgendaId >= this.mAgendas.length`);
+    if (this.agendaId >= this.mAgendas.length) {
+      throw new Error(`${this.mName} this.agendaId >= this.mAgendas.length`);
     }
-    const agenda = new this.mAgendas[this.mAgendaId]();
-    this.mAgendaId += 1;
+    const agenda = new this.mAgendas[this.agendaId]();
+    this.agendaId += 1;
     return agenda;
   }
 }

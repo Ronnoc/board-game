@@ -55,7 +55,6 @@ function serveAsset(req: http.IncomingMessage, res: http.ServerResponse): void {
   }
 
   if (isGzip && filepath !== "" && fs.existsSync(`${filepath}.gz`)) {
-    console.log(`serveAsset gzip ${filepath}`);
     res.setHeader("Content-Encoding", "gzip");
     res.write(fs.readFileSync(`${filepath}.gz`));
   } else if (req.url === "/main.js") {
@@ -65,7 +64,7 @@ function serveAsset(req: http.IncomingMessage, res: http.ServerResponse): void {
     res.setHeader("Content-Type", "text/css");
     res.write(fs.readFileSync(filepath));
   } else {
-    console.log(`unknown req${req.url}`);
+    console.warn(`unknown req${req.url}`);
   }
   res.end();
 }
@@ -254,7 +253,7 @@ function requestHandler(
   req: http.IncomingMessage,
   res: http.ServerResponse,
 ): void {
-  console.log(`${req.url} ${req.method}`);
+  console.debug(`${req.url} ${req.method}`);
   if (req.url === undefined) {
     notFound(req, res);
     return;

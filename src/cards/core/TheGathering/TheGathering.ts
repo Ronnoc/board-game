@@ -2,8 +2,8 @@ import { IScenario } from "../../IScenario";
 import { WhatsGoingOn } from "./WhatsGoingOn";
 import { Trapped } from "./Trapped";
 import { Study } from "./Study";
-import { ILocationCard } from "../../ILocationCard";
 import { EncounterSet } from "../../../enums/EncounterSet";
+import { Game } from "../../../Game";
 
 export class TheGathering extends IScenario {
   mName = "The Gathering";
@@ -21,7 +21,13 @@ export class TheGathering extends IScenario {
     EncounterSet.CORE_CHILLING_COLD,
   ];
 
-  protected initLocation(): Array<ILocationCard> {
-    return [new Study()];
+  protected initLocation(game: Game): void {
+    const study = new Study();
+    game.setLocations([study]);
+    game.players.forEach(
+      (player) => {
+        game.playerMoveTo(player, study);
+      },
+    );
   }
 }

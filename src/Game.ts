@@ -51,11 +51,15 @@ export class Game implements ILoadable<SerializedGame, Game> {
     public first: Player,
     public createGameForm: IFCreateGameForm,
   ) {
-    this.log("Init Game");
+    if (players.length === 0) {
+      throw new Error("players.length === 0");
+    }
+    this.log("Game init");
     Database.getInstance();
     this.id = id;
     this.first = first;
     this.players = players;
+    this.players[0].isLead = true;
     this.scenario = new TheGathering();
     this.scenario.init(this);
     this.gotoPreparePhase();
@@ -69,7 +73,6 @@ export class Game implements ILoadable<SerializedGame, Game> {
   }
 
   public loadFromJSON(d: SerializedGame): Game {
-    console.log(this.first.id); // debug
     return Object.assign(this, d);
   }
 
@@ -77,9 +80,19 @@ export class Game implements ILoadable<SerializedGame, Game> {
     return this.getGameAge() > num;
   }
 
+  // board
+  public playerMoveTo(player: Player, location: ILocationCard):void {
+    this.log(
+      `\${0} move to ${location.mName}`,
+      new LogMessageData(LogMessageDataType.PLAYER, player.id),
+    );
+    player.setAtLocation(location);
+    location.turnOver(this);
+  }
+
   // phase
   private gotoPreparePhase(): void {
-    this.log("game goto Prepare phase");
+    this.log("Game goto Prepare phase");
     this.phase = Phase.PREPARE;
     this.donePreparePlayers.clear();
     this.players.forEach((player) => {
@@ -102,8 +115,8 @@ export class Game implements ILoadable<SerializedGame, Game> {
   public playerFinishedPreparePhase(player: Player): void {
     this.donePreparePlayers.add(player.id);
     this.log(
-      "${0} finish prepare",
-      new LogMessageData(LogMessageDataType.PLAYER, this.id),
+      "${0} FinishedPreparePhase",
+      new LogMessageData(LogMessageDataType.PLAYER, player.id),
     );
     if (this.allPlayersDonePrepare()) {
       this.gotoInvestigationPhase();
@@ -111,10 +124,11 @@ export class Game implements ILoadable<SerializedGame, Game> {
   }
 
   private gotoInvestigationPhase(): void {
-    this.log("game goto Investigation phase");
+    this.log("Game goto Investigation phase");
     this.phase = Phase.INVESTIGATION;
     this.doneInvestigationPlayers.clear();
     this.players.forEach((player) => {
+      player.refreshInvestigationAction(this);
       player.runInvestigationPhase(this);
     });
   }
@@ -133,25 +147,29 @@ export class Game implements ILoadable<SerializedGame, Game> {
 
   public playerFinishedInvestigationPhase(player: Player): void {
     this.doneInvestigationPlayers.add(player.id);
+    this.log(
+      "${0} FinishedInvestigationPhase",
+      new LogMessageData(LogMessageDataType.PLAYER, player.id),
+    );
     if (this.allPlayersDoneInvestigation()) {
       this.gotoEnemyPhase();
     }
   }
 
   private gotoEnemyPhase(): void {
-    this.log("game goto Enemy phase");
+    this.log("Game goto Enemy phase");
     this.phase = Phase.ENEMY;
     this.gotoUpkeepPhase();
   }
 
   private gotoUpkeepPhase(): void {
-    this.log("game goto Upkeep phase");
+    this.log("Game goto Upkeep phase");
     this.phase = Phase.UPKEEP;
     this.gotoMythosPhase();
   }
 
   private gotoMythosPhase(): void {
-    this.log("game goto Mythos phase");
+    this.log("Game goto Mythos phase");
     this.phase = Phase.MYTHOS;
     this.gotoInvestigationPhase();
   }
@@ -163,6 +181,16 @@ export class Game implements ILoadable<SerializedGame, Game> {
 
   public getGameAge(): number {
     return this.gameLog[this.gameLog.length - 1].timestamp;
+  }
+
+  public getAlivePlayerCount(): number {
+    let rtn = 0;
+    this.players.forEach(
+      (player) => {
+        if (player.isAlive) rtn += 1;
+      },
+    );
+    return rtn;
   }
 
   // set
@@ -179,6 +207,11 @@ export class Game implements ILoadable<SerializedGame, Game> {
   }
 
   public setLocations(locations: Array<ILocationCard>): void {
+    locations.forEach(
+      (location) => {
+        this.log(`${location.mName}::${location.mBackText}`);
+      },
+    );
     this.locations = locations;
   }
 

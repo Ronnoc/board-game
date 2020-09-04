@@ -21,20 +21,18 @@ export class ILocationCard extends ICard {
 
   isFront = false;
 
-  checkTurnOver(game: Game): boolean {
-    throw new Error(`${game.id} ${this.mName} checkTurnOver NotImplemented`);
-    return false;
+  protected checkTurnOver(game: Game): boolean {
+    return true;
   }
 
   protected doTurnOver(game: Game): void {
-    throw new Error(`${game.id} ${this.mName} _TurnOver NotImplemented`);
+    game.log(`${this.mName}::${this.mFrontText}`);
   }
 
   turnOver(game: Game): void {
-    if (this.isFront) {
-      console.error("is turned over!");
+    if (!this.isFront && this.checkTurnOver(game)) {
+      this.isFront = true;
+      this.doTurnOver(game);
     }
-    this.isFront = true;
-    this.doTurnOver(game);
   }
 }

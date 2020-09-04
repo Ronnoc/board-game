@@ -1,8 +1,6 @@
 import { PlayerInput } from "../inputs/PlayerInput";
 import { LogMessage } from "../LogMessage";
 import { IInvestigatorCard } from "../cards/IInvestigatorCard";
-import { IPlayerCard } from "../cards/IPlayerCard";
-import { IEncounterCard } from "../cards/IEncounterCard";
 import { Player } from "../Player";
 import { ILocationCard } from "../cards/ILocationCard";
 import { IActCard } from "../cards/IActCard";
@@ -10,16 +8,17 @@ import { IAgendaCard } from "../cards/IAgendaCard";
 import { IScenario } from "../cards/IScenario";
 import { Phase } from "../enums/Phase";
 import { ChaosBag } from "../ChaosBag";
+import { ICard } from "../cards/ICard";
 
 export interface IFPlayerGameState {
   // player
   id: string,
   investigator: IInvestigatorCard,
   atLocation: ILocationCard,
-  cardsInHand: Array<IPlayerCard | IEncounterCard>;
-  cardsDiscarded: Array<IPlayerCard | IEncounterCard>;
-  assets: Array<IPlayerCard>,
-  threats: Array<IPlayerCard | IEncounterCard>,
+  cardsInHand: Array<ICard>;
+  cardsDiscarded: Array<ICard>;
+  assets: Array<ICard>,
+  threats: Array<ICard>,
   waitingFor: PlayerInput,
   // game
   gameId: string,
@@ -27,7 +26,7 @@ export interface IFPlayerGameState {
   gameLog: LogMessage[],
   players: Player[],
   locations: ILocationCard[],
-  npcs: Array<IPlayerCard | IEncounterCard>,
+  npcs: Array<ICard>,
   act: IActCard,
   agenda: IAgendaCard,
   scenario: IScenario,

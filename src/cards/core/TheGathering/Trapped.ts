@@ -12,7 +12,7 @@ export class Trapped extends IAgendaCard {
     game.log(`${this.mName} turnOver`);
   }
 
-  mFrontText = "front";
+  mFrontText = "Trapped.front";
 
-  mBackText = "back";
+  mBackText = "Trapped.back";
 }

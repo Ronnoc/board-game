@@ -24,35 +24,25 @@ export const PlayerHome = Vue.component("player-home", {
         </tr></tbody></table>
       </div>
       <div>
-        *locations
-        <table v-if="player.locations.length > 0"><tbody><tr>
+        *locations + npcs
+        <table><tbody><tr>
           <td v-for="loc in player.locations" :card="loc">
             <vm-card :card="loc"></vm-card>
           </td>
-        </tr></tbody></table>
-      </div>
-      <div>
-        *npcs
-        <table v-if="player.npcs.length > 0"><tbody><tr>
           <td v-for="npc in player.npcs" :card="npc">
             <vm-card :card="npc"></vm-card>
           </td>
         </tr></tbody></table>
       </div>
       <div>
-        *threats
-        <table v-if="player.threats.length > 0"><tbody><tr>
-          <td v-for="thr in player.npcs" :card="thr">
-            <vm-card :card="thr"></vm-card>
-          </td>
-        </tr></tbody></table>
-      </div>
-      <div>
-        *investigator+assets
+        *investigator+assets+threats
         <table><tbody><tr>
           <td><vm-card :card="player.investigator"></vm-card></td>
           <td v-for="ass in player.assets" :card="ass">
             <vm-card :card="ass"></vm-card>
+          </td>
+          <td v-for="thr in player.threats" :card="thr">
+            <vm-card :card="thr"></vm-card>
           </td>
         </tr></tbody></table>
       </div>

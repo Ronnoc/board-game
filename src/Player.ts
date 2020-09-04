@@ -10,13 +10,12 @@ import { debugDecks, DeckDealer } from "./DeckDealer";
 import { SelectInput } from "./inputs/SelectInput";
 import { OrInput } from "./inputs/OrInput";
 import { ILocationCard } from "./cards/ILocationCard";
-import { LogMessageData } from "./LogMessageData";
-import { LogMessageDataType } from "./enums/LogMessageDataType";
 import { CardType } from "./enums/CardType";
 import { ICard } from "./cards/ICard";
 import { SelectCardInput } from "./inputs/SelectCardInput";
 import { IEncounterCard } from "./cards/IEncounterCard";
 import { WeaknessType } from "./enums/WeaknessType";
+import { CardFactory } from "./cards/CardFactory";
 
 export class Player implements ILoadable<SerializedPlayer, Player> {
   public id = "";
@@ -35,7 +34,13 @@ export class Player implements ILoadable<SerializedPlayer, Player> {
 
   public atLocation: ILocationCard | undefined;
 
+  public remainActionCount = 0;
+
   public currentGame = "";
+
+  public isLead = false;
+
+  public isAlive = true;
 
   private waitingFor?: PlayerInput;
 
@@ -46,29 +51,7 @@ export class Player implements ILoadable<SerializedPlayer, Player> {
   constructor(public name: string, public color: Color) {
     this.id = generateRandomId();
     this.deckDealer = new DeckDealer(debugDecks);
-  }
-
-  private count = 1;
-
-  public getDebugOption(game: Game): OrInput {
-    this.count += 1;
-    this.count = Math.min(this.count, 5);
-    const debugOptions = new OrInput();
-    for (let i = 0; i < this.count; i += 1) {
-      debugOptions.options.push(
-        new SelectInput(String(i), () => {
-          game.log(
-            `\${0} select ${String(i)}`,
-            new LogMessageData(LogMessageDataType.PLAYER, this.id),
-          );
-          if (!game.locations[0].isFront) {
-            game.locations[0].turnOver(game);
-          }
-          return undefined;
-        }),
-      );
-    }
-    return debugOptions;
+    console.log(`CardFactory.size${String(CardFactory.size)}`);
   }
 
   // load
@@ -80,16 +63,21 @@ export class Player implements ILoadable<SerializedPlayer, Player> {
   public setCurrentGame(gameId: string): void {
     this.currentGame = gameId;
   }
+
+  public setAtLocation(location: ILocationCard): void{
+    this.atLocation = location;
+  }
   // get
 
   // phase
 
   public runPreparePhase(game: Game): void {
+    this.investigator.preparePhase();
+
     this.cardsInHand = [];
     const skipFunc = (card:ICard):boolean => {
       if (card.mCardType !== CardType.ENCOUNTER) return false;
-      const tmpCard = card as IEncounterCard;
-      return tmpCard.mWeaknessType !== WeaknessType.NORMAL;
+      return true;
     };
     for (let i = 0; i < 5; i += 1) {
       this.cardsInHand.push(
@@ -126,10 +114,53 @@ export class Player implements ILoadable<SerializedPlayer, Player> {
     );
   }
 
+  public refreshInvestigationAction(game: Game): void{
+    this.remainActionCount = 3;
+  }
+
   public runInvestigationPhase(game: Game): void {
-    this.setWaitingFor(this.getDebugOption(game), () => {
+    const actions:Array<PlayerInput> = [];
+    if (this.remainActionCount > 0) {
+      if (this.deckDealer.deck.length > 0) {
+        actions.push(
+          new SelectInput(
+            "Draw a Card", () => {
+              this.cardsInHand.push(
+                this.deckDealer.drawCard(),
+              );
+              this.remainActionCount -= 1;
+              this.runInvestigationPhase(game);
+              return undefined;
+            },
+          ),
+        );
+      }
+      actions.push(
+        new SelectInput(
+          "Gain a Resource", () => {
+            this.investigator.curResource += 1;
+            this.remainActionCount -= 1;
+            this.runInvestigationPhase(game);
+            return undefined;
+          },
+        ),
+      );
+    }
+
+    if (actions.length > 0) {
+      actions.push(
+        new SelectInput("FinishedInvestigationPhase", () => {
+          game.playerFinishedInvestigationPhase(this);
+          return undefined;
+        }),
+      );
+      this.setWaitingFor(
+        new OrInput(...actions),
+        () => undefined,
+      );
+    } else {
       game.playerFinishedInvestigationPhase(this);
-    });
+    }
   }
 
   // waiting for

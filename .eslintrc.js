@@ -25,6 +25,7 @@ module.exports = {
     "no-alert": "off",
     "no-empty-function": "off",
     "no-template-curly-in-string": "off",
+    "@typescript-eslint/no-unused-vars": "off",
   },
   settings: {
     "import/resolver": {

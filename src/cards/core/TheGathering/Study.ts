@@ -1,5 +1,4 @@
 import { ILocationCard } from "../../ILocationCard";
-import { Game } from "../../../Game";
 
 export class Study extends ILocationCard {
   static cArkhamDBID = "01111";
@@ -16,8 +15,4 @@ export class Study extends ILocationCard {
     "You've been investigating the strange events occurring in Arkham for several days now. Your deck in covered in newspaper articles, police reports, and witness accounts.";
 
   mFrontText = "The door to your study has vanished.";
-
-  protected doTurnOver(game: Game): void {
-    game.log("Study doTurnOver");
-  }
 }

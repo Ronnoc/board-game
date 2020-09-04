@@ -23,7 +23,39 @@ export class IInvestigatorCard extends ICard {
 
   mSanity: number | undefined;
 
-  elderSign(game: Game, player: Player): number {
+  curHealth = 0;
+
+  curSanity = 0;
+
+  curResource = 0;
+
+  curPhysicalTrauma = 0;
+
+  curMentalTrauma = 0;
+
+  // set
+
+  setResource(rescoureTarget: number): void {
+    this.curResource = rescoureTarget;
+  }
+
+  updateResource(rescoureDiff: number): void{
+    this.curResource += rescoureDiff;
+  }
+
+  preparePhase():void {
+    if (this.mHealth === undefined) {
+      throw new Error("this.mHealth === undefined");
+    }
+    if (this.mSanity === undefined) {
+      throw new Error("this.mSanity === undefined");
+    }
+    this.curHealth = this.mHealth - this.curPhysicalTrauma;
+    this.curSanity = this.mSanity - this.curMentalTrauma;
+    this.curResource = 5;
+  }
+
+  mElderSign(game: Game, player: Player): number {
     throw new Error(`${game.id} ${player.id} ${this.mName} turnOver NotImplemented`);
   }
 }

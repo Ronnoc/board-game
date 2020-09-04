@@ -2,6 +2,7 @@ import { Roland38Special } from "./cards/core/investigators/Roland38Special";
 import { ICard } from "./cards/ICard";
 import { shuffle } from "./utils";
 import { CoverUp } from "./cards/core/investigators/CoverUp";
+import { Paranoia } from "./cards/core/weakness/Paranoia";
 
 export const debugDecks: Array<ICard> = [
   new Roland38Special(),
@@ -15,8 +16,7 @@ export const debugDecks: Array<ICard> = [
   new Roland38Special(),
   new Roland38Special(),
   new CoverUp(),
-  new CoverUp(),
-  new CoverUp(),
+  new Paranoia(),
 ];
 
 export class DeckDealer {
@@ -33,10 +33,6 @@ export class DeckDealer {
   }
 
   private draw():ICard {
-    if (this.deck.length === 0) {
-      this.deck = shuffle(this.discarded);
-      this.discarded = [];
-    }
     const rtn = this.deck.shift();
     if (rtn === undefined) {
       throw new Error("Unexpected empty deck");
@@ -61,7 +57,7 @@ export class DeckDealer {
         result = this.drawCard();
       }
       skipCards.forEach((card) => this.putInDeck(card));
-      this.shuffleDeck();
+      if (skipCards.length > 0) this.shuffleDeck();
     }
     return result;
   }

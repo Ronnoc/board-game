@@ -2,8 +2,9 @@ import Vue from "vue";
 import { ILocationCard } from "../cards/ILocationCard";
 import { CardType } from "../enums/CardType";
 import { ICard } from "../cards/ICard";
+import { IInvestigatorCard } from "../cards/IInvestigatorCard";
 
-const Localhtml = (card: ILocationCard): string => {
+const LocationCardHtml = (card: ILocationCard): string => {
   let rtn = "";
   rtn += "<div>";
   rtn += `<h5>${card.mName}</h5>`;
@@ -22,13 +23,28 @@ const Localhtml = (card: ILocationCard): string => {
   return rtn;
 };
 
+const InvestigatorCardHtml = (card: IInvestigatorCard): string => {
+  let rtn = "";
+  rtn += "<div>";
+  rtn += `<h5>${card.mName}</h5>`;
+  rtn += `<p>W${card.mWillpower} I${card.mIntellect} C${card.mCombat} A${card.mAgility}</p>`;
+  rtn += `<a>H ${card.curHealth}/${card.mHealth}</a><br>`;
+  rtn += `<a>S ${card.curSanity}/${card.mSanity}</a><br>`;
+  rtn += `<a>R ${card.curResource}</a><br>`;
+  rtn += "</div>";
+  return rtn;
+};
+
 export const Card = Vue.component("card", {
   props: ["card"],
   computed: {
     getCardContent() {
       if (this.card === undefined) return "card is undefined";
       if ((this.card as ICard).mCardType === CardType.LOCATION) {
-        return Localhtml(this.card);
+        return LocationCardHtml(this.card);
+      }
+      if ((this.card as ICard).mCardType === CardType.INVESTIGATOR) {
+        return InvestigatorCardHtml(this.card);
       }
       return JSON.stringify(this.card, null, 2);
     },

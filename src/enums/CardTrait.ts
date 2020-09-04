@@ -1,8 +1,9 @@
 export enum CardTrait {
-  UNKNOWN,
-  SUPPLY,
-  ITEM,
-  WEAPON,
-  FIREARM,
-  CREATURE,
+  UNKNOWN = "Unknown",
+  SUPPLY = "Supply",
+  ITEM = "Item",
+  WEAPON = "Weapon",
+  FIREARM = "Firearm",
+  CREATURE = "Creature",
+  MADNESS = "Madness",
 }
