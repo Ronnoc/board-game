@@ -13,8 +13,6 @@ import { ILocationCard } from "./cards/ILocationCard";
 import { CardType } from "./enums/CardType";
 import { ICard } from "./cards/ICard";
 import { SelectCardInput } from "./inputs/SelectCardInput";
-import { IEncounterCard } from "./cards/IEncounterCard";
-import { WeaknessType } from "./enums/WeaknessType";
 import { CardFactory } from "./cards/CardFactory";
 
 export class Player implements ILoadable<SerializedPlayer, Player> {
