@@ -56,6 +56,6 @@ export class IInvestigatorCard extends ICard {
   }
 
   mElderSign(game: Game, player: Player): number {
-    throw new Error(`${game.id} ${player.id} ${this.mName} turnOver NotImplemented`);
+    throw new Error(`${game.id} ${player.id} ${this.mName} mElderSign NotImplemented`);
   }
 }

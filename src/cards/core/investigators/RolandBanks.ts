@@ -20,7 +20,7 @@ export class RolandBanks extends IInvestigatorCard {
 
   mHealth = 9;
 
-  elderSign(game: Game, player: Player): number {
+  mElderSign(game: Game, player: Player): number {
     return 2;
   }
 }

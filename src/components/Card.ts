@@ -10,7 +10,7 @@ const LocationCardHtml = (card: ILocationCard): string => {
   rtn += `<h5>${card.mName}</h5>`;
   if (card.isFront) {
     rtn += `<a>Shroud: ${card.mShroud}</a><br>`;
-    rtn += `<a>Clues: ${card.mClues}</a>`;
+    rtn += `<a>Clues: ${card.curClue} / ${card.mClues}</a>`;
     if (card.mCluePerInvestigator) {
       rtn += "<a>xP</a>";
     }

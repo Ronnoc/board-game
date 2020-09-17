@@ -8,6 +8,7 @@ import { ChaosToken } from "../enums/ChaosToken";
 import { EncounterSetFactory } from "./EncounterSetFactory";
 import { EncounterSet } from "../enums/EncounterSet";
 import { IEncounterCard } from "./IEncounterCard";
+import { Player } from "../Player";
 
 export class IScenario extends ICard {
   mCardType = CardType.SCENARIO;
@@ -45,7 +46,7 @@ export class IScenario extends ICard {
         ChaosToken.MINUS_TWO,
         ChaosToken.MINUS_THREE,
         ChaosToken.MINUS_FOUR,
-        ChaosToken.SKULL,
+        ChaosToken.CULTIST,
         ChaosToken.SKULL,
         ChaosToken.CULTIST,
         ChaosToken.TOMBSTONE,
@@ -94,5 +95,21 @@ export class IScenario extends ICard {
     const agenda = new this.mAgendas[this.agendaId]();
     this.agendaId += 1;
     return agenda;
+  }
+
+  mSkull(game: Game, player: Player): number {
+    throw new Error(`${game.id} ${player.id} ${this.mName} mSkull NotImplemented`);
+  }
+
+  mCultist(game: Game, player: Player): number {
+    throw new Error(`${game.id} ${player.id} ${this.mName} mCultist NotImplemented`);
+  }
+
+  mTombstone(game: Game, player: Player): number {
+    throw new Error(`${game.id} ${player.id} ${this.mName} mTombstone NotImplemented`);
+  }
+
+  mTentacles(game: Game, player: Player): number {
+    throw new Error(`${game.id} ${player.id} ${this.mName} mTentacles NotImplemented`);
   }
 }

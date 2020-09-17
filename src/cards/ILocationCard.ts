@@ -21,12 +21,18 @@ export class ILocationCard extends ICard {
 
   isFront = false;
 
+  curClue = 0;
+
   protected checkTurnOver(game: Game): boolean {
     return true;
   }
 
   protected doTurnOver(game: Game): void {
     game.log(`${this.mName}::${this.mFrontText}`);
+    this.curClue = this.mClues as number;
+    if (this.mCluePerInvestigator) {
+      this.curClue *= game.getAlivePlayerCount();
+    }
   }
 
   turnOver(game: Game): void {

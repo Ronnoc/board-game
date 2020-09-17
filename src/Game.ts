@@ -18,6 +18,8 @@ import { IPlayerCard } from "./cards/IPlayerCard";
 import { EncounterDealer } from "./EncounterDealer";
 import { IEncounterCard } from "./cards/IEncounterCard";
 import { LogMessageDataType } from "./enums/LogMessageDataType";
+import { ChaosToken } from "./enums/ChaosToken";
+import { throws } from "assert";
 
 export type PlayerId = string;
 export class Game implements ILoadable<SerializedGame, Game> {
@@ -78,6 +80,14 @@ export class Game implements ILoadable<SerializedGame, Game> {
 
   public needRefresh(num: number): boolean {
     return this.getGameAge() > num;
+  }
+  // chaos token
+
+  public dealChaosToken(player:Player):ChaosToken {
+    if (this.chaosBag === undefined) {
+      throw new Error("game.chaosBag === undefined");
+    }
+    return this.chaosBag.drawToken();
   }
 
   // board

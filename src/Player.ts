@@ -14,6 +14,11 @@ import { CardType } from "./enums/CardType";
 import { ICard } from "./cards/ICard";
 import { SelectCardInput } from "./inputs/SelectCardInput";
 import { CardFactory } from "./cards/CardFactory";
+import { LogMessageDataType } from "./enums/LogMessageDataType";
+import { LogMessageData } from "./LogMessageData";
+import { SkillIcon } from "./enums/SkillIcon";
+import { SkillTestTiming } from "./enums/SkillTestTiming";
+import { ChaosToken } from "./enums/ChaosToken";
 
 export class Player implements ILoadable<SerializedPlayer, Player> {
   public id = "";
@@ -116,13 +121,91 @@ export class Player implements ILoadable<SerializedPlayer, Player> {
     this.remainActionCount = 3;
   }
 
+  public doSkillTest(
+    game:Game, type:SkillIcon,
+    difficulty:number, timing:SkillTestTiming,
+    committedCards?:ICard[],
+    revealChaos?:ChaosToken,
+  ) : void{
+    if (timing === SkillTestTiming.START) {
+      this.doSkillTest(game, type, difficulty,
+        SkillTestTiming.TRIGGER_WINDOW1);
+      return;
+    }
+    if (timing === SkillTestTiming.TRIGGER_WINDOW1) {
+      this.doSkillTest(game, type, difficulty,
+        SkillTestTiming.COMMIT_CARDS);
+      return;
+    }
+    if (timing === SkillTestTiming.COMMIT_CARDS) {
+      this.setWaitingFor(
+        new SelectCardInput(
+          "Select cards to commit",
+          this.cardsInHand,
+          (cards) => {
+            this.doSkillTest(game, type, difficulty, SkillTestTiming.TRIGGER_WINDOW2, cards);
+            return undefined;
+          },
+        ),
+        () => undefined,
+      );
+      return;
+    }
+    if (timing === SkillTestTiming.TRIGGER_WINDOW2) {
+      this.doSkillTest(game, type, difficulty,
+        SkillTestTiming.REVEAL_CHAOS, committedCards);
+      return;
+    }
+    if (timing === SkillTestTiming.REVEAL_CHAOS) {
+      const token = game.dealChaosToken(this);
+      this.doSkillTest(game, type, difficulty,
+        SkillTestTiming.RESOLVE_CHAOS_EFFECTS, committedCards, token);
+      return;
+    }
+    if (timing === SkillTestTiming.RESOLVE_CHAOS_EFFECTS) {
+      let chaosValue;
+      switch (revealChaos) {
+        case ChaosToken.UNKNOWN:
+          throw new Error("ChaosToken.UNKNOWN");
+        case ChaosToken.ELDER_SIGN:
+          chaosValue = this.investigator.mElderSign(game, this);
+          break;
+        case ChaosToken.AUTO_FAIL:
+          chaosValue = -99999;
+          break;
+        case ChaosToken.SKULL:
+          chaosValue = game.scenario?.mSkull(game, this);
+          break;
+        case ChaosToken.CULTIST:
+          chaosValue = game.scenario?.mCultist(game, this);
+          break;
+        case ChaosToken.TOMBSTONE:
+          chaosValue = game.scenario?.mTombstone(game, this);
+          break;
+        case ChaosToken.TENTACLES:
+          chaosValue = game.scenario?.mTentacles(game, this);
+          break;
+        default:
+          chaosValue = parseInt(revealChaos as string, 10);
+      }
+      // SKILL_TEST_END
+      return;
+    }
+    throw new Error(`timing ${timing} unknown`);
+  }
+
   public runInvestigationPhase(game: Game): void {
     const actions:Array<PlayerInput> = [];
     if (this.remainActionCount > 0) {
+      // draw card action
       if (this.deckDealer.deck.length > 0) {
         actions.push(
           new SelectInput(
             "Draw a Card", () => {
+              game.log(
+                "${0} Draw a Card",
+                new LogMessageData(LogMessageDataType.PLAYER, this.id),
+              );
               this.cardsInHand.push(
                 this.deckDealer.drawCard(),
               );
@@ -133,9 +216,14 @@ export class Player implements ILoadable<SerializedPlayer, Player> {
           ),
         );
       }
+      // gain resource action
       actions.push(
         new SelectInput(
           "Gain a Resource", () => {
+            game.log(
+              "${0} Gain a Resource",
+              new LogMessageData(LogMessageDataType.PLAYER, this.id),
+            );
             this.investigator.curResource += 1;
             this.remainActionCount -= 1;
             this.runInvestigationPhase(game);
@@ -143,6 +231,24 @@ export class Player implements ILoadable<SerializedPlayer, Player> {
           },
         ),
       );
+      // Activate an costed => ability
+      // fight with engaged enemy
+      // fight with enemy at same location
+      // engage with enemy
+      // investigate location
+      actions.push(
+        new SelectInput(
+          `Investigate at ${this.atLocation?.mName}`,
+          () => {
+            this.remainActionCount -= 1;
+            // this.doInvestigateAction(game);
+            return undefined;
+          },
+        ),
+      );
+      // move to connect location
+      // play card from hand
+      // evade from engaged enemy
     }
 
     if (actions.length > 0) {
