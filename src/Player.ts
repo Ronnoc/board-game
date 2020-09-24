@@ -163,7 +163,7 @@ export class Player implements ILoadable<SerializedPlayer, Player> {
       return;
     }
     if (timing === SkillTestTiming.RESOLVE_CHAOS_EFFECTS) {
-      let chaosValue;
+      let chaosValue : undefined|number;
       switch (revealChaos) {
         case ChaosToken.UNKNOWN:
           throw new Error("ChaosToken.UNKNOWN");
@@ -188,6 +188,16 @@ export class Player implements ILoadable<SerializedPlayer, Player> {
         default:
           chaosValue = parseInt(revealChaos as string, 10);
       }
+      if (committedCards === undefined) {
+        throw new Error("committedCards === undefined");
+      }
+      committedCards.forEach((card) => {
+        this.deckDealer.discard(card);
+        if (chaosValue === undefined) {
+          throw new Error("chaosValue === undefined");
+        }
+        chaosValue += 1;
+      });
       // SKILL_TEST_END
       return;
     }

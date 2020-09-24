@@ -19,7 +19,6 @@ import { EncounterDealer } from "./EncounterDealer";
 import { IEncounterCard } from "./cards/IEncounterCard";
 import { LogMessageDataType } from "./enums/LogMessageDataType";
 import { ChaosToken } from "./enums/ChaosToken";
-import { throws } from "assert";
 
 export type PlayerId = string;
 export class Game implements ILoadable<SerializedGame, Game> {

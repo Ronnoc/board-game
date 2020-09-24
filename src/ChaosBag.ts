@@ -6,7 +6,7 @@ export class ChaosBag {
     this.tokens = shuffle(tokens);
   }
 
-  private draw():ICard {
+  private draw():ChaosToken {
     const rtn = this.tokens.shift();
     if (rtn === undefined) {
       throw new Error("Unexpected empty ChaosBag");
