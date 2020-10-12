@@ -4,7 +4,6 @@ import {ITagCount} from '../../ITagCount';
 import {PlayerModel} from '../../models/PlayerModel';
 import {Tags} from '../../cards/Tags';
 import {SpecialTags} from '../../cards/SpecialTags';
-import {isTagsViewConcise} from './OverviewSettings';
 
 export const PlayerTags = Vue.component('player-tags', {
   props: {
@@ -18,24 +17,12 @@ export const PlayerTags = Vue.component('player-tags', {
   components: {
     'tag-count': TagCount,
   },
-
   methods: {
     showColonyCount: function(): boolean {
       return this.player.coloniesExtension;
     },
     showInfluence: function(): boolean {
       return this.player.turmoil !== undefined;
-    },
-    getTagsPlaceholders: function() {
-      const tags: {[x: string]: Tags | SpecialTags} = {...Tags, ...SpecialTags};
-      if (!this.showColonyCount()) {
-        delete tags.COLONY_COUNT;
-      }
-      if (!this.showInfluence()) {
-        delete tags.INFLUENCE;
-      }
-
-      return tags;
     },
     getCardCount: function(): number {
       if (this.player.cardsInHandNbr) {
@@ -51,12 +38,6 @@ export const PlayerTags = Vue.component('player-tags', {
     },
     hideVpCount: function(): boolean {
       return !this.player.showOtherPlayersVP && !this.isActivePlayer;
-    },
-    showShortTags: function(): boolean {
-      return isTagsViewConcise(this.$root);
-    },
-    showLongTags: function(): boolean {
-      return !isTagsViewConcise(this.$root);
     },
     getTagCount(tagName: Tags | SpecialTags): number {
       if (tagName === SpecialTags.COLONY_COUNT && this.showColonyCount()) {
@@ -90,8 +71,7 @@ export const PlayerTags = Vue.component('player-tags', {
                 <tag-count :tag="'cards'" :count="getCardCount()" :size="'big'" :type="'main'"/>
             </div>
             <div class="player-tags-secondary">
-                <tag-count v-if="showShortTags()" v-for="tag in player.tags" :key="tag.tag" :tag="tag.tag" :count="tag.count" :size="'big'" :type="'secondary'"/>
-                <tag-count v-if="showLongTags()" v-for="tagName in getTagsPlaceholders()" :key="tagName" :tag="tagName" :count="getTagCount(tagName)" :size="'big'" :type="'secondary'"/>
+                <tag-count v-for="tag in player.tags" :key="tag.tag" :tag="tag.tag" :count="tag.count" :size="'big'" :type="'secondary'"/>
             </div>
         </div>
     `,
