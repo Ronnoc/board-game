@@ -23,7 +23,6 @@ export interface CreateGameModel {
     initialDraft: boolean;
     randomMA: RandomMAOptionType;
     randomFirstPlayer: boolean;
-    showOtherPlayersVP: boolean;
     beginnerOption: boolean;
     venusNext: boolean;
     colonies: boolean;
@@ -83,7 +82,6 @@ export const CreateGameForm = Vue.component('create-game-form', {
       initialDraft: false,
       randomMA: RandomMAOptionType.NONE,
       randomFirstPlayer: true,
-      showOtherPlayersVP: false,
       beginnerOption: false,
       venusNext: false,
       colonies: false,
@@ -321,7 +319,6 @@ export const CreateGameForm = Vue.component('create-game-form', {
       const draftVariant = component.draftVariant;
       const initialDraft = component.initialDraft;
       const randomMA = component.randomMA;
-      const showOtherPlayersVP = component.showOtherPlayersVP;
       const venusNext = component.venusNext;
       const colonies = component.colonies;
       const turmoil = component.turmoil;
@@ -378,7 +375,6 @@ export const CreateGameForm = Vue.component('create-game-form', {
         corporateEra,
         prelude,
         draftVariant,
-        showOtherPlayersVP,
         venusNext,
         colonies,
         turmoil,
@@ -674,11 +670,6 @@ export const CreateGameForm = Vue.component('create-game-form', {
                                     <span v-i18n>Venus Terraforming</span>
                                 </label>
                             </template>
-
-                            <input type="checkbox" name="showOtherPlayersVP" v-model="showOtherPlayersVP" id="realTimeVP-checkbox">
-                            <label for="realTimeVP-checkbox">
-                                <span v-i18n>Show real-time VP</span>&nbsp;<a href="https://github.com/bafolts/terraforming-mars/wiki/Variants#show-real-time-vp" class="tooltip" target="_blank">&#9432;</a>
-                            </label>
                             
                             <input type="checkbox" v-model="fastModeOption" id="fastMode-checkbox">
                             <label for="fastMode-checkbox">
