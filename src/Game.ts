@@ -84,9 +84,7 @@ export interface GameOptions {
   aresExtension: boolean;
   aresHazards: boolean;
   solarPhaseOption: boolean;
-  removeNegativeGlobalEventsOption: boolean;
-  includeVenusMA: boolean;
-
+  
   // Variants
   draftVariant: boolean;
   initialDraftVariant: boolean;
@@ -176,8 +174,6 @@ export class Game implements ILoadable<SerializedGame, Game> {
           aresExtension: false,
           aresHazards: true,
           solarPhaseOption: false,
-          removeNegativeGlobalEventsOption: false,
-          includeVenusMA: true,
 
           draftVariant: false,
           initialDraftVariant: false,
@@ -198,7 +194,7 @@ export class Game implements ILoadable<SerializedGame, Game> {
         this.aresData = AresHandler.initialData(gameOptions.aresExtension, gameOptions.aresHazards, players);
       }
 
-      this.board = this.boardConstructor(gameOptions.boardName, gameOptions.randomMA, gameOptions.venusNextExtension && gameOptions.includeVenusMA);
+      this.board = this.boardConstructor(gameOptions.boardName, gameOptions.randomMA, gameOptions.venusNextExtension);
 
       this.activePlayer = first.id;
 
@@ -236,7 +232,7 @@ export class Game implements ILoadable<SerializedGame, Game> {
 
       // Add Venus Next corporations cards, board colonies and milestone / award
       if (gameOptions.venusNextExtension) {
-        this.setVenusElements(gameOptions.randomMA, gameOptions.includeVenusMA);
+        this.setVenusElements(gameOptions.randomMA);
       }
 
       // Add colonies stuff
@@ -425,14 +421,14 @@ export class Game implements ILoadable<SerializedGame, Game> {
     }
 
     // Add Venus Next board colonies and milestone / award
-    public setVenusElements(randomMA: RandomMAOptionType, includeVenusMA: boolean) {
-      if ((randomMA !== RandomMAOptionType.NONE) && includeVenusMA) {
-        this.milestones = [];
-        this.awards = [];
+    public setVenusElements(randomMA: RandomMAOptionType) {
+      if (randomMA !== RandomMAOptionType.NONE) {
+        this.milestones = []
+        this.awards = []
         this.setRandomMilestonesAndAwards(true, 6, randomMA);
       } else {
-        if (includeVenusMA) this.milestones.push(...VENUS_MILESTONES);
-        if (includeVenusMA) this.awards.push(...VENUS_AWARDS);
+        this.milestones.push(...VENUS_MILESTONES);
+        this.awards.push(...VENUS_AWARDS);
       }
 
       this.addVenusBoardSpaces();
