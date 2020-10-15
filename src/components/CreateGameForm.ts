@@ -625,7 +625,6 @@ export const CreateGameForm = Vue.component('create-game-form', {
                             </template>
                         </div>
 
-
                         <div class="create-game-page-column" v-if="playersCount > 1">
                             <h4 v-i18n>Multiplayer Options</h4>
 
