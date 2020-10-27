@@ -81,4 +81,5 @@ export interface PlayerModel {
     deckSize: number;
     preludeExtension: boolean;
     waitingFor: PlayerInputModel | undefined;
+    totalSpend: number;
 }

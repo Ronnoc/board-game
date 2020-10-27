@@ -425,7 +425,7 @@ function createGame(req: http.IncomingMessage, res: http.ServerResponse): void {
       if (gameReq.board === 'random') {
         let boards = Object.values(BoardName);
         if (!gameReq.communityCardsOption) boards = boards.filter((b) => b !== BoardName.AMAZONIS);
-        
+
         gameReq.board = boards[Math.floor(Math.random() * boards.length)];
       }
 
@@ -611,6 +611,7 @@ function getPlayer(player: Player, game: Game): string {
     aresExtension: game.gameOptions.aresExtension,
     aresData: game.aresData,
     preludeExtension: game.gameOptions.preludeExtension,
+    totalSpend: player.totalSpend,
   };
   return JSON.stringify(output);
 }
@@ -817,6 +818,7 @@ function getPlayers(players: Array<Player>, game: Game): Array<PlayerModel> {
       deckSize: game.dealer.getDeckSize(),
       actionsTakenThisRound: player.actionsTakenThisRound,
       preludeExtension: game.gameOptions.preludeExtension,
+      totalSpend: player.totalSpend,
     } as PlayerModel;
   });
 }
