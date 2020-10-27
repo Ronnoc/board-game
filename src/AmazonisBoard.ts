@@ -4,7 +4,7 @@ import { BoardBuilder } from "./BoardBuilder";
 import { SpaceName } from "./SpaceName";
 
 export class AmazonisBoard extends Board {
-    constructor(shuffleMapOption: boolean = false, seed: number = 0) {
+    constructor(shuffleMapOption: boolean = false, seed: number = 0, erodedSpaces: Array<string> = []) {
         super();
 
         const builder = new BoardBuilder(seed);
@@ -43,6 +43,6 @@ export class AmazonisBoard extends Board {
             builder.shuffle(SpaceName.MEDUSAE_FOSSAE, SpaceName.ALBOR_THOLUS, SpaceName.ANSERIS_MONS, SpaceName.PINUDS_MONS, SpaceName.ULYSSES_THOLUS);
         }
 
-        this.spaces = builder.build();
+        this.spaces = builder.build(erodedSpaces);
     }
 }
