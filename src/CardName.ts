@@ -450,6 +450,7 @@ export enum CardName {
     PLAYWRIGHTS = 'Playwrights',
     MIDAS = 'Midas',
     COLONIAL_ONE = 'Colonial One',
+    ERIS = 'Eris',
 
     // Community preludes
     VALUABLE_GASES = 'Valuable Gases',
