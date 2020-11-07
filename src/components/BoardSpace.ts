@@ -158,6 +158,8 @@ export const BoardSpace = Vue.component('board-space', {
           css += ' board-space-type-ocean';
         } else if (this.space.bonus.includes(SpaceBonus.VOLCANIC)) {
           css += 'board-space-type-volcanic'
+        } else if (this.space.bonus.includes(SpaceBonus.COVE)) {
+            css += " board-space-type-cove"
         } else if (!this.space.bonus.includes(SpaceBonus.RESTRICTED)) {
           css += 'board-space-type-land'
         }

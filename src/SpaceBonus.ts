@@ -14,6 +14,7 @@ export enum SpaceBonus {
     POWER,
 
     // Custom maps / special tiles
-    RESTRICTED,
-    VOLCANIC
+    RESTRICTED, // Tiles cannot be placed on these spaces
+    VOLCANIC, // Used for volcanic area custom CSS
+    COVE, // Spaces that allow both ocean and land tiles to be placed
 }

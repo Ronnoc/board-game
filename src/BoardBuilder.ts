@@ -59,7 +59,7 @@ export class BoardBuilder {
 
       this.spaces.push(new BoardColony(SpaceName.STANFORD_TORUS));
 
-      const reservedBonuses = [SpaceBonus.VOLCANIC, SpaceBonus.RESTRICTED];
+      const reservedBonuses = [SpaceBonus.VOLCANIC, SpaceBonus.RESTRICTED, SpaceBonus.COVE];
 
       this.spaces.forEach((space) => {
         if (erodedSpaces.includes(space.id)) {
