@@ -40,7 +40,7 @@ export class AmazonisBoard extends Board {
         builder.land().land(DRAW_CARD).land(STEEL).ocean(PLANT).land(STEEL, STEEL);
 
         if (shuffleMapOption) {
-            builder.shuffle(SpaceName.MEDUSAE_FOSSAE, SpaceName.ALBOR_THOLUS, SpaceName.ANSERIS_MONS, SpaceName.PINUDS_MONS, SpaceName.ULYSSES_THOLUS);
+            builder.shuffle(SpaceName.MEDUSAE_FOSSAE, SpaceName.ALBOR_THOLUS, SpaceName.ANSERIS_MONS, SpaceName.PINDUS_MONS, SpaceName.ULYSSES_THOLUS);
         }
 
         this.spaces = builder.build(erodedSpaces);
