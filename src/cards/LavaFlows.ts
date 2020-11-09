@@ -43,7 +43,7 @@ export class LavaFlows implements IProjectCard {
             .filter((space) => space.id === SpaceName.ALBOR_THOLUS ||
                                space.id === SpaceName.ANSERIS_MONS ||
                                space.id === SpaceName.PINDUS_MONS ||
-                               space.id === SpaceName.ULYSSES_THOLUS);        
+                               space.id === SpaceName.ULYSSES_THOLUS);
       } else {
         return game.board.getSpaces(SpaceType.LAND, player)
             .filter((space) => space.tile === undefined && (space.player === undefined || space.player === player));

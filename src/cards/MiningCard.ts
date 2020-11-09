@@ -69,23 +69,23 @@ export abstract class MiningCard implements IProjectCard {
             this.increaseProduction(foundSpace, game, player, bonus, resource);
           } else {
             game.defer(new DeferredAction(
-              player,
-              () => {
-                return new OrOptions(
-                  new SelectOption("Increase titanium production 1 step", "Select", () => {
-                    bonus = SpaceBonus.TITANIUM;
-                    resource = Resources.TITANIUM;
-                    this.increaseProduction(foundSpace, game, player, bonus, resource);
-                    return undefined;
-                  }),
-                  new SelectOption("Increase steel production 1 step", "Select", () => {
-                    bonus = SpaceBonus.STEEL;
-                    resource = Resources.STEEL;
-                    this.increaseProduction(foundSpace, game, player, bonus, resource);
-                    return undefined;
-                  })
-                );
-              }
+                player,
+                () => {
+                  return new OrOptions(
+                      new SelectOption('Increase titanium production 1 step', 'Select', () => {
+                        bonus = SpaceBonus.TITANIUM;
+                        resource = Resources.TITANIUM;
+                        this.increaseProduction(foundSpace, game, player, bonus, resource);
+                        return undefined;
+                      }),
+                      new SelectOption('Increase steel production 1 step', 'Select', () => {
+                        bonus = SpaceBonus.STEEL;
+                        resource = Resources.STEEL;
+                        this.increaseProduction(foundSpace, game, player, bonus, resource);
+                        return undefined;
+                      }),
+                  );
+                },
             ));
           }
         } else {
@@ -101,12 +101,12 @@ export abstract class MiningCard implements IProjectCard {
         game: Game,
         player: Player,
         bonus: SpaceBonus.STEEL | SpaceBonus.TITANIUM,
-        resource: Resources
-        ): void {
-        game.addTile(player, foundSpace.spaceType, foundSpace, { tileType: this.getTileType(bonus) });
-        foundSpace.adjacency = this.getAdjacencyBonus(bonus);
-        player.addProduction(resource);
-        this.bonusResource = resource;
-        LogHelper.logGainProduction(game, player, resource);
+        resource: Resources,
+    ): void {
+      game.addTile(player, foundSpace.spaceType, foundSpace, {tileType: this.getTileType(bonus)});
+      foundSpace.adjacency = this.getAdjacencyBonus(bonus);
+      player.addProduction(resource);
+      this.bonusResource = resource;
+      LogHelper.logGainProduction(game, player, resource);
     }
 }

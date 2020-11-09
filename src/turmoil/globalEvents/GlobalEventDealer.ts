@@ -104,7 +104,7 @@ export const NEGATIVE_GLOBAL_EVENTS: Array<IGlobalEventFactory<IGlobalEvent>> = 
 ];
 
 export const COMMUNITY_GLOBAL_EVENTS: Array<IGlobalEventFactory<IGlobalEvent>> = [
-    { globalEventName: GlobalEventName.LEADERSHIP_SUMMIT , Factory: LeadershipSummit },
+  {globalEventName: GlobalEventName.LEADERSHIP_SUMMIT, Factory: LeadershipSummit},
 ];
 
 // Function to return a global event object by its name
@@ -117,7 +117,7 @@ export function getGlobalEventByName(globalEventName: string): IGlobalEvent | un
     ...VENUS_COLONY_POSITIVE_GLOBAL_EVENTS,
     ...VENUS_COLONY_NEGATIVE_GLOBAL_EVENTS,
     ...VENUS_POSITIVE_GLOBAL_EVENTS,
-    ...COMMUNITY_GLOBAL_EVENTS
+    ...COMMUNITY_GLOBAL_EVENTS,
   ];
 
   const globalEventFactory = allEvents.find((globalEventFactory) => globalEventFactory.globalEventName === globalEventName);
@@ -137,7 +137,7 @@ export class GlobalEventDealer {
       if (game.gameOptions.coloniesExtension) events.push(...COLONY_ONLY_NEGATIVE_GLOBAL_EVENTS);
 
       if (game.gameOptions.venusNextExtension && game.gameOptions.coloniesExtension) {
-        events.push(...VENUS_COLONY_NEGATIVE_GLOBAL_EVENTS)
+        events.push(...VENUS_COLONY_NEGATIVE_GLOBAL_EVENTS);
       };
 
       if (game.gameOptions.venusNextExtension && game.gameOptions.coloniesExtension) {

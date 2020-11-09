@@ -15,7 +15,7 @@ export class SelectHowToPayDeferred implements DeferredAction {
 
   public execute() {
     this.player.totalSpend += this.amount;
-    
+
     if ((!this.player.canUseHeatAsMegaCredits || this.player.heat === 0) &&
             (!this.canUseSteel || this.player.steel === 0) &&
             (!this.canUseTitanium || this.player.titanium === 0)) {
