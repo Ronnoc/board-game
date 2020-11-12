@@ -64,6 +64,7 @@ export const ColoniesFilter = Vue.component('colonies-filter', {
   data: function() {
     if (!this.venusNext) communityColonies = communityColonies.filter((c) => c.name !== ColonyName.VENUS);
     if (!this.turmoil) communityColonies = communityColonies.filter((c) => c.name !== ColonyName.PALLAS);
+    if (!this.aresExtension) communityColonies = communityColonies.filter((c) => c.name !== ColonyName.DEIMOS);
 
     return {
       allColonies: officialColonies.concat(communityColonies),
