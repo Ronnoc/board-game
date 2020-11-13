@@ -40,11 +40,7 @@ describe('SeptumTribus', function() {
     const card = new SeptumTribus();
     const player = new Player('test', Color.BLUE, false);
 
-<<<<<<< HEAD
-    const gameOptions = setCustomGameOptions({turmoilExtension: false});
-=======
     const gameOptions = setCustomGameOptions({turmoilExtension: false}) as GameOptions;
->>>>>>> Fix GTS issues
     const game = new Game('foobar', [player], player, gameOptions);
     card.play();
 

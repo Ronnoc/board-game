@@ -40,16 +40,10 @@
     "extends": "@istanbuljs/nyc-config-typescript"
   },
   "scripts": {
-    "build": "npm run compile && npm run lint && npm run webpack",
     "clean": "rm -r ./build/ ./styles.css || true",
-    "compile": "tsc",
-    "cover": "nyc mocha --file build/tests/utils/Vue.js --recursive build/tests",
-    "fix": "eslint --fix src server.ts script.ts tests --ext ts",
-    "lint": "eslint src server.ts script.ts tests --ext ts",
-    "precover": "tsc --build tsconfig-test.json",
-    "prebuild": "node make_static_json.js && lessc src/styles/common.less styles.css",
-    "pretest": "tsc --build tsconfig-test.json",
+    "build": "node make_static_json.js && eslint src/*.ts src/components/**/*.ts src/database/**/*.ts && lessc src/styles/common.less styles.css && tsc --build tsconfig.json && npm run webpack",
     "start": "node build/server.js",
+    "pretest": "tsc --build tsconfig-test.json",
     "test": "mocha --file build/tests/utils/Vue.js --recursive build/tests",
     "testgiven": "tsc --build tsconfig.json && npm run webpack && tsc --build tsconfig-test.json && mocha",
     "webpack": "webpack --config webpack.config.js"
