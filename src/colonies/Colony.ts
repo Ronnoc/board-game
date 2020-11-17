@@ -27,7 +27,6 @@ import {SerializedColony} from '../SerializedColony';
 import {StealResources} from '../deferredActions/StealResources';
 import {Tags} from '../cards/Tags';
 import {SendDelegateToArea} from '../deferredActions/SendDelegateToArea';
-import {Deimos} from '../cards/community/Deimos';
 import {PlaceHazardTile} from '../deferredActions/PlaceHazardTile';
 import { AresHandler } from '../ares/AresHandler';
 import { SelectSpace } from '../inputs/SelectSpace';
@@ -266,6 +265,7 @@ export abstract class Colony implements SerializedColony {
         case ColonyBenefit.GAIN_MC_PER_DELEGATE:
           if (game.turmoil) {
             let partyDelegateCount = PLAYER_DELEGATES_COUNT - game.turmoil.getDelegates(player.id);
+            if (game.turmoil.lobby.has(player.id)) partyDelegateCount--;
             if (game.turmoil.chairman === player.id) partyDelegateCount--;
             
             player.megaCredits += partyDelegateCount;
@@ -273,7 +273,12 @@ export abstract class Colony implements SerializedColony {
           break;
 
         case ColonyBenefit.PLACE_HAZARD_TILE:
-          const availableSpaces = Deimos.getAvailableSpaces(player, game);
+          const availableSpaces = game.board.getAvailableSpacesOnLand(player)
+            .filter((space => space.tile === undefined))
+            .filter((space) => {
+                const adjacentSpaces = game.board.getAdjacentSpaces(space);
+                return adjacentSpaces.filter((space) => space.tile !== undefined).length === 0;
+          });
           game.defer(new PlaceHazardTile(player, game, 'Select space next to no other tile for hazard', availableSpaces));
           break;
 
