@@ -609,6 +609,7 @@ function getPlayer(player: Player, game: Game): string {
     randomMA: game.gameOptions.randomMA,
     actionsTakenThisRound: player.actionsTakenThisRound,
     passedPlayers: game.getPassedPlayers(),
+    draftedPlayers: game.getDraftedPlayers(),
     aresExtension: game.gameOptions.aresExtension,
     aresData: game.aresData,
     preludeExtension: game.gameOptions.preludeExtension,
