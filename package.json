@@ -40,7 +40,7 @@
     "extends": "@istanbuljs/nyc-config-typescript"
   },
   "scripts": {
-    "build": "npm run clean && npm run prebuild && npm run fix && npm run lint && npm run compile && npm run templates && npm run webpack",
+    "build": "npm run fix && npm run lint && npm run compile && npm run templates && npm run webpack",
     "clean": "rm -r ./build/ ./styles.css || true",
     "compile": "tsc",
     "cover": "nyc mocha --file build/tests/utils/Vue.js --recursive build/tests",
@@ -49,7 +49,7 @@
     "precover": "tsc --build tsconfig-test.json",
     "prebuild": "node make_static_json.js && lessc src/styles/common.less styles.css",
     "pretest": "tsc --build tsconfig-test.json",
-    "start": "npm run build && node build/server.js",
+    "start": "npm run clean && npm run build && node build/server.js",
     "templates": "node compile-vue-templates.js && tsc --build tsconfig-vue.json",
     "test": "mocha --file build/tests/utils/Vue.js --recursive build/tests",
     "testgiven": "tsc --build tsconfig.json && npm run webpack && tsc --build tsconfig-test.json && mocha",

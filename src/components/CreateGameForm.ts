@@ -78,6 +78,7 @@ export const CreateGameForm = Vue.component('create-game-form', {
         {index: 4, name: '', color: Color.BLUE, beginner: false, handicap: 0, first: false},
         {index: 5, name: '', color: Color.BLACK, beginner: false, handicap: 0, first: false},
         {index: 6, name: '', color: Color.PURPLE, beginner: false, handicap: 0, first: false},
+        {index: 7, name: '', color: Color.ORANGE, beginner: false, handicap: 0, first: false},
       ],
       corporateEra: true,
       prelude: true,
@@ -102,6 +103,8 @@ export const CreateGameForm = Vue.component('create-game-form', {
         BoardName.ORIGINAL,
         BoardName.HELLAS,
         BoardName.ELYSIUM,
+        BoardName.AMAZONIS,
+        BoardName.ARABIA_TERRA,
         'random',
       ],
       seed: Math.random(),
@@ -265,6 +268,10 @@ export const CreateGameForm = Vue.component('create-game-form', {
         return 'create-game-board-hexagon create-game-hellas';
       } else if (boardName === BoardName.ELYSIUM) {
         return 'create-game-board-hexagon create-game-elysium';
+      } else if (boardName === BoardName.AMAZONIS) {
+        return 'create-game-board-hexagon create-game-amazonis';
+      } else if (boardName === BoardName.ARABIA_TERRA) {
+        return 'create-game-board-hexagon create-game-arabia_terra';
       } else {
         return 'create-game-board-hexagon create-game-random';
       }
@@ -291,7 +298,7 @@ export const CreateGameForm = Vue.component('create-game-form', {
       // Auto assign an available color if there are duplicates
       const uniqueColors = players.map((player) => player.color).filter((v, i, a) => a.indexOf(v) === i);
       if (uniqueColors.length !== players.length) {
-        const allColors = [Color.BLUE, Color.RED, Color.YELLOW, Color.GREEN, Color.BLACK, Color.PURPLE];
+        const allColors = [Color.BLUE, Color.RED, Color.YELLOW, Color.GREEN, Color.BLACK, Color.PURPLE, Color.ORANGE];
         players.forEach((player) => {
           if (allColors.includes(player.color)) {
             allColors.splice(allColors.indexOf(player.color), 1);
@@ -452,7 +459,7 @@ export const CreateGameForm = Vue.component('create-game-form', {
                         <div class="create-game-colors-wrapper">
                             <label class="form-label form-inline create-game-color-label" v-i18n>Color:</label>
                             <span class="create-game-colors-cont">
-                            <label class="form-radio form-inline create-game-color" v-for="color in ['Red', 'Green', 'Yellow', 'Blue', 'Black', 'Purple']">
+                            <label class="form-radio form-inline create-game-color" v-for="color in ['Red', 'Green', 'Yellow', 'Blue', 'Black', 'Purple', 'Orange']">
                                 <input type="radio" :value="color.toLowerCase()" :name="'playerColor' + newPlayer.index" v-model="newPlayer.color">
                                 <i class="form-icon"></i> <div :class="'board-cube board-cube--'+color.toLowerCase()"></div>
                             </label>
@@ -550,14 +557,21 @@ export const CreateGameForm = Vue.component('create-game-form', {
                         <div class="create-game-page-column">
                             <h4 v-i18n>Options</h4>
 
-                            <label for="startingCorpNum-checkbox">
-                            <input type="number" class="create-game-corporations-count" value="2" min="1" :max="6" v-model="startingCorporations" id="startingCorpNum-checkbox">
-                                <span v-i18n>Starting Corporations</span>
+                            <label for="startingCorps-checkbox" class="startingCorps-checkbox">
+                                <span>
+                                    <template v-for="n in 5">
+                                        <input type="radio" :value="n+1" v-model="startingCorporations" :id="n+'-checkbox'">
+                                        <label :for="n+'-checkbox'" class="corporation-count">
+                                            <span>{{ n + 1 }}</span>
+                                        </label>
+                                    </template>
+                                </span>
+                                <span v-i18n>Corporations</span>
                             </label>
 
                             <input type="checkbox" v-model="solarPhaseOption" id="WGT-checkbox">
                             <label for="WGT-checkbox">
-                                <span v-i18n>World Government Terraforming</span>&nbsp;<a href="https://github.com/bafolts/terraforming-mars/wiki/Variants#solar-phase" class="tooltip" target="_blank">&#9432;</a>
+                                <span v-i18n>Solar Phase</span>&nbsp;<a href="https://github.com/bafolts/terraforming-mars/wiki/Variants#solar-phase" class="tooltip" target="_blank">&#9432;</a>
                             </label>
 
                             <template v-if="playersCount === 1">
@@ -577,11 +591,6 @@ export const CreateGameForm = Vue.component('create-game-form', {
                                 <span v-i18n>Allow undo</span>&nbsp;<a href="https://github.com/bafolts/terraforming-mars/wiki/Variants#allow-undo" class="tooltip" target="_blank">&#9432;</a>
                             </label>
 
-                            <input type="checkbox" v-model="shuffleMapOption" id="shuffleMap-checkbox">
-                            <label for="shuffleMap-checkbox">
-                                    <span v-i18n>Randomize board tiles</span>&nbsp;<a href="https://github.com/bafolts/terraforming-mars/wiki/Variants#randomize-board-tiles" class="tooltip" target="_blank">&#9432;</a>
-                            </label>
-
                             <input type="checkbox" v-model="seededGame" id="seeded-checkbox">
                             <label for="seeded-checkbox">
                                 <span v-i18n>Set Predefined Game</span>&nbsp;<a href="https://github.com/bafolts/terraforming-mars/wiki/Variants#set-predefined-game" class="tooltip" target="_blank">&#9432;</a>
@@ -594,13 +603,44 @@ export const CreateGameForm = Vue.component('create-game-form', {
                                     </option>
                                 </select>
                             </div>
-
                             <template v-if="prelude">
                                 <input type="checkbox" v-model="morePreludeOption" id="morePreludeOption-checkbox">
                                 <label for="morePreludeOption-checkbox">
                                     <span v-i18n>Prelude 3/5</span>
                                 </label>
                             </template>
+                            <div class="create-game-subsection-label">Randomize</div>
+
+                            <input type="checkbox" v-model="randomFirstPlayer" id="randomFirstPlayer-checkbox">
+                            <label for="randomFirstPlayer-checkbox">
+                                <span v-i18n>First player</span>
+                            </label>
+
+                            <input type="checkbox" name="randomMAToggle" id="randomMA-checkbox" v-on:change="randomMAToggle()">
+                            <label for="randomMA-checkbox">
+                                <span v-i18n>Milestones/Awards</span>&nbsp;<a href="https://github.com/bafolts/terraforming-mars/wiki/Variants#random-milestones-and-awards" class="tooltip" target="_blank">&#9432;</a>
+                            </label>
+
+                            <div class="create-game-page-column-row" v-if="isRandomMAEnabled()">
+                                <div>
+                                <input type="radio" name="randomMAOption" v-model="randomMA" :value="getRandomMaOptionType('limited')" id="limitedRandomMA-radio">
+                                <label class="label-randomMAOption" for="limitedRandomMA-radio">
+                                    <span v-i18n>{{ getRandomMaOptionType('limited') }}</span>
+                                </label>
+                                </div>
+
+                                <div>
+                                <input type="radio" name="randomMAOption" v-model="randomMA" :value="getRandomMaOptionType('full')" id="unlimitedRandomMA-radio">
+                                <label class="label-randomMAOption" for="unlimitedRandomMA-radio">
+                                    <span v-i18n>{{ getRandomMaOptionType('full') }}</span>
+                                </label>
+                                </div>
+                            </div>
+
+                            <input type="checkbox" v-model="shuffleMapOption" id="shuffleMap-checkbox">
+                            <label for="shuffleMap-checkbox">
+                                    <span v-i18n>Board tiles</span>&nbsp;<a href="https://github.com/bafolts/terraforming-mars/wiki/Variants#randomize-board-tiles" class="tooltip" target="_blank">&#9432;</a>
+                            </label>
 
                             <div class="create-game-subsection-label" v-i18n>Filter</div>
 
@@ -634,47 +674,15 @@ export const CreateGameForm = Vue.component('create-game-form', {
                         <div class="create-game-page-column" v-if="playersCount > 1">
                             <h4 v-i18n>Multiplayer Options</h4>
 
-                            <div class="create-game-page-column-row">
-                                <div>
-                                <input type="checkbox" name="draftVariant" v-model="draftVariant" id="draft-checkbox">
-                                <label for="draft-checkbox">
-                                    <span v-i18n>Draft variant</span>
-                                </label>
-                                </div>
-
-                                <div>
-                                <input type="checkbox" name="initialDraft" v-model="initialDraft" id="initialDraft-checkbox">
-                                <label for="initialDraft-checkbox">
-                                    <span v-i18n>Initial Draft variant</span>&nbsp;<a href="https://github.com/bafolts/terraforming-mars/wiki/Variants#initial-draft" class="tooltip" target="_blank">&#9432;</a>
-                                </label>
-                                </div>
-                            </div>
-
-                            <input type="checkbox" v-model="randomFirstPlayer" id="randomFirstPlayer-checkbox">
-                            <label for="randomFirstPlayer-checkbox">
-                                <span v-i18n>Random first player</span>
+                            <input type="checkbox" name="draftVariant" v-model="draftVariant" id="draft-checkbox">
+                            <label for="draft-checkbox">
+                                <span v-i18n>Draft variant</span>
                             </label>
 
-                            <input type="checkbox" name="randomMAToggle" id="randomMA-checkbox" v-on:change="randomMAToggle()">
-                            <label for="randomMA-checkbox">
-                                <span v-i18n>Random Milestones/Awards</span>&nbsp;<a href="https://github.com/bafolts/terraforming-mars/wiki/Variants#random-milestones-and-awards" class="tooltip" target="_blank">&#9432;</a>
+                            <input type="checkbox" name="initialDraft" v-model="initialDraft" id="initialDraft-checkbox">
+                            <label for="initialDraft-checkbox">
+                                <span v-i18n>Initial Draft</span>&nbsp;<a href="https://github.com/bafolts/terraforming-mars/wiki/Variants#initial-draft" class="tooltip" target="_blank">&#9432;</a>
                             </label>
-
-                            <div class="create-game-page-column-row" v-if="isRandomMAEnabled()">
-                                <div>
-                                <input type="radio" name="randomMAOption" v-model="randomMA" :value="getRandomMaOptionType('limited')" id="limitedRandomMA-radio">
-                                <label class="label-randomMAOption" for="limitedRandomMA-radio">
-                                    <span v-i18n>{{ getRandomMaOptionType('limited') }}</span>
-                                </label>
-                                </div>
-
-                                <div>
-                                <input type="radio" name="randomMAOption" v-model="randomMA" :value="getRandomMaOptionType('full')" id="unlimitedRandomMA-radio">
-                                <label class="label-randomMAOption" for="unlimitedRandomMA-radio">
-                                    <span v-i18n>{{ getRandomMaOptionType('full') }}</span>
-                                </label>
-                                </div>
-                            </div>
 
                             <template v-if="venusNext">
                                 <input type="checkbox" v-model="includeVenusMA" id="venusMA-checkbox">
@@ -712,7 +720,7 @@ export const CreateGameForm = Vue.component('create-game-form', {
                                             <input class="form-input form-inline create-game-player-name" :placeholder="getPlayerNamePlaceholder(newPlayer)" v-model="newPlayer.name" />
                                         </div>
                                         <div class="create-game-page-color-row">
-                                            <template v-for="color in ['Red', 'Green', 'Yellow', 'Blue', 'Black', 'Purple']">
+                                            <template v-for="color in ['Red', 'Green', 'Yellow', 'Blue', 'Black', 'Purple', 'Orange']">
                                                 <input type="radio" :value="color.toLowerCase()" :name="'playerColor' + newPlayer.index" v-model="newPlayer.color" :id="'radioBox' + color + newPlayer.index">
                                                 <label :for="'radioBox' + color + newPlayer.index">
                                                     <div :class="'create-game-colorbox '+getPlayerCubeColorClass(color)"></div>
@@ -744,15 +752,15 @@ export const CreateGameForm = Vue.component('create-game-form', {
                         </div>
 
                         <div class="create-game-action">
-                            <Button title="Create game" size="big" :onClick="createGame"/>
+                            <Button title="Create game" size="big" :onClick="createGame" class="create-game-btn"/>
 
                             <label>
-                                <div class="btn btn-primary btn-action btn-lg"><i class="icon icon-upload"></i></div>
+                                <div class="btn btn-primary btn-action btn-lg import-export-settings-btn"><i class="icon icon-upload import-export-settings-icon"></i></div>
                                 <input style="display: none" type="file" id="settings-file" ref="file" v-on:change="handleSettingsUpload()"/>
                             </label>
 
                             <label>
-                                <div v-on:click="downloadCurrentSettings()" class="btn btn-primary btn-action btn-lg"><i class="icon icon-download"></i></div>
+                                <div v-on:click="downloadCurrentSettings()" class="btn btn-primary btn-action btn-lg import-export-settings-btn"><i class="icon icon-download import-export-settings-icon"></i></div>
                             </label>
                         </div>  
                     </div>
@@ -778,6 +786,9 @@ export const CreateGameForm = Vue.component('create-game-form', {
                 ref="coloniesFilter"
                 v-if="showColoniesList"
                 v-on:colonies-list-changed="updateCustomColoniesList"
+                v-bind:venusNext="venusNext"
+                v-bind:turmoil="turmoil"
+                v-bind:aresExtension="aresExtension"
                 v-bind:communityCardsOption="communityCardsOption"
             ></colonies-filter>
 

@@ -15,10 +15,6 @@ export const TagCount = Vue.component('tag-count', {
     type: {
       type: String,
     },
-    hideCount: {
-      required: false,
-      type: Boolean,
-    },
   },
   components: {
     'tag': Tag,
@@ -40,7 +36,7 @@ export const TagCount = Vue.component('tag-count', {
       return classes.join(' ');
     },
     getCount: function(): number | string {
-      return this.hideCount === true ? '?' : this.count;
+      return this.count;
     },
   },
   template: `<div :class="getClasses()">

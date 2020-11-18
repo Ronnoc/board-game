@@ -146,6 +146,9 @@ export class Player implements ILoadable<SerializedPlayer, Player> {
     // Lawsuit
     public removingPlayers: Array<PlayerId> = [];
 
+    // Stats
+    public totalSpend: number = 0;
+
     constructor(
         public name: string,
         public color: Color,
@@ -994,7 +997,7 @@ export class Player implements ILoadable<SerializedPlayer, Player> {
 
     public worldGovernmentTerraforming(game: Game): void {
       const action: OrOptions = new OrOptions();
-      action.title = 'Select action for World Government Terraforming';
+      action.title = 'Select action for Solar Phase';
       action.buttonLabel = 'Confirm';
       if (game.getTemperature() < constants.MAX_TEMPERATURE) {
         action.options.push(
@@ -1297,6 +1300,7 @@ export class Player implements ILoadable<SerializedPlayer, Player> {
       if (totalToPay < cardCost) {
         throw new Error('Did not spend enough to pay for card');
       }
+      this.totalSpend += cardCost;
       return this.playCard(game, selectedCard, howToPay);
     }
 

@@ -423,7 +423,10 @@ function createGame(req: http.IncomingMessage, res: http.ServerResponse): void {
       }
 
       if (gameReq.board === 'random') {
-        const boards = Object.values(BoardName);
+        let boards = Object.values(BoardName);
+        const communityBoards = [BoardName.AMAZONIS, BoardName.ARABIA_TERRA];
+        if (!gameReq.communityCardsOption) boards = boards.filter((b) => !communityBoards.includes(b));
+
         gameReq.board = boards[Math.floor(Math.random() * boards.length)];
       }
 
@@ -616,6 +619,7 @@ function getPlayer(player: Player, game: Game): string {
     aresExtension: game.gameOptions.aresExtension,
     aresData: game.aresData,
     preludeExtension: game.gameOptions.preludeExtension,
+    totalSpend: player.totalSpend,
   };
   return JSON.stringify(output);
 }
@@ -823,6 +827,7 @@ function getPlayers(players: Array<Player>, game: Game): Array<PlayerModel> {
       deckSize: game.dealer.getDeckSize(),
       actionsTakenThisRound: player.actionsTakenThisRound,
       preludeExtension: game.gameOptions.preludeExtension,
+      totalSpend: player.totalSpend,
     } as PlayerModel;
   });
 }
@@ -1044,8 +1049,8 @@ function serveAsset(req: http.IncomingMessage, res: http.ServerResponse): void {
     file = `dist${req.url}${suffix}`;
   } else if (req.url === '/assets/Prototype.ttf') {
     file = 'assets/Prototype.ttf';
-  } else if (req.url === '/assets/futureforces.ttf') {
-    file = 'assets/futureforces.ttf';
+  } else if (req.url === '/assets/BattleStar.ttf') {
+    file = 'assets/BattleStar.ttf';
   } else if (req.url.endsWith('.png')) {
     const assetsRoot = path.resolve('./assets');
     const reqFile = path.resolve(path.normalize(req.url).slice(1));
