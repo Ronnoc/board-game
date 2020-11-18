@@ -147,7 +147,7 @@ export abstract class Colony implements SerializedColony {
     }
 
 
-    private giveBonus(player: Player, game: Game, bonusType: ColonyBenefit, quantity: number, resource: Resources | undefined, isGiveColonyBonus: boolean = false): undefined | PlayerInput {
+    public giveBonus(player: Player, game: Game, bonusType: ColonyBenefit, quantity: number, resource: Resources | undefined, isGiveColonyBonus: boolean = false): undefined | PlayerInput {
       let action: undefined | DeferredAction = undefined;
       switch (bonusType) {
         case ColonyBenefit.ADD_RESOURCES_TO_CARD:
