@@ -1350,6 +1350,14 @@ export class Game implements ILoadable<SerializedGame, Game> {
       return passedPlayersColors;
     }
 
+    public getDraftedPlayers():Array<Color> {
+      const draftedPlayersColors: Array<Color> = [];
+      this.draftedPlayers.forEach((player) => {
+        draftedPlayersColors.push(this.getPlayerById(player).color);
+      });
+      return draftedPlayersColors;
+    }
+
     public getPlayer(name: string): Player {
       const found = this.players.filter((player) => player.name === name);
       if (found.length === 0) {

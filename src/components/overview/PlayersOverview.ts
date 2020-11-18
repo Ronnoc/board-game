@@ -4,6 +4,7 @@ import {OverviewSettings} from './OverviewSettings';
 import {OtherPlayer} from '../OtherPlayer';
 import {PlayerModel} from '../../models/PlayerModel';
 import {ActionLabel} from './ActionLabel';
+import { Phase } from '../../Phase';
 
 const SHOW_NEXT_LABEL_MIN = 2;
 
@@ -64,9 +65,11 @@ export const PlayersOverview = Vue.component('players-overview', {
       return result.slice(0, -1);
     },
     getActionLabel(player: PlayerModel): string {
+      if (!this.player.draftedPlayers.includes(player.color) && this.player.phase === Phase.DRAFTING) return ActionLabel.DRAFTING;
       if (this.player.passedPlayers.includes(player.color)) {
         return ActionLabel.PASSED;
       }
+      if (this.player.phase === Phase.DRAFTING) return ActionLabel.NONE;
       if (player.isActive) return ActionLabel.ACTIVE;
       const notPassedPlayers = this.player.players.filter(
           (p: PlayerModel) => !this.player.passedPlayers.includes(p.color),
