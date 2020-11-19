@@ -23,6 +23,7 @@ export interface CreateGameModel {
     initialDraft: boolean;
     randomMA: RandomMAOptionType;
     randomFirstPlayer: boolean;
+    showOtherPlayersVP: boolean;
     beginnerOption: boolean;
     venusNext: boolean;
     colonies: boolean;
@@ -44,6 +45,8 @@ export interface CreateGameModel {
     aresExtension: boolean;
     undoOption: boolean;
     fastModeOption: boolean;
+    removeNegativeGlobalEventsOption: boolean;
+    includeVenusMA: boolean;
     startingCorporations: number;
     soloTR: boolean;
     clonedGameData: IGameData | undefined;
@@ -81,6 +84,7 @@ export const CreateGameForm = Vue.component('create-game-form', {
       initialDraft: false,
       randomMA: RandomMAOptionType.NONE,
       randomFirstPlayer: true,
+      showOtherPlayersVP: false,
       beginnerOption: false,
       venusNext: false,
       colonies: false,
@@ -110,6 +114,8 @@ export const CreateGameForm = Vue.component('create-game-form', {
       aresExtension: false,
       undoOption: false,
       fastModeOption: false,
+      removeNegativeGlobalEventsOption: false,
+      includeVenusMA: true,
       startingCorporations: 2,
       soloTR: false,
       clonedGameData: undefined,
@@ -213,6 +219,9 @@ export const CreateGameForm = Vue.component('create-game-form', {
     },
     isRandomMAEnabled: function(): Boolean {
       return this.randomMA !== RandomMAOptionType.NONE;
+    },
+    isSoloGame: function(): Boolean {
+      return this.playersCount === 1;
     },
     randomMAToggle: function() {
       const component = (this as any) as CreateGameModel;
@@ -322,6 +331,7 @@ export const CreateGameForm = Vue.component('create-game-form', {
       const draftVariant = component.draftVariant;
       const initialDraft = component.initialDraft;
       const randomMA = component.randomMA;
+      const showOtherPlayersVP = component.showOtherPlayersVP;
       const venusNext = component.venusNext;
       const colonies = component.colonies;
       const turmoil = component.turmoil;
@@ -337,6 +347,8 @@ export const CreateGameForm = Vue.component('create-game-form', {
       const aresExtension = component.aresExtension;
       const undoOption = component.undoOption;
       const fastModeOption = component.fastModeOption;
+      const removeNegativeGlobalEventsOption = this.removeNegativeGlobalEventsOption;
+      const includeVenusMA = component.includeVenusMA;
       const startingCorporations = component.startingCorporations;
       const soloTR = component.soloTR;
       const beginnerOption = component.beginnerOption;
@@ -376,6 +388,7 @@ export const CreateGameForm = Vue.component('create-game-form', {
         corporateEra,
         prelude,
         draftVariant,
+        showOtherPlayersVP,
         venusNext,
         colonies,
         turmoil,
@@ -390,6 +403,8 @@ export const CreateGameForm = Vue.component('create-game-form', {
         aresExtension: aresExtension,
         undoOption,
         fastModeOption,
+        removeNegativeGlobalEventsOption,
+        includeVenusMA,
         startingCorporations,
         soloTR,
         clonedGamedId,
@@ -539,7 +554,7 @@ export const CreateGameForm = Vue.component('create-game-form', {
 
                             <label for="startingCorps-checkbox" class="startingCorps-checkbox">
                                 <span>
-                                    <template v-for="n in 3">
+                                    <template v-for="n in 4">
                                         <input type="radio" :value="n+1" v-model="startingCorporations" :id="n+'-checkbox'">
                                         <label :for="n+'-checkbox'" class="corporation-count">
                                             <span>{{ n + 1 }}</span>
@@ -551,7 +566,7 @@ export const CreateGameForm = Vue.component('create-game-form', {
 
                             <input type="checkbox" v-model="solarPhaseOption" id="WGT-checkbox">
                             <label for="WGT-checkbox">
-                                <span v-i18n>Solar Phase</span>&nbsp;<a href="https://github.com/bafolts/terraforming-mars/wiki/Variants#solar-phase" class="tooltip" target="_blank">&#9432;</a>
+                                <span v-i18n>World Government Terraforming</span>&nbsp;<a href="https://github.com/bafolts/terraforming-mars/wiki/Variants#solar-phase" class="tooltip" target="_blank">&#9432;</a>
                             </label>
 
                             <template v-if="playersCount === 1">
@@ -564,6 +579,11 @@ export const CreateGameForm = Vue.component('create-game-form', {
                             <input type="checkbox" v-model="undoOption" id="undo-checkbox">
                             <label for="undo-checkbox">
                                 <span v-i18n>Allow undo</span>&nbsp;<a href="https://github.com/bafolts/terraforming-mars/wiki/Variants#allow-undo" class="tooltip" target="_blank">&#9432;</a>
+                            </label>
+
+                            <input type="checkbox" v-model="shuffleMapOption" id="shuffleMap-checkbox">
+                            <label for="shuffleMap-checkbox">
+                                    <span v-i18n>Randomize board tiles</span>&nbsp;<a href="https://github.com/bafolts/terraforming-mars/wiki/Variants#randomize-board-tiles" class="tooltip" target="_blank">&#9432;</a>
                             </label>
 
                             <input type="checkbox" v-model="seededGame" id="seeded-checkbox">
@@ -581,29 +601,34 @@ export const CreateGameForm = Vue.component('create-game-form', {
 
                             <div class="create-game-subsection-label">Randomize</div>
 
-                            <input type="checkbox" v-model="randomFirstPlayer" id="randomFirstPlayer-checkbox">
-                            <label for="randomFirstPlayer-checkbox">
-                                <span v-i18n>First player</span>
-                            </label>
-
-                            <input type="checkbox" name="randomMAToggle" id="randomMA-checkbox" v-on:change="randomMAToggle()">
-                            <label for="randomMA-checkbox">
-                                <span v-i18n>Milestones/Awards</span>&nbsp;<a href="https://github.com/bafolts/terraforming-mars/wiki/Variants#random-milestones-and-awards" class="tooltip" target="_blank">&#9432;</a>
-                            </label>
-
-                            <div class="create-game-page-column-row" v-if="isRandomMAEnabled()">
-                                <div>
-                                <input type="radio" name="randomMAOption" v-model="randomMA" :value="getRandomMaOptionType('limited')" id="limitedRandomMA-radio">
-                                <label class="label-randomMAOption" for="limitedRandomMA-radio">
-                                    <span v-i18n>{{ getRandomMaOptionType('limited') }}</span>
+                            <div v-if="!isSoloGame()">
+                                <input type="checkbox" v-model="randomFirstPlayer" id="randomFirstPlayer-checkbox">
+                                <label for="randomFirstPlayer-checkbox">
+                                    <span v-i18n>First player</span>
                                 </label>
-                                </div>
+                            </div>
 
-                                <div>
-                                <input type="radio" name="randomMAOption" v-model="randomMA" :value="getRandomMaOptionType('full')" id="unlimitedRandomMA-radio">
-                                <label class="label-randomMAOption" for="unlimitedRandomMA-radio">
-                                    <span v-i18n>{{ getRandomMaOptionType('full') }}</span>
+                            <div v-if="!isSoloGame()">
+                                <input type="checkbox" name="randomMAToggle" id="randomMA-checkbox" v-on:change="randomMAToggle()">
+                                <label for="randomMA-checkbox">
+                                    <span v-i18n>Milestones/Awards</span>&nbsp;<a href="https://github.com/bafolts/terraforming-mars/wiki/Variants#random-milestones-and-awards" class="tooltip" target="_blank">&#9432;</a>
                                 </label>
+
+
+                                <div class="create-game-page-column-row" v-if="isRandomMAEnabled()">
+                                    <div>
+                                    <input type="radio" name="randomMAOption" v-model="randomMA" :value="getRandomMaOptionType('limited')" id="limitedRandomMA-radio">
+                                    <label class="label-randomMAOption" for="limitedRandomMA-radio">
+                                        <span v-i18n>{{ getRandomMaOptionType('limited') }}</span>
+                                    </label>
+                                    </div>
+
+                                    <div>
+                                    <input type="radio" name="randomMAOption" v-model="randomMA" :value="getRandomMaOptionType('full')" id="unlimitedRandomMA-radio">
+                                    <label class="label-randomMAOption" for="unlimitedRandomMA-radio">
+                                        <span v-i18n>{{ getRandomMaOptionType('full') }}</span>
+                                    </label>
+                                    </div>
                                 </div>
                             </div>
 
@@ -630,7 +655,16 @@ export const CreateGameForm = Vue.component('create-game-form', {
                                     <span v-i18n>Custom Colonies list</span>
                                 </label>
                             </template>
+                            
+                            <template v-if="turmoil">
+                                <input type="checkbox" v-model="removeNegativeGlobalEventsOption" id="removeNegativeEvent-checkbox">
+                                <label for="removeNegativeEvent-checkbox">
+                                    <span v-i18n>Remove negative Global Events</span>&nbsp;<a href="https://github.com/bafolts/terraforming-mars/wiki/Variants#remove-negative-global-events" class="tooltip" target="_blank">&#9432;</a>
+                                </label>
+                            </template>
+
                         </div>
+
 
                         <div class="create-game-page-column" v-if="playersCount > 1">
                             <h4 v-i18n>Multiplayer Options</h4>
@@ -645,12 +679,37 @@ export const CreateGameForm = Vue.component('create-game-form', {
                                 <span v-i18n>Initial Draft</span>&nbsp;<a href="https://github.com/bafolts/terraforming-mars/wiki/Variants#initial-draft" class="tooltip" target="_blank">&#9432;</a>
                             </label>
 
+                            <div class="create-game-page-column-row" v-if="isRandomMAEnabled()">
+                                <div>
+                                <input type="radio" name="randomMAOption" v-model="randomMA" :value="getRandomMaOptionType('limited')" id="limitedRandomMA-radio">
+                                <label class="label-randomMAOption" for="limitedRandomMA-radio">
+                                    <span v-i18n>{{ getRandomMaOptionType('limited') }}</span>
+                                </label>
+                                </div>
+
+                                <div>
+                                <input type="radio" name="randomMAOption" v-model="randomMA" :value="getRandomMaOptionType('full')" id="unlimitedRandomMA-radio">
+                                <label class="label-randomMAOption" for="unlimitedRandomMA-radio">
+                                    <span v-i18n>{{ getRandomMaOptionType('full') }}</span>
+                                </label>
+                                </div>
+                            </div>
+
                             <template v-if="venusNext">
+                                <input type="checkbox" v-model="includeVenusMA" id="venusMA-checkbox">
+                                <label for="venusMA-checkbox">
+                                    <span v-i18n>Venus Milestone/Award</span>
+                                </label>
                                 <input type="checkbox" v-model="requiresVenusTrackCompletion" id="requiresVenusTrackCompletion-checkbox">
                                 <label for="requiresVenusTrackCompletion-checkbox">
                                     <span v-i18n>Venus Terraforming</span>
                                 </label>
                             </template>
+
+                            <input type="checkbox" name="showOtherPlayersVP" v-model="showOtherPlayersVP" id="realTimeVP-checkbox">
+                            <label for="realTimeVP-checkbox">
+                                <span v-i18n>Show real-time VP</span>&nbsp;<a href="https://github.com/bafolts/terraforming-mars/wiki/Variants#show-real-time-vp" class="tooltip" target="_blank">&#9432;</a>
+                            </label>
                             
                             <input type="checkbox" v-model="fastModeOption" id="fastMode-checkbox">
                             <label for="fastMode-checkbox">
