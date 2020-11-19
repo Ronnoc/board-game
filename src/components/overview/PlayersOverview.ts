@@ -4,7 +4,7 @@ import {OverviewSettings} from './OverviewSettings';
 import {OtherPlayer} from '../OtherPlayer';
 import {PlayerModel} from '../../models/PlayerModel';
 import {ActionLabel} from './ActionLabel';
-import { Phase } from '../../Phase';
+import {Phase} from '../../Phase';
 
 const SHOW_NEXT_LABEL_MIN = 2;
 
